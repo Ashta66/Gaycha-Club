@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GAYCHA CLUB — Phase 2</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Fraunces:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<style>
+:root{color-scheme:dark;--bg:#101010;--ch:#1D1D20;--gold:#D6B46A;--cream:#F4EBDD;--mut:#a9a39a}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--cream);font:16px/1.5 Fraunces,Georgia,serif}
+h1,h2,.logo{font-family:Anton,Impact,sans-serif;font-weight:400;margin:0}
+button{font:inherit;cursor:pointer}:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+header{display:flex;gap:16px;align-items:center;flex-wrap:wrap;padding:12px 20px;background:var(--ch);border-bottom:1px solid #3a3326}
+.logo{font-size:26px;color:var(--gold);line-height:1}.logo small{font:600 10px Fraunces;letter-spacing:.5em;display:block;color:var(--cream)}
+header nav{display:flex;gap:6px}header .me{margin-left:auto;color:var(--mut);font-size:14px}
+main{max-width:1100px;margin:0 auto;padding:30px 20px}
+.btn{background:var(--gold);color:#101010;border:0;border-radius:6px;padding:12px 20px;font-weight:600;min-height:46px}
+.btn.alt{background:none;color:var(--cream);border:1px solid var(--gold)}.btn:disabled{opacity:.5;cursor:default}
+input{background:var(--ch);color:var(--cream);border:1px solid #4a4233;border-radius:6px;padding:10px 12px;min-height:44px;font:inherit;width:100%;margin:6px 0}
+.box{max-width:420px;background:var(--ch);border-radius:12px;padding:22px;margin:20px auto}
+.note{background:var(--ch);border-left:4px solid #FF477E;padding:12px 16px;border-radius:0 8px 8px 0;color:var(--mut);margin:14px 0}
+.err{border-color:#ff5555;color:#ffb4b4}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:18px;margin-top:18px}
+.card{--s1:#FF477E;--s2:#c4204f;--r:#8a95a3;position:relative;aspect-ratio:5/7;border-radius:12px;background:#0b0b0c;border:3px solid var(--r);padding:6px;display:flex;flex-direction:column;overflow:hidden;color:#fff;width:100%}
+.band{background:linear-gradient(90deg,var(--s1),var(--s2));color:#101010;font:11px Anton;letter-spacing:.12em;padding:4px 8px;border-radius:4px;display:flex;justify-content:space-between}
+.art{flex:1;margin:6px 0;border-radius:6px;background:radial-gradient(circle at 50% 35%,var(--s1) 0,transparent 55%),linear-gradient(160deg,#26262b,#0b0b0c);display:grid;place-items:center}
+.art b{font:clamp(34px,7vw,60px) Anton}.nm{font:15px Anton}.spec{font-size:10px;line-height:1.25;color:#d8d2c8}
+.meta{display:flex;justify-content:space-between;font-size:10px;margin-top:2px}.rar{color:var(--r);font-weight:600}
+.x{position:absolute;top:30px;right:6px;background:var(--gold);color:#101010;border-radius:10px;font:600 11px Fraunces;padding:1px 8px}
+.r-peu_commun{--r:#2fa57a}.r-rare{--r:#3867FF;box-shadow:0 0 14px #3867FF66}.r-epique{--r:#e03bd0;box-shadow:0 0 18px #e03bd088}
+.r-legendaire{--r:#D6B46A;box-shadow:0 0 22px #D6B46A88}
+.r-secrete{border-color:transparent;background:linear-gradient(#0b0b0c,#0b0b0c) padding-box,conic-gradient(#ff477e,#ffda45,#8ccf35,#00a9a5,#3867ff,#c9a7ff,#ff477e) border-box}
+.fl{aspect-ratio:5/7;perspective:900px}.fi{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .7s}.fl.on .fi{transform:rotateY(180deg)}
+.fb,.ff{position:absolute;inset:0;backface-visibility:hidden}.ff{transform:rotateY(180deg)}.ff .card{height:100%}
+.back{display:grid;place-items:center;border:3px solid var(--gold);background:#0b0b0c}
+.sealed{width:200px;aspect-ratio:5/8;margin:20px auto;background:linear-gradient(160deg,#2a2418,#0b0b0c);border:3px solid var(--gold);border-radius:10px;display:grid;place-content:center;text-align:center;animation:shk .5s 2}
+@keyframes shk{25%{transform:rotate(-4deg)}75%{transform:rotate(4deg)}}
+@media(prefers-reduced-motion:reduce){.sealed{animation:none}.fi{transition:none}}
+</style></head><body>
+<header><div class="logo">GAYCHA<small>CLUB</small></div>
+<nav><button class="btn alt" data-v="catalog">Catalogue</button><button class="btn alt" data-v="collection">Ma collection</button><button class="btn alt" data-v="booster">Boosters</button><button class="btn alt" data-v="missions">Missions</button></nav>
+<div class="me" id="me"></div></header>
+<main id="app" aria-live="polite"></main>
+<script>
+// ===== CONFIG : URL et clé PUBLIQUE uniquement. Jamais la clé service_role. =====
+const SUPABASE_URL='https://tgnembausaanuazoelxw.supabase.co';
+const SUPABASE_KEY='sb_publishable_xPvkIsb6dO0DVHXrf6Gs-g_wGrdewIx';
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const $=id=>document.getElementById(id),app=$('app');
+const RN={commun:['Commun','●'],peu_commun:['Peu commun','⬢'],rare:['Rare','◆'],epique:['Épique','★'],legendaire:['Légendaire','♛'],secrete:['Secrète','◈']};
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let user=null,profile=null,cards=[],busy=false;
+const msg=(t,e)=>`<div class="note ${e?'err':''}">${esc(t)}</div>`;
+function card(c,n){const r=RN[c.rarity],s=c.series||{};
+return `<div class="card r-${c.rarity}" style="--s1:${esc(s.color_a)};--s2:${esc(s.color_b)}"><div class="band"><span>${esc((s.name||'').toUpperCase())}</span><span>${r[1]} ${r[0].toUpperCase()}</span></div>${n>1?`<span class="x">×${n}</span>`:''}<div class="art"><b>${esc(c.name.replace(/^(Le |La |L’|Madame |Diva du )/,'').charAt(0).toUpperCase())}</b></div><div class="nm">${esc(c.name)}</div><div class="spec">${esc(c.spec)}</div><div class="meta"><span class="rar">${r[1]} ${r[0]}</span><span>N° ${String(c.number).padStart(3,'0')}</span></div></div>`}
+async function loadCards(){const {data,error}=await sb.from('cards').select('id,name,rarity,number,spec,series(name,color_a,color_b)').order('number');if(error)throw error;cards=data}
+async function refresh(){const {data:{session}}=await sb.auth.getSession();user=session?.user||null;profile=null;
+if(user){const {data}=await sb.from('profiles').select('username,balance,age_confirmed_at').eq('id',user.id).maybeSingle();profile=data}
+$('me').innerHTML=user?`${esc(profile?.username||user.email)} · ${profile?.balance??0} 💰 <button class="btn alt" id="out">Déconnexion</button>`:'';
+if(user)$('out').onclick=async()=>{await sb.auth.signOut();go('catalog')}}
+async function go(v){await refresh();try{if(!cards.length)await loadCards()}catch(e){app.innerHTML=msg('Impossible de charger le catalogue : '+e.message,1);return}
+if(v!=='catalog'&&!user)return auth();
+({catalog,collection,booster,missions})[v]()}
+document.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>go(b.dataset.v));
+function catalog(){app.innerHTML=`<h1>Catalogue</h1>${cards.length?'':msg('Aucune carte publiée. Vérifiez que phase2_seed.sql a été exécuté.')}<div class="grid">${cards.map(c=>card(c)).join('')}</div>`}
+function auth(){app.innerHTML=`<div class="box"><h2>Connexion</h2><input id="em" type="email" placeholder="E-mail" autocomplete="email"><input id="pw" type="password" placeholder="Mot de passe (8 caractères min.)" autocomplete="current-password"><input id="un" placeholder="Pseudo (inscription : 3 à 20 lettres, chiffres, _)"><button class="btn" id="li">Se connecter</button> <button class="btn alt" id="su">Créer un compte</button><div id="am"></div></div>`;
+const v=()=>[$('em').value.trim(),$('pw').value];
+$('li').onclick=async()=>{const[e,p]=v();const {error}=await sb.auth.signInWithPassword({email:e,password:p});error?$('am').innerHTML=msg(error.message,1):go('collection')};
+$('su').onclick=async()=>{const[e,p]=v();const {error}=await sb.auth.signUp({email:e,password:p,options:{data:{username:$('un').value.trim()}}});$('am').innerHTML=error?msg(error.message,1):msg('Compte créé. Confirmez votre adresse via l’e-mail reçu, puis connectez-vous.')}}
+async function ageGate(){app.innerHTML=`<div class="box"><h2>Réservé aux 18 ans et plus</h2><p>Ce site contient de l’humour adulte. Confirmez que vous avez 18 ans ou plus. Il s’agit d’une déclaration, pas d’une vérification d’identité.</p><button class="btn" id="ok">J’ai 18 ans ou plus</button><div id="am"></div></div>`;
+$('ok').onclick=async()=>{const {error}=await sb.rpc('confirm_age');error?$('am').innerHTML=msg(error.message,1):go('booster')}}
+async function collection(){app.innerHTML='<h1>Ma collection</h1><p>Chargement…</p>';
+const {data,error}=await sb.from('card_instances').select('card_id,acquired_at').order('acquired_at',{ascending:false});
+if(error)return app.innerHTML=msg(error.message,1);
+const cnt={};data.forEach(d=>cnt[d.card_id]=(cnt[d.card_id]||0)+1);
+const own=cards.filter(c=>cnt[c.id]);
+app.innerHTML=`<h1>Ma collection</h1><p>${own.length} / ${cards.length} cartes découvertes</p>${own.length?'':msg('Votre album est vide. Ouvrez un booster.')}<div class="grid">${own.map(c=>`<div>${card(c,cnt[c.id])}${cnt[c.id]>1?`<button class="btn alt" style="width:100%;margin-top:6px" data-conv="${c.id}" data-n="${cnt[c.id]-1}">Convertir ${cnt[c.id]-1} doublon(s)</button>`:''}</div>`).join('')}</div><div id="cm"></div>`;
+app.querySelectorAll('[data-conv]').forEach(b=>b.onclick=async()=>{b.disabled=true;const {data:g,error:e}=await sb.rpc('convert_duplicates',{p_card:b.dataset.conv,p_qty:+b.dataset.n,p_key:crypto.randomUUID()});if(e){$('cm').innerHTML=msg(e.message,1);b.disabled=false;return}await refresh();collection();$('cm').innerHTML=msg('+'+g+' 💰 ajoutés à votre solde.')})}
+function booster(){if(profile&&!profile.age_confirmed_at)return ageGate();
+app.innerHTML=`<h1>Boosters</h1><p>5 cartes par booster. Le tirage est fait par le serveur.</p><button class="btn" data-b="petit-malaise">Le Petit Malaise (gratuit, 1 par jour)</button> <button class="btn alt" data-b="red-flag">Le Red Flag (100 💰)</button><div id="odds" class="note">Chargement des probabilités…</div><div id="pk" class="grid"></div>`;
+app.querySelectorAll('[data-b]').forEach(b=>b.onclick=()=>open5(b.dataset.b));
+sb.from('booster_types').select('name,odds,pity_threshold').eq('active',true).then(({data})=>{$('odds').innerHTML=(data||[]).map(t=>esc(t.name)+' : '+Object.entries(t.odds).map(([k,v])=>(RN[k]?.[0]||k)+' '+v+' %').join(' · ')+'. Garantie : une Rare ou mieux après '+t.pity_threshold+' cartes sans.').join('<br>')})}
+async function open5(slug){if(busy)return;busy=true;document.querySelectorAll('[data-b]').forEach(b=>b.disabled=true);const pk=$('pk');
+pk.innerHTML='<div class="sealed" style="grid-column:1/-1;justify-self:center"><div class="logo">GAYCHA<small>CLUB</small></div></div>';
+const {data,error}=await sb.rpc('open_booster',{p_booster:slug,p_key:crypto.randomUUID()});
+busy=false;document.querySelectorAll('[data-b]').forEach(b=>b.disabled=false);
+if(error){pk.innerHTML=msg('Ouverture impossible : '+error.message,1);return}
+const rm=matchMedia('(prefers-reduced-motion:reduce)').matches;
+pk.innerHTML=data.map(d=>{const c=cards.find(x=>x.id===d.card_id);return `<div class="fl"><div class="fi"><div class="card back fb"><div class="logo">G</div></div><div class="ff">${c?card(c):msg('Carte inconnue')}</div></div></div>`}).join('');
+[...pk.children].forEach((e,i)=>setTimeout(()=>e.classList.add('on'),rm?0:500+i*750));refresh()}
+async function missions(){const {data,error}=await sb.from('missions').select('slug,title,kind,reward,xp_reward').eq('active',true).order('kind');
+if(error)return app.innerHTML=msg(error.message,1);
+if(profile&&!profile.age_confirmed_at)return ageGate();
+app.innerHTML=`<h1>Missions</h1><div id="mm"></div>${data.map(m=>`<div class="box" style="margin:12px 0;max-width:none"><b>${esc(m.title)}</b> · ${m.kind==='daily'?'quotidienne':'hebdomadaire'}<br>Récompense : ${m.reward} 💰 + ${m.xp_reward} XP<br><button class="btn" data-m="${esc(m.slug)}">Réclamer</button></div>`).join('')}`;
+app.querySelectorAll('[data-m]').forEach(b=>b.onclick=async()=>{const {error:e}=await sb.rpc('claim_mission',{p_slug:b.dataset.m});$('mm').innerHTML=e?msg(e.message,1):msg('Récompense créditée.');refresh()})}
+go('catalog');
+</script></body></html>

@@ -129,8 +129,8 @@ async function loadCards(){const {data,error}=await sb.from('cards').select('id,
 async function refresh(){const {data:{session}}=await sb.auth.getSession();user=session?.user||null;profile=null;
 if(user){const {data}=await sb.from('profiles').select('username,balance,age_confirmed_at,role').eq('id',user.id).maybeSingle();profile=data}
 $('nadm').hidden=!['admin','moderator','catalog_manager'].includes(profile?.role);
-$('me').innerHTML=user?`${esc(profile?.username||user.email)} · ${profile?.balance??0} 💰 <button class="btn alt" id="out">Déconnexion</button>`:'';
-if(user)$('out').onclick=async()=>{await sb.auth.signOut();go('catalog')}}
+$('me').innerHTML=user?`<button class="profile-trigger" id="profile-open" aria-label="Paramètres personnels">🌈 ${esc(profile?.username||user.email)} ▾</button><span>${profile?.balance??0} 💰</span>`:'';
+if(user)$('profile-open').onclick=()=>openSettings()}
 async function go(v){await refresh();try{if(!cards.length)await loadCards()}catch(e){app.innerHTML=msg('Impossible de charger le catalogue : '+e.message,1);return}
 if(v!=='catalog'&&!user)return auth();
 ({catalog,collection,booster,missions,market,leaderboard,trades,messages,admin})[v]()}
@@ -164,8 +164,8 @@ pk.innerHTML=data.map(d=>{const c=cards.find(x=>x.id===d.card_id);return `<div c
 [...pk.children].forEach((e,i)=>setTimeout(()=>e.classList.add('on'),rm?0:500+i*750));refresh()}
 async function missions(){if(profile&&!profile.age_confirmed_at)return ageGate();
 const {data,error}=await sb.rpc('my_missions');if(error)return app.innerHTML=msg(error.message,1);
-const st=m=>m.claimed?['✔ Déjà réclamée',0]:m.progress>=m.goal?['Disponible : à réclamer !',1]:['Pas encore réclamable ('+m.progress+' / '+m.goal+')',0];
-app.innerHTML=`<h1>Missions</h1><div id="mm"></div>${data.map(m=>{const [t,ok]=st(m);return `<div class="box" style="margin:12px 0;max-width:none"><b>${esc(m.title)}</b> · ${m.kind==='daily'?'quotidienne':'hebdomadaire'}<br>Récompense : ${m.reward} 💰 + ${m.xp_reward} XP<br><b>${t}</b><br><button class="btn" data-m="${esc(m.slug)}" ${ok?'':'disabled'}>${m.claimed?'Réclamée':'Réclamer'}</button></div>`}).join('')}`;
+const st=m=>m.claimed?['✔ Déjà réclamée',0,'done']:m.progress>=m.goal?['Disponible : à réclamer !',1,'ready']:['En cours',0,''];
+app.innerHTML=`<h1>Missions</h1><p>Les cartes vertes sont déjà réclamées. La barre indique l’avancement vers l’objectif.</p><div class="rainbow-line"></div><div id="mm"></div>${data.map(m=>{const [t,ok,cl]=st(m),pct=Math.max(0,Math.min(100,Math.round((Number(m.progress||0)/Math.max(1,Number(m.goal||1)))*100)));return `<div class="box mission-card ${cl}" style="margin:12px 0;max-width:none"><div class="mission-top"><b>${esc(m.title)}</b><span class="mission-status">${t}</span></div><p style="margin:6px 0;color:var(--mut)">${m.kind==='daily'?'Mission quotidienne':'Mission hebdomadaire'} · Récompense : ${m.reward} 💰 + ${m.xp_reward} XP</p><div class="progress-track" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><div class="progress-fill" style="--progress:${pct}%"></div></div><small>${Math.min(Number(m.progress||0),Number(m.goal||0))} / ${m.goal} · ${pct}%</small><br><button class="btn ${m.claimed?'alt':''}" style="margin-top:12px" data-m="${esc(m.slug)}" ${ok?'':'disabled'}>${m.claimed?'✔ Réclamée':'Réclamer'}</button></div>`}).join('')}`;
 app.querySelectorAll('[data-m]').forEach(b=>b.onclick=async()=>{b.disabled=true;const {error:e}=await sb.rpc('claim_mission',{p_slug:b.dataset.m});if(e){$('mm').innerHTML=msg(e.message,1);b.disabled=false;return}await refresh();missions()})}
 async function market(){const {data,error}=await sb.from('market_view').select('*').order('created_at',{ascending:false});
 if(error)return app.innerHTML=msg(error.message,1);
@@ -173,7 +173,7 @@ app.innerHTML=`<h1>Marché</h1><p>Prix en monnaie virtuelle uniquement, non conv
 app.querySelectorAll('[data-l]').forEach(b=>b.onclick=async()=>{const own=b.dataset.own==='1';if(!own&&!confirm('Acheter cette carte pour '+b.dataset.p+' 💰 ?'))return;b.disabled=true;const {error:e}=own?await sb.rpc('cancel_listing',{p_listing:b.dataset.l}):await sb.rpc('buy_listing',{p_listing:b.dataset.l,p_key:crypto.randomUUID()});await refresh();if(e){b.disabled=false;$('mk').innerHTML=msg(e.message,1)}else market()})}
 async function leaderboard(){const {data,error}=await sb.from('leaderboard').select('*');
 if(error)return app.innerHTML=msg(error.message,1);
-app.innerHTML=`<h1>Classement</h1><div class="box" style="max-width:none">${data.map((r,i)=>`<div>${i+1}. <b>${esc(r.username)}</b> · ${r.xp} XP · ${r.cards_found} cartes</div>`).join('')}</div>`}
+app.innerHTML=`<h1>Hall of Fame</h1><p>Les légendes du Gaycha Club : gloire, paillettes et cartes rares ✨</p><div class="rainbow-line"></div><div class="leaderboard-list">${data.map((r,i)=>`<div class="leader-row ${i===0?'top-1':i===1?'top-2':i===2?'top-3':''}"><div class="leader-rank">${i===0?'👑':i===1?'🥈':i===2?'🥉':String(i+1).padStart(2,'0')}</div><div><span class="leader-avatar">${esc((r.username||'?').charAt(0).toUpperCase())}</span><b>${esc(r.username)}</b><div class="leader-metrics"><span>🃏 ${r.cards_found} cartes</span><span>✨ ${r.xp} XP</span></div></div><div class="leader-score"><b style="color:#d6b46a">${Number(r.xp||0).toLocaleString('fr-FR')} XP</b></div></div>`).join('')}</div>`}
 async function trades(){if(profile&&!profile.age_confirmed_at)return ageGate();await sb.rpc('expire_offers');
 const [a,b,c]=await Promise.all([sb.from('trades_view').select('*').order('created_at',{ascending:false}),sb.from('trade_items_view').select('*'),sb.from('card_instances').select('id,card_id').eq('locked',false)]);
 if(a.error)return app.innerHTML=msg(a.error.message,1);

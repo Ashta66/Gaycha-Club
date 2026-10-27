@@ -222,7 +222,7 @@ $('me').innerHTML=user?`${user.user_metadata?.avatar_url?`<img class="profile-av
 if(user)$('profile-open').onclick=()=>openSettings();setTimeout(refreshNotificationBadges,0)}
 async function go(v){currentView=v;await refresh();try{if(!cards.length)await loadCards()}catch(e){app.innerHTML=msg('Impossible de charger le catalogue : '+e.message,1);return}
 if(v!=='catalog'&&!user)return auth();
-await ({catalog,collection,booster,missions,market,leaderboard,playercard:playerCard,trades,messages,admin,dashboard,stats,history,friends,events})[v]();applyLanguage();document.querySelectorAll('[data-v]').forEach(b=>{const active=b.dataset.v===v;b.classList.toggle('nav-active',active);if(active)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')})
+await ({catalog,collection,booster,missions,market,leaderboard,playercard:playerCard,trades,messages,admin,dashboard,stats,history,friends,events})[v]();applyLanguage();document.querySelectorAll('[data-v]').forEach(b=>{const active=b.dataset.v===v;b.classList.toggle('nav-active',active);if(active)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')})}
 const mobileMore=$('mobile-more-menu'),mobileMoreToggle=$('mobile-more-toggle');
 function closeMobileMore(){if(mobileMore){mobileMore.hidden=true;mobileMoreToggle?.setAttribute('aria-expanded','false')}}
 mobileMoreToggle?.addEventListener('click',()=>{const opening=mobileMore.hidden;mobileMore.hidden=!opening;mobileMoreToggle.setAttribute('aria-expanded',String(opening))});

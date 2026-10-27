@@ -151,12 +151,31 @@ body.reduced-motion *,body.reduced-motion *::before,body.reduced-motion *::after
 .trade-review-cards .card{pointer-events:none}
 @media(max-width:560px){.collection-tools{grid-template-columns:1fr}.trade-review-grid{grid-template-columns:1fr}}
 @media(max-width:560px){.booster-choice{width:calc(50% - 8px);min-width:135px}.chat-bubble{max-width:90%}.chat-compose{align-items:stretch}.chat-compose input{width:100%}}
+/* ===== Finition premium, confort et accessibilité ===== */
+.skip-link{position:fixed;left:12px;top:-80px;z-index:1000;background:#fff;color:#111;padding:12px 16px;border-radius:8px;font:700 16px Arial,sans-serif}.skip-link:focus{top:12px}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #fff;outline-offset:3px;box-shadow:0 0 0 6px #3867ff99}
+main{min-height:65vh}
+.card{isolation:isolate;box-shadow:0 10px 24px #0005}
+.card::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;opacity:0;background:linear-gradient(115deg,transparent 20%,#fff5 45%,transparent 58%);transform:translateX(-130%);transition:transform .55s,opacity .2s}
+.card:hover::before,.card:focus-visible::before{opacity:.75;transform:translateX(130%)}
+.r-commun{--r:#c5c5c5}.r-peu_commun{--r:#45d4a3}.r-rare{--r:#5f8cff}.r-epique{--r:#ff6be7}.r-legendaire{--r:#f3cf72}
+.player-card-wrap{max-width:900px;margin:22px auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,340px);gap:24px;align-items:start}
+.player-card-preview{position:relative;overflow:hidden;min-height:420px;padding:24px;border:2px solid transparent;border-radius:22px;background:linear-gradient(#17151d,#17151d) padding-box,conic-gradient(from var(--a),#ff477e,#ff8a00,#ffda45,#8ccf35,#00a9a5,#3867ff,#c9a7ff,#ff477e) border-box;box-shadow:0 20px 55px #0008;isolation:isolate}
+.player-card-preview:before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(circle at 80% 20%,var(--pc-accent,#ff477e)55,transparent 40%),radial-gradient(circle at 10% 90%,#3867ff66,transparent 42%);opacity:.45}
+.player-card-brand{font:12px Arial,sans-serif;letter-spacing:.3em;color:#f4ebdd99}.player-card-avatar{width:86px;height:86px;border-radius:50%;display:grid;place-items:center;margin:24px 0 12px;background:var(--rb);color:#101010;font:48px Anton,sans-serif;border:3px solid #fff8;box-shadow:0 0 35px #ff477e66}
+.player-card-name{font:clamp(28px,5vw,42px)/1 Anton,sans-serif;overflow-wrap:anywhere}.player-card-title{display:inline-block;margin:10px 0;padding:7px 11px;border:1px solid var(--pc-accent,#ff477e);border-radius:999px;color:#fff;background:#ffffff0d;font:700 12px Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase}
+.player-card-motto{color:#f4ebddcc;font-style:italic;margin:8px 0 22px;overflow-wrap:anywhere}
+.player-card-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.player-card-stat{padding:12px 8px;border:1px solid #ffffff24;border-radius:12px;background:#09090b66;text-align:center}.player-card-stat b{display:block;font:25px Anton,sans-serif}.player-card-stat small{font:10px Arial,sans-serif;color:#f4ebddad;text-transform:uppercase;letter-spacing:.06em}
+.player-card-form{padding:18px;border:1px solid #ffffff20;border-radius:16px;background:#ffffff06}.player-card-form label{display:block;font-size:13px;color:var(--mut);margin-top:8px}.player-card-form .btn{width:100%;margin-top:10px}
+@media(max-width:700px){.player-card-wrap{grid-template-columns:1fr}.player-card-preview{min-height:390px}.player-card-form{order:-1}}
+@media(prefers-reduced-motion:reduce){.card::before{display:none}}
+
 
 </style></head><body>
 <header><div class="logo">GAYCHA<small>CLUB</small></div>
-<nav><button class="btn alt" data-v="booster">Boosters</button><button class="btn alt" data-v="collection">Ma collection</button><button class="btn alt" data-v="missions">Missions</button><button class="btn alt" data-v="market">Marché</button><button class="btn alt" data-v="leaderboard">Classement</button><button class="btn alt" data-v="trades">Échanges</button><button class="btn alt" data-v="messages">Messages</button><button class="btn alt" data-v="admin" id="nadm" hidden>Admin</button></nav>
+<nav><button class="btn alt" data-v="booster">Boosters</button><button class="btn alt" data-v="collection">Ma collection</button><button class="btn alt" data-v="missions">Missions</button><button class="btn alt" data-v="market">Marché</button><button class="btn alt" data-v="leaderboard">Classement</button><button class="btn alt" data-v="playercard">Carte joueur</button><button class="btn alt" data-v="trades">Échanges</button><button class="btn alt" data-v="messages">Messages</button><button class="btn alt" data-v="admin" id="nadm" hidden>Admin</button></nav>
 <div class="me" id="me"></div></header>
-<main id="app" aria-live="polite"></main>
+<a class="skip-link" href="#app">Aller au contenu</a><main id="app" aria-live="polite" aria-busy="false"></main>
 <script>
 // ===== CONFIG : URL et clé PUBLIQUE uniquement. Jamais la clé service_role. =====
 const SUPABASE_URL='https://tgnembausaanuazoelxw.supabase.co';
@@ -177,7 +196,7 @@ $('me').innerHTML=user?`${user.user_metadata?.avatar_url?`<img class="profile-av
 if(user)$('profile-open').onclick=()=>openSettings();setTimeout(refreshNotificationBadges,0)}
 async function go(v){await refresh();try{if(!cards.length)await loadCards()}catch(e){app.innerHTML=msg('Impossible de charger le catalogue : '+e.message,1);return}
 if(v!=='catalog'&&!user)return auth();
-({catalog,collection,booster,missions,market,leaderboard,trades,messages,admin})[v]()}
+({catalog,collection,booster,missions,market,leaderboard,playercard:playerCard,trades,messages,admin})[v]()}
 document.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>go(b.dataset.v));
 async function refreshNotificationBadges(){const tradeBtn=document.querySelector('[data-v="trades"]'),messageBtn=document.querySelector('[data-v="messages"]');if(!tradeBtn||!messageBtn)return;for(const [btn,id] of [[tradeBtn,'trade-badge'],[messageBtn,'message-badge']]){let badge=btn.querySelector('.nav-badge');if(!badge){badge=document.createElement('span');badge.className='nav-badge';badge.id=id;badge.hidden=true;btn.appendChild(badge)}}if(!user){$('trade-badge').hidden=true;$('message-badge').hidden=true;return}const [tr,ms]=await Promise.all([sb.from('trades_view').select('id',{count:'exact',head:true}).eq('recipient_id',user.id).eq('status','pending'),sb.from('conversations_view').select('unread')]);if(!tr.error){const n=tr.count||0;$('trade-badge').textContent=n>99?'99+':n;$('trade-badge').hidden=n===0;$('trade-badge').title=n? n+' proposition(s) en attente':''}if(!ms.error){const n=(ms.data||[]).reduce((sum,x)=>sum+Number(x.unread||0),0);$('message-badge').textContent=n>99?'99+':n;$('message-badge').hidden=n===0;$('message-badge').title=n?n+' message(s) non lu(s)':''}}
 setInterval(refreshNotificationBadges,60000);
@@ -232,6 +251,29 @@ app.querySelectorAll('[data-l]').forEach(b=>b.onclick=async()=>{const own=b.data
 async function leaderboard(){const {data,error}=await sb.from('leaderboard').select('*');
 if(error)return app.innerHTML=msg(error.message,1);
 app.innerHTML=`<h1>Hall of Fame</h1><p>Les légendes du Gaycha Club : gloire, paillettes et cartes rares ✨</p><div class="rainbow-line"></div><div class="leaderboard-list">${data.map((r,i)=>`<div class="leader-row ${i===0?'top-1':i===1?'top-2':i===2?'top-3':''}"><div class="leader-rank">${i===0?'👑':i===1?'🥈':i===2?'🥉':String(i+1).padStart(2,'0')}</div><div><span class="leader-avatar">${esc((r.username||'?').charAt(0).toUpperCase())}</span><b>${esc(r.username)}</b><div class="leader-metrics"><span>🃏 ${r.cards_found} cartes</span><span>✨ ${r.xp} XP</span></div></div><div class="leader-score"><b style="color:#d6b46a">${Number(r.xp||0).toLocaleString('fr-FR')} XP</b></div></div>`).join('')}</div>`}
+
+/* ===== Carte personnalisée du joueur ===== */
+async function playerCard(){
+ if(!user)return auth();
+ app.innerHTML='<h1>Ma carte de joueur</h1><p>Chargement de tes statistiques…</p>';
+ const {data:instances,error}=await sb.from('card_instances').select('card_id');
+ if(error){app.innerHTML=msg('Impossible de charger les statistiques : '+error.message,1);return}
+ const counts={};(instances||[]).forEach(x=>counts[x.card_id]=(counts[x.card_id]||0)+1);
+ const owned=cards.filter(c=>counts[c.id]);const rarest=[...owned].sort((a,b)=>Object.keys(RN).indexOf(b.rarity)-Object.keys(RN).indexOf(a.rarity))[0];
+ const confKey='gaycha-player-card-'+user.id;
+ let conf={title:'Icône du Club',motto:'Paillettes, drama et collection.',accent:'#ff477e'};
+ try{conf={...conf,...JSON.parse(localStorage.getItem(confKey)||'{}')}}catch{}
+ const username=profile?.username||user.user_metadata?.name||'Joueur·euse';
+ app.innerHTML=`<h1>Ma carte de joueur</h1><p>Crée une carte de profil à ton image, puis exporte-la pour la partager.</p><div class="rainbow-line"></div><div class="player-card-wrap"><section class="player-card-preview" id="player-preview" style="--pc-accent:${esc(conf.accent)}"><div class="player-card-brand">GAYCHA CLUB · PLAYER CARD</div><div class="player-card-avatar" id="pc-avatar">${esc(username.charAt(0).toUpperCase())}</div><div class="player-card-name" id="pc-name">${esc(username)}</div><div class="player-card-title" id="pc-title">${esc(conf.title)}</div><p class="player-card-motto" id="pc-motto">${esc(conf.motto)}</p><div class="player-card-stats"><div class="player-card-stat"><b>${owned.length}</b><small>Cartes</small></div><div class="player-card-stat"><b>${(instances||[]).length}</b><small>Exemplaires</small></div><div class="player-card-stat"><b>${esc(rarest?RN[rarest.rarity][1]:'—')}</b><small>Rareté max</small></div></div><p style="font:11px Arial,sans-serif;opacity:.55;margin-top:24px">COLLECTIONNE. ÉCHANGE. BRILLE.</p></section><section class="player-card-form"><h2 style="margin-top:0">Personnalisation</h2><label for="pc-input-title">Titre de joueur</label><input id="pc-input-title" maxlength="32" value="${esc(conf.title)}" placeholder="Icône du Club"><label for="pc-input-motto">Devise</label><textarea id="pc-input-motto" maxlength="100" rows="3" placeholder="Ta phrase culte…">${esc(conf.motto)}</textarea><label for="pc-input-accent">Couleur dominante</label><select id="pc-input-accent"><option value="#ff477e">Rose drama</option><option value="#8d3f9e">Violet club</option><option value="#00a9a5">Turquoise diva</option><option value="#3867ff">Bleu électrique</option><option value="#d6b46a">Or légendaire</option><option value="#8ccf35">Vert insolent</option></select><button class="btn" id="pc-save">Enregistrer la personnalisation</button><button class="btn alt" id="pc-export">Exporter ma carte en PNG</button><button class="btn alt" id="pc-copy">Copier ma présentation</button><div id="pc-msg" aria-live="polite"></div><p class="note">La personnalisation est conservée sur cet appareil. L’image exportée contient ton pseudo et tes statistiques au moment de l’export.</p></section></div>`;
+ $('pc-input-accent').value=conf.accent;
+ const sync=()=>{const t=$('pc-input-title').value.trim()||'Membre du Club',m=$('pc-input-motto').value.trim()||'Paillettes, drama et collection.',a=$('pc-input-accent').value;$('pc-title').textContent=t;$('pc-motto').textContent=m;$('player-preview').style.setProperty('--pc-accent',a);return {title:t,motto:m,accent:a}};
+ ['pc-input-title','pc-input-motto','pc-input-accent'].forEach(id=>$(id).addEventListener('input',sync));
+ $('pc-save').onclick=()=>{const v=sync();localStorage.setItem(confKey,JSON.stringify(v));$('pc-msg').innerHTML=msg('Personnalisation enregistrée sur cet appareil.')};
+ $('pc-copy').onclick=async()=>{const v=sync(),txt='GAYCHA CLUB — '+username+'\n'+v.title+'\n« '+v.motto+' »\n'+owned.length+' cartes découvertes · '+(instances||[]).length+' exemplaires'+(rarest?' · rareté maximale : '+RN[rarest.rarity][0]:'');try{await navigator.clipboard.writeText(txt);$('pc-msg').innerHTML=msg('Présentation copiée.')}catch{$('pc-msg').innerHTML=msg(txt)}};
+ $('pc-export').onclick=()=>{const v=sync(),canvas=document.createElement('canvas');canvas.width=900;canvas.height=1200;const ctx=canvas.getContext('2d');const g=ctx.createLinearGradient(0,0,900,1200);g.addColorStop(0,'#17151d');g.addColorStop(.45,v.accent);g.addColorStop(1,'#101018');ctx.fillStyle=g;ctx.fillRect(0,0,900,1200);ctx.strokeStyle='#ffffff';ctx.lineWidth=10;ctx.strokeRect(24,24,852,1152);ctx.fillStyle='#fff';ctx.font='bold 28px Arial';ctx.fillText('GAYCHA CLUB · PLAYER CARD',60,90);ctx.beginPath();ctx.arc(130,230,62,0,Math.PI*2);ctx.fillStyle='#ffffff33';ctx.fill();ctx.fillStyle='#fff';ctx.font='bold 82px Arial';ctx.textAlign='center';ctx.fillText(username.charAt(0).toUpperCase(),130,258);ctx.textAlign='left';ctx.font='bold 66px Arial';wrapCanvas(ctx,username,60,370,770,76);ctx.font='bold 30px Arial';ctx.fillStyle='#ffe8f0';wrapCanvas(ctx,v.title.toUpperCase(),60,500,770,42);ctx.font='italic 30px Georgia';wrapCanvas(ctx,'« '+v.motto+' »',60,610,760,44);const vals=[[owned.length,'CARTES'],[(instances||[]).length,'EXEMPLAIRES'],[rarest?RN[rarest.rarity][0]:'—','RARETÉ MAX']];vals.forEach((p,i)=>{const x=60+i*265;ctx.fillStyle='#09090b99';ctx.fillRect(x,850,240,150);ctx.fillStyle='#fff';ctx.font='bold 46px Arial';ctx.fillText(String(p[0]),x+18,915);ctx.font='bold 19px Arial';ctx.fillText(p[1],x+18,960)});ctx.font='20px Arial';ctx.fillStyle='#ffffffaa';ctx.fillText('COLLECTIONNE. ÉCHANGE. BRILLE.',60,1090);const a=document.createElement('a');a.download='gaycha-player-card.png';a.href=canvas.toDataURL('image/png');a.click()};
+}
+function wrapCanvas(ctx,text,x,y,maxWidth,lineHeight){const words=String(text).split(/\s+/);let line='';for(const word of words){const test=line?line+' '+word:word;if(ctx.measureText(test).width>maxWidth&&line){ctx.fillText(line,x,y);line=word;y+=lineHeight}else line=test}if(line)ctx.fillText(line,x,y)}
+
 async function trades(){if(profile&&!profile.age_confirmed_at)return ageGate();await sb.rpc('expire_offers');
 const [a,b,c]=await Promise.all([sb.from('trades_view').select('*').order('created_at',{ascending:false}),sb.from('trade_items_view').select('*'),sb.from('card_instances').select('id,card_id').eq('locked',false)]);
 if(a.error)return app.innerHTML=msg(a.error.message,1);

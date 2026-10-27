@@ -10,7 +10,7 @@ revoke all on public.user_achievements from anon;
 grant select on public.user_achievements to authenticated;
 drop policy if exists "Users can read their own achievements" on public.user_achievements;
 create policy "Users can read their own achievements" on public.user_achievements
-  for select to authenticated using ((select auth.uid()));
+  for select to authenticated using ((select auth.uid()) = user_id);
 
 create or replace function public.sync_user_achievements()
 returns table (achievement_key text, unlocked_at timestamptz)

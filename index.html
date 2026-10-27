@@ -171,9 +171,24 @@ main{min-height:65vh}
 @media(prefers-reduced-motion:reduce){.card::before{display:none}}
 
 
+
+/* ===== Dashboard, statistiques et historique ===== */
+.dashboard-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin:18px 0}
+.dash-tile{padding:18px;border:1px solid #ffffff1c;border-radius:16px;background:linear-gradient(145deg,#25212b,#151519);min-width:0}
+.dash-tile strong{display:block;font:36px Anton,sans-serif;color:var(--gold);line-height:1.15;margin:8px 0}
+.dash-tile small,.muted{color:var(--mut)}
+.section-panel{padding:18px;border:1px solid #ffffff1c;border-radius:16px;background:#ffffff04;margin:16px 0}
+.stat-bars{display:grid;gap:10px;margin:14px 0}
+.stat-row{display:grid;grid-template-columns:minmax(100px,1fr) minmax(80px,2fr) 42px;gap:10px;align-items:center}
+.stat-track{height:10px;background:#ffffff12;border-radius:99px;overflow:hidden}.stat-fill{height:100%;border-radius:99px;background:var(--rb)}
+.history-row{display:grid;grid-template-columns:130px minmax(0,1fr) auto;gap:12px;align-items:center;padding:12px 4px;border-bottom:1px solid #ffffff14}
+.history-row:last-child{border-bottom:0}.history-value{font-weight:700;text-align:right}.positive{color:#65e6ad}.negative{color:#ff8da9}
+.achievement-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px}
+.achievement{border:1px solid #ffffff20;border-radius:12px;padding:14px;background:#ffffff05}.achievement.unlocked{border-color:#d6b46a88;background:linear-gradient(135deg,#d6b46a15,#ffffff04)}.achievement .medal{font-size:28px}
+@media(max-width:560px){.history-row{grid-template-columns:1fr auto;gap:4px}.history-row time{grid-column:1/-1}.stat-row{grid-template-columns:95px 1fr 32px}}
 </style></head><body>
 <header><div class="logo">GAYCHA<small>CLUB</small></div>
-<nav><button class="btn alt" data-v="booster">Boosters</button><button class="btn alt" data-v="collection">Ma collection</button><button class="btn alt" data-v="missions">Missions</button><button class="btn alt" data-v="market">Marché</button><button class="btn alt" data-v="leaderboard">Classement</button><button class="btn alt" data-v="playercard">Carte joueur</button><button class="btn alt" data-v="trades">Échanges</button><button class="btn alt" data-v="messages">Messages</button><button class="btn alt" data-v="admin" id="nadm" hidden>Admin</button></nav>
+<nav><button class="btn alt" data-v="booster">Boosters</button><button class="btn alt" data-v="dashboard">Accueil</button><button class="btn alt" data-v="collection">Ma collection</button><button class="btn alt" data-v="stats">Statistiques</button><button class="btn alt" data-v="history">Historique</button><button class="btn alt" data-v="missions">Missions</button><button class="btn alt" data-v="market">Marché</button><button class="btn alt" data-v="leaderboard">Classement</button><button class="btn alt" data-v="playercard">Carte joueur</button><button class="btn alt" data-v="trades">Échanges</button><button class="btn alt" data-v="messages">Messages</button><button class="btn alt" data-v="admin" id="nadm" hidden>Admin</button></nav>
 <div class="me" id="me"></div></header>
 <a class="skip-link" href="#app">Aller au contenu</a><main id="app" aria-live="polite" aria-busy="false"></main>
 <script>
@@ -196,7 +211,7 @@ $('me').innerHTML=user?`${user.user_metadata?.avatar_url?`<img class="profile-av
 if(user)$('profile-open').onclick=()=>openSettings();setTimeout(refreshNotificationBadges,0)}
 async function go(v){await refresh();try{if(!cards.length)await loadCards()}catch(e){app.innerHTML=msg('Impossible de charger le catalogue : '+e.message,1);return}
 if(v!=='catalog'&&!user)return auth();
-({catalog,collection,booster,missions,market,leaderboard,playercard:playerCard,trades,messages,admin})[v]()}
+({catalog,collection,booster,missions,market,leaderboard,playercard:playerCard,trades,messages,admin,dashboard,stats,history})[v]()}
 document.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>go(b.dataset.v));
 async function refreshNotificationBadges(){const tradeBtn=document.querySelector('[data-v="trades"]'),messageBtn=document.querySelector('[data-v="messages"]');if(!tradeBtn||!messageBtn)return;for(const [btn,id] of [[tradeBtn,'trade-badge'],[messageBtn,'message-badge']]){let badge=btn.querySelector('.nav-badge');if(!badge){badge=document.createElement('span');badge.className='nav-badge';badge.id=id;badge.hidden=true;btn.appendChild(badge)}}if(!user){$('trade-badge').hidden=true;$('message-badge').hidden=true;return}const [tr,ms]=await Promise.all([sb.from('trades_view').select('id',{count:'exact',head:true}).eq('recipient_id',user.id).eq('status','pending'),sb.from('conversations_view').select('unread')]);if(!tr.error){const n=tr.count||0;$('trade-badge').textContent=n>99?'99+':n;$('trade-badge').hidden=n===0;$('trade-badge').title=n? n+' proposition(s) en attente':''}if(!ms.error){const n=(ms.data||[]).reduce((sum,x)=>sum+Number(x.unread||0),0);$('message-badge').textContent=n>99?'99+':n;$('message-badge').hidden=n===0;$('message-badge').title=n?n+' message(s) non lu(s)':''}}
 setInterval(refreshNotificationBadges,60000);
@@ -344,6 +359,85 @@ zoom.addEventListener('click',e=>{if(e.target===zoom)zoom.close()});
 document.addEventListener('click',e=>{const c=e.target.closest('.card[data-cid]');if(c&&!c.closest('dialog'))openZoom(c.dataset.cid)});
 document.addEventListener('keydown',e=>{if(e.key==='Enter'){const c=document.activeElement;if(c&&c.matches&&c.matches('.card[data-cid]')&&!c.closest('dialog'))openZoom(c.dataset.cid)}});
 
+
+/* ===== Tableau de bord personnel ===== */
+async function dashboard(){
+ if(!user)return auth();
+ app.innerHTML='<h1>Mon tableau de bord</h1><p>Chargement de ton espace…</p>';
+ const [ir,lr,mr,sr]=await Promise.all([
+  sb.from('card_instances').select('card_id,acquired_at').order('acquired_at',{ascending:false}),
+  sb.from('ledger').select('delta,reason,created_at,balance_after').order('created_at',{ascending:false}).limit(5),
+  sb.from('missions').select('id,title,kind,goal,reward,xp_reward').eq('active',true).limit(4),
+  sb.from('series').select('id,name')
+ ]);
+ if(ir.error)return app.innerHTML=msg('Chargement de la collection impossible : '+ir.error.message,1);
+ const items=ir.data||[],counts={};items.forEach(x=>counts[x.card_id]=(counts[x.card_id]||0)+1);
+ const owned=Object.keys(counts).length,dupes=items.length-owned,series=sr.data||[];
+ const month=items.filter(x=>x.acquired_at&&new Date(x.acquired_at)>new Date(Date.now()-30*86400000)).length;
+ const recent=(lr.data||[]).map(x=>({date:x.created_at,label:x.reason||'Mouvement de monnaie',value:Number(x.delta||0)}));
+ const milestones=[
+  ['🌱','Première carte',owned>=1,'Obtenir une première carte'],
+  ['💎','Collectionneur·euse',owned>=10,'Découvrir 10 cartes différentes'],
+  ['🌈','Arc-en-ciel',new Set(cards.filter(c=>counts[c.id]).map(c=>c.rarity)).size>=4,'Posséder 4 raretés différentes'],
+  ['🃏','Anti-doublon',dupes>=5,'Cumuler 5 doublons'],
+  ['✨','Complétion',cards.length>0&&owned>=cards.length,'Découvrir tout le catalogue']
+ ];
+ app.innerHTML=`<div class="hero"><h1>Salut, ${esc(profile?.username||user.user_metadata?.name||'collectionneur·euse')} !</h1><p>Ton espace personnel, ta progression et les nouveautés du Club.</p><div class="rainbow-line"></div></div>
+ <div class="dashboard-grid">
+ <div class="dash-tile"><span>Cartes découvertes</span><strong>${owned}</strong><small>sur ${cards.length} cartes au catalogue</small></div>
+ <div class="dash-tile"><span>Exemplaires</span><strong>${items.length}</strong><small>${dupes} doublon(s) au total</small></div>
+ <div class="dash-tile"><span>Solde</span><strong>${Number(profile?.balance||0).toLocaleString('fr-FR')} 💰</strong><small>Monnaie virtuelle</small></div>
+ <div class="dash-tile"><span>Activité récente</span><strong>${month}</strong><small>carte(s) obtenue(s) sur 30 jours</small></div></div>
+ <div class="section-panel"><h2 style="margin-top:0">Raccourcis</h2><div class="tabs"><button class="btn" data-go="booster">Ouvrir un booster</button><button class="btn alt" data-go="collection">Voir ma collection</button><button class="btn alt" data-go="stats">Mes statistiques</button><button class="btn alt" data-go="history">Mon historique</button></div></div>
+ <div class="section-panel"><h2 style="margin-top:0">Succès de collection</h2><div class="achievement-grid">${milestones.map(a=>`<div class="achievement ${a[2]?'unlocked':''}"><div class="medal">${a[0]}</div><b>${esc(a[1])}</b><p class="muted">${esc(a[3])}</p><span>${a[2]?'Débloqué ✓':'À débloquer'}</span></div>`).join('')}</div></div>
+ <div class="section-panel"><h2 style="margin-top:0">Missions du moment</h2>${mr.error?msg('Les missions ne sont pas disponibles pour le moment.'):((mr.data||[]).length?(mr.data||[]).map(m=>`<div class="history-row"><span>🎯 Mission</span><b>${esc(m.title)}</b><span class="history-value">+${Number(m.reward||0)} 💰</span></div>`).join(''):msg('Aucune mission active pour le moment.'))}</div>
+ <div class="section-panel"><h2 style="margin-top:0">Derniers mouvements de monnaie</h2>${lr.error?msg('Historique de monnaie indisponible.'):recent.length?recent.map(x=>`<div class="history-row"><time>${x.date?new Date(x.date).toLocaleDateString('fr-FR'):''}</time><span>${esc(x.label)}</span><span class="history-value ${x.value>=0?'positive':'negative'}">${x.value>0?'+':''}${x.value.toLocaleString('fr-FR')} 💰</span></div>`).join(''):'Aucun mouvement enregistré pour le moment.'}</div>`;
+ app.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
+}
+/* ===== Statistiques approfondies ===== */
+async function stats(){
+ if(!user)return auth();
+ app.innerHTML='<h1>Statistiques</h1><p>Calcul des statistiques de ta collection…</p>';
+ const {data,error}=await sb.from('card_instances').select('card_id,acquired_at').order('acquired_at',{ascending:true});
+ if(error)return app.innerHTML=msg(error.message,1);
+ const inst=data||[],cnt={};inst.forEach(x=>cnt[x.card_id]=(cnt[x.card_id]||0)+1);
+ const owned=cards.filter(c=>cnt[c.id]),unique=owned.length,duplicates=inst.length-unique;
+ const rarity=Object.keys(RN).map(k=>({name:RN[k][0],n:owned.filter(c=>c.rarity===k).length})).filter(x=>x.n);
+ const seriesMap={};owned.forEach(c=>{const n=c.series?.name||'Sans série';seriesMap[n]=(seriesMap[n]||0)+1});
+ const series=Object.entries(seriesMap).sort((a,b)=>b[1]-a[1]);
+ const timeline={};inst.forEach(x=>{if(x.acquired_at){const d=new Date(x.acquired_at),k=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');timeline[k]=(timeline[k]||0)+1}});
+ const valueMap={};for(const c of owned){const duplicatesN=Math.max(0,(cnt[c.id]||1)-1);valueMap[c.id]=duplicatesN}
+ const bar=(arr,max)=>arr.map(x=>`<div class="stat-row"><span>${esc(x.name)}</span><div class="stat-track"><div class="stat-fill" style="width:${Math.max(2,100*x.n/Math.max(1,max))}%"></div></div><b>${x.n}</b></div>`).join('');
+ app.innerHTML=`<h1>Mes statistiques</h1><p>Une vue détaillée de ta progression, basée sur les cartes réellement présentes dans ton inventaire.</p><div class="rainbow-line"></div>
+ <div class="dashboard-grid"><div class="dash-tile">Cartes uniques<strong>${unique}</strong><small>${cards.length?Math.round(unique/cards.length*100):0}% du catalogue</small></div><div class="dash-tile">Exemplaires<strong>${inst.length}</strong><small>toutes cartes confondues</small></div><div class="dash-tile">Doublons<strong>${duplicates}</strong><small>exemplaires au-delà du premier</small></div><div class="dash-tile">Séries découvertes<strong>${series.length}</strong><small>séries représentées</small></div></div>
+ <div class="section-panel"><h2 style="margin-top:0">Progression par rareté</h2><div class="stat-bars">${bar(rarity,Math.max(1,...rarity.map(x=>x.n)))||'Aucune carte découverte.'}</div></div>
+ <div class="section-panel"><h2 style="margin-top:0">Séries les plus représentées</h2><div class="stat-bars">${bar(series.slice(0,12).map(x=>({name:x[0],n:x[1]})),Math.max(1,...series.map(x=>x[1])))||'Aucune série découverte.'}</div></div>
+ <div class="section-panel"><h2 style="margin-top:0">Chronologie d’acquisition</h2>${Object.keys(timeline).length?`<div class="stat-bars">${bar(Object.entries(timeline).sort((a,b)=>a[0].localeCompare(b[0])).map(([name,n])=>({name,n})),Math.max(...Object.values(timeline)))}</div>`:'Aucune date d’acquisition enregistrée.'}</div>
+ <div class="section-panel"><h2 style="margin-top:0">Valeur de collection</h2><p>La valeur marchande n’est pas estimée : le site ne dispose pas d’un cours fiable par carte. À la place, voici les indicateurs calculables.</p><div class="dashboard-grid"><div class="dash-tile">Doublons échangeables<strong>${duplicates}</strong><small>hors cartes verrouillées</small></div><div class="dash-tile">Rareté maximale<strong>${owned.length?esc(RN[[...owned].sort((a,b)=>Object.keys(RN).indexOf(b.rarity)-Object.keys(RN).indexOf(a.rarity))[0].rarity][0]):'—'}</strong><small>selon le catalogue</small></div></div></div>
+ <div class="tabs"><button class="btn alt" data-go="collection">Retour à ma collection</button><button class="btn" data-go="dashboard">Tableau de bord</button></div>`;
+ app.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
+}
+/* ===== Historique complet avec filtres ===== */
+async function history(){
+ if(!user)return auth();
+ app.innerHTML='<h1>Historique</h1><p>Chargement de tes activités…</p>';
+ const [led,inst,list,claims]=await Promise.all([
+  sb.from('ledger').select('id,delta,reason,created_at,balance_after').order('created_at',{ascending:false}).limit(250),
+  sb.from('card_instances').select('id,card_id,acquired_at').order('acquired_at',{ascending:false}).limit(250),
+  sb.from('market_listings').select('id,price,status,created_at,sold_at,buyer_id,seller_id').or('seller_id.eq.'+user.id+',buyer_id.eq.'+user.id).order('created_at',{ascending:false}).limit(150),
+  sb.from('mission_claims').select('mission_id,claimed_at').order('claimed_at',{ascending:false}).limit(100)
+ ]);
+ const rows=[];
+ if(!led.error)(led.data||[]).forEach(x=>rows.push({date:x.created_at,type:'monnaie',label:x.reason||'Mouvement de monnaie',detail:'Solde après opération : '+Number(x.balance_after||0).toLocaleString('fr-FR'),value:Number(x.delta||0)}));
+ if(!inst.error)(inst.data||[]).forEach(x=>{const c=cards.find(y=>y.id===x.card_id);rows.push({date:x.acquired_at,type:'cartes',label:'Carte obtenue : '+(c?.name||'Carte du catalogue'),detail:c?.series?.name||'Collection',value:null})});
+ if(!list.error)(list.data||[]).forEach(x=>rows.push({date:x.sold_at||x.created_at,type:'marché',label:x.status==='sold'?'Vente réalisée':x.status==='active'?'Mise en vente':'Annonce de marché',detail:'Annonce · '+x.status,value:null}));
+ if(!claims.error)(claims.data||[]).forEach(x=>rows.push({date:x.claimed_at,type:'missions',label:'Récompense de mission récupérée',detail:'Mission '+String(x.mission_id).slice(0,8),value:null}));
+ rows.sort((a,b)=>new Date(b.date||0)-new Date(a.date||0));
+ app.innerHTML=`<h1>Historique d’activité</h1><p>Les opérations visibles sont celles que les tables actuelles permettent de retrouver. Résultats limités aux 250 dernières cartes et lignes de monnaie, 150 annonces et 100 récompenses.</p><div class="rainbow-line"></div><div class="collection-tools"><input id="history-search" type="search" placeholder="Rechercher dans l’historique…"><select id="history-filter" aria-label="Filtrer l’historique"><option value="all">Toutes les activités</option><option value="monnaie">Monnaie</option><option value="cartes">Cartes obtenues</option><option value="marché">Marché</option><option value="missions">Missions</option></select></div><p class="muted" id="history-count"></p><div class="section-panel" id="history-list"></div>`;
+ const draw=()=>{const q=$('history-search').value.trim().toLocaleLowerCase('fr'),f=$('history-filter').value;const shown=rows.filter(x=>(f==='all'||x.type===f)&&(!q||(x.label+' '+x.detail+' '+x.type).toLocaleLowerCase('fr').includes(q)));$('history-count').textContent=shown.length+' activité(s) affichée(s)';$('history-list').innerHTML=shown.length?shown.map(x=>`<div class="history-row"><time>${x.date?new Date(x.date).toLocaleString('fr-FR'):'Date inconnue'}</time><div><b>${esc(x.label)}</b><div class="muted">${esc(x.detail||'')}</div></div><div class="history-value ${x.value==null?'':x.value>=0?'positive':'negative'}">${x.value==null?'':(x.value>0?'+':'')+x.value.toLocaleString('fr-FR')+' 💰'}</div></div>`).join(''):'Aucune activité ne correspond à ces filtres.'};
+ $('history-search').addEventListener('input',draw);$('history-filter').addEventListener('change',draw);draw();
+}
+
 /* ===== Administration (les droits sont vérifiés par le serveur) ===== */
 async function admin(tab){const R=profile?.role;if(!['admin','moderator','catalog_manager'].includes(R))return app.innerHTML=msg('Accès réservé au staff.',1);
 tab=tab||'stats';const T={stats:'Stats',reports:'Signalements',users:'Comptes',cards:'Catalogue',boosters:'Boosters',audit:'Audit'};
@@ -375,5 +469,5 @@ app.querySelectorAll('[data-ed]').forEach(b=>b.onclick=()=>{const c=list.find(x=
 app.querySelectorAll('[data-sb]').forEach(b=>b.onclick=async()=>{const s=b.dataset.sb,o={};document.querySelectorAll('.o-'+s).forEach(i=>o[i.dataset.k]=+i.value);
 const {error}=await sb.rpc('admin_set_booster',{p_slug:s,p_odds:o,p_price:+$('p-'+s).value,p_pity:+$('g-'+s).value,p_cooldown:+$('d-'+s).value,p_active:$('a-'+s).checked});say(error,'Booster mis à jour.')});
 if($('gbgrant'))$('gbgrant').onclick=async()=>{const b=$('gbgrant'),username=$('gbuser').value.trim(),slug=$('gbslug').value,qty=+$('gbqty').value,reason=$('gbreason').value.trim();if(!username||!reason||qty<1||qty>20){$('gbmsg').innerHTML=msg('Indique un pseudo, un motif et une quantité de 1 à 20.',1);return}b.disabled=true;const {error}=await sb.rpc('admin_grant_booster',{p_username:username,p_slug:slug,p_quantity:qty,p_reason:reason});b.disabled=false;$('gbmsg').innerHTML=error?msg(error.message==='unknown user'?'Pseudo introuvable. Vérifie le pseudo exact.':error.message,1):msg('Booster(s) distribué(s).');};}
-go('booster');
+go('dashboard');
 </script></body></html>

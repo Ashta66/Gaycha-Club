@@ -99,9 +99,78 @@ main{max-width:1440px;padding:34px clamp(14px,3vw,42px) 70px}main h1{font-size:c
 @media(max-width:620px){.booster-options{grid-template-columns:1fr;gap:14px}.booster-pack{min-height:330px}.pack-art{width:170px}.trade-picks,.trade-coins,.review-columns{grid-template-columns:1fr}.trade-picks select{min-height:130px}}
 
 .nav-count{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 5px;margin-left:4px;border-radius:99px;background:var(--pink);color:#fff;font:700 11px/1 Fraunces;box-shadow:0 0 12px #ff4fa355}
+
+/* Phase 2: a more tactile, editorial finish — less glow, more character. */
+:root{--bg:#111014;--ch:#1d1a20;--cream:#f6eee5;--mut:#b8aeb6;--gold:#e8bf72;--pink:#e86b9b;--blue:#7886a8;--cyan:#a7d8cf}
+main h1{background:none;color:var(--cream);animation:none;letter-spacing:-.025em}
+.hero-panel{background:linear-gradient(115deg,#25202a,#17171d 72%);border-color:#ffffff19;box-shadow:0 14px 36px #0003}
+.hero-panel:after{content:"";position:absolute;right:-20px;bottom:-44px;width:150px;height:150px;border:1px solid #e8bf7233;border-radius:47% 53% 62% 38%;transform:rotate(-18deg);pointer-events:none}
+.card{box-shadow:0 8px 18px #0005;transition:transform .18s,border-color .18s}
+.card:before{opacity:.35}
+.card:hover{transform:translateY(-3px) rotate(-.25deg);box-shadow:0 12px 24px #0006;filter:none}
+.r-epique,.r-legendaire,.r-secrete{animation:none}
+.r-rare,.r-epique,.r-legendaire,.r-secrete{box-shadow:0 0 0 1px color-mix(in srgb,var(--r) 45%,transparent)}
+.btn{background:var(--gold);box-shadow:none;color:#1a1516}
+.btn:hover{box-shadow:0 4px 0 #0003;transform:translateY(-1px)}
+.btn.alt{border-color:#6b5d65;background:#ffffff04}
+header{background:#17151bea;box-shadow:0 5px 20px #0003}
+header nav .btn{font-size:13px}
+.nav-more{display:contents}
+.nav-more-toggle{display:none}
+.auth-box{max-width:480px;padding:clamp(22px,4vw,34px)}
+.auth-box h2{margin:5px 0 4px}
+.auth-intro,.auth-footnote,.account-note{color:var(--mut)}
+.auth-box label{display:block;margin-top:10px;color:var(--cream);font-weight:600;font-size:14px}
+.auth-box label span{color:var(--mut);font-weight:400}
+.auth-box input{margin:5px 0 0}
+.auth-buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.google-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;margin:18px 0 16px;background:#f6eee5;color:#22202a}
+.google-mark{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:#fff;color:#4285f4;font:800 17px Arial,sans-serif}
+.auth-divider{display:flex;align-items:center;gap:12px;color:var(--mut);font-size:12px;margin:12px 0}
+.auth-divider:before,.auth-divider:after{content:"";height:1px;background:#ffffff20;flex:1}
+.auth-footnote,.account-note{font-size:12px;margin-top:16px}
+.account-box{margin-top:18px}
+@media(max-width:680px){
+ body{padding-bottom:82px}
+ header{position:relative;top:auto;padding:12px 14px;gap:10px}
+ header .logo{font-size:25px}
+ header .me{margin-left:auto;font-size:12px;max-width:58%;text-align:right}
+ header nav{position:fixed;z-index:100;left:0;right:0;bottom:0;top:auto;width:100%;padding:8px 7px calc(8px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;background:#17151bf5;border-top:1px solid #ffffff20;box-shadow:0 -8px 24px #0005;backdrop-filter:blur(16px)}
+ header nav .btn{min-width:0;padding:8px 3px;font-size:11px;line-height:1.15;min-height:46px;border-radius:12px;white-space:normal}
+ .nav-more{display:none;position:absolute;bottom:calc(100% + 8px);right:8px;left:auto;width:min(250px,calc(100vw - 16px));padding:8px;grid-template-columns:1fr;gap:5px;background:#211c25;border:1px solid #ffffff24;border-radius:16px;box-shadow:0 14px 40px #0008}
+ .nav-more.is-open{display:grid}
+ .nav-more .btn{width:100%;text-align:left;justify-content:flex-start;padding:10px 14px}
+ .nav-more-toggle{display:block}
+ main{padding:20px 13px 26px}
+ .grid,.cards-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ .card{padding:6px;border-radius:13px}
+ .card .band{font-size:9px;padding:4px 5px;letter-spacing:.04em}
+ .card .nm{font-size:clamp(13px,3.6vw,17px)}
+ .card .spec{font-size:10px}
+ .card .meta{font-size:9px}
+ .hero-panel{padding:22px 18px;border-radius:18px}
+ .hero-panel:after{width:95px;height:95px;right:-15px;bottom:-32px}
+ .stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .auth-buttons{grid-template-columns:1fr}
+ .booster-options{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ .booster-pack{min-height:270px;padding:15px 9px;border-radius:18px}
+ .pack-art{width:min(145px,88%)}
+ .pack-name{font-size:16px}
+ .pack-desc{font-size:12px}
+ .pack-cta{font-size:12px;padding:8px 10px}
+}
+@media(max-width:380px){
+ header .me{font-size:11px;max-width:55%}
+ header nav .btn{font-size:10px}
+ .booster-pack{min-height:245px}
+ .pack-art{width:118px}
+}
+@media(prefers-reduced-motion:reduce){
+ *,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
 </style></head><body>
 <header><div class="logo">GAYCHA<small>CLUB</small></div>
-<nav><button class="btn alt" data-v="catalog">Catalogue</button><button class="btn alt" data-v="collection">Ma collection</button><button class="btn alt" data-v="booster">Boosters</button><button class="btn alt" data-v="missions">Missions</button><button class="btn alt" data-v="market">Marché</button><button class="btn alt" data-v="leaderboard">Classement</button><button class="btn alt" data-v="trades">Échanges</button><button class="btn alt" data-v="messages">Messages</button><button class="btn alt" data-v="profile">Profil</button></nav>
+<nav aria-label="Navigation principale"><button class="btn alt nav-main" data-v="booster">Boosters</button><button class="btn alt nav-main" data-v="collection">Ma collection</button><button class="btn alt nav-main" data-v="trades">Échanges</button><button class="btn alt nav-main" data-v="market">Marché</button><button class="btn alt nav-more-toggle" id="navMoreToggle" type="button" aria-expanded="false" aria-controls="navMore">Plus <span aria-hidden="true">＋</span></button><div class="nav-more" id="navMore"><button class="btn alt" data-v="catalog">Catalogue</button><button class="btn alt" data-v="missions">Missions</button><button class="btn alt" data-v="leaderboard">Classement</button><button class="btn alt" data-v="messages">Messages</button><button class="btn alt" data-v="profile">Profil</button></div></nav>
 <div class="me" id="me"></div></header>
 <main id="app" aria-live="polite"></main>
 <script>
@@ -126,12 +195,13 @@ if(user)$('out').onclick=async()=>{await sb.auth.signOut();go('catalog')}}
 async function go(v){await refresh();try{if(!cards.length)await loadCards()}catch(e){app.innerHTML=msg('Impossible de charger le catalogue : '+e.message,1);return}
 if(v!=='catalog'&&!user)return auth();
 ({catalog,collection,booster,missions,market,leaderboard,trades,messages})[v]()}
-document.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>go(b.dataset.v));
+document.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{const menu=$('navMore');if(menu)menu.classList.remove('is-open');const toggle=$('navMoreToggle');if(toggle)toggle.setAttribute('aria-expanded','false');go(b.dataset.v)});const navToggle=$('navMoreToggle');if(navToggle)navToggle.onclick=()=>{const menu=$('navMore');if(!menu)return;const open=menu.classList.toggle('is-open');navToggle.setAttribute('aria-expanded',String(open))};
 function catalog(){app.innerHTML=`<h1>Catalogue</h1>${cards.length?'':msg('Aucune carte publiée. Vérifiez que phase2_seed.sql a été exécuté.')}<div class="grid">${cards.map(c=>card(c)).join('')}</div>`}
-function auth(){app.innerHTML=`<div class="box"><h2>Connexion</h2><input id="em" type="email" placeholder="E-mail" autocomplete="email"><input id="pw" type="password" placeholder="Mot de passe (8 caractères min.)" autocomplete="current-password"><input id="un" placeholder="Pseudo (inscription : 3 à 20 lettres, chiffres, _)"><button class="btn" id="li">Se connecter</button> <button class="btn alt" id="su">Créer un compte</button><div id="am"></div></div>`;
+function auth(){app.innerHTML=`<div class="box auth-box"><div class="eyebrow">Heureux de te revoir</div><h2>Connexion</h2><p class="auth-intro">Retrouve ton album, tes échanges et tes prochaines découvertes.</p><button class="btn google-btn" id="googleAuth" type="button"><span class="google-mark" aria-hidden="true">G</span> Continuer avec Google</button><div class="auth-divider"><span>ou avec ton e-mail</span></div><label for="em">Adresse e-mail</label><input id="em" type="email" placeholder="toi@exemple.fr" autocomplete="email"><label for="pw">Mot de passe</label><input id="pw" type="password" placeholder="Mot de passe (8 caractères min.)" autocomplete="current-password"><label for="un">Pseudo <span>(pour l’inscription)</span></label><input id="un" placeholder="3 à 20 lettres, chiffres ou _" autocomplete="nickname" maxlength="20"><div class="auth-buttons"><button class="btn" id="li" type="button">Se connecter</button><button class="btn alt" id="su" type="button">Créer un compte</button></div><div id="am" aria-live="polite"></div><p class="auth-footnote">En te connectant, tu retrouves les données associées à ton compte existant.</p></div>`;
 const v=()=>[$('em').value.trim(),$('pw').value];
-$('li').onclick=async()=>{const[e,p]=v();const {error}=await sb.auth.signInWithPassword({email:e,password:p});error?$('am').innerHTML=msg(error.message,1):go('collection')};
-$('su').onclick=async()=>{const[e,p]=v();const {error}=await sb.auth.signUp({email:e,password:p,options:{data:{username:$('un').value.trim()}}});$('am').innerHTML=error?msg(error.message,1):msg('Compte créé. Confirmez votre adresse via l’e-mail reçu, puis connectez-vous.')}}
+$('googleAuth').onclick=async()=>{const b=$('googleAuth');b.disabled=true;$('am').innerHTML=msg('Redirection vers Google…');const {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.origin+window.location.pathname}});if(error){$('am').innerHTML=msg('Connexion Google impossible : '+error.message,1);b.disabled=false}};
+$('li').onclick=async()=>{const[e,p]=v();if(!e||!p){$('am').innerHTML=msg('Saisis ton e-mail et ton mot de passe.',1);return}const {error}=await sb.auth.signInWithPassword({email:e,password:p});error?$('am').innerHTML=msg(error.message,1):go('collection')};
+$('su').onclick=async()=>{const[e,p]=v(),username=$('un').value.trim();if(!e||!p||!username){$('am').innerHTML=msg('Renseigne l’e-mail, le mot de passe et le pseudo.',1);return}if(!/^[a-zA-Z0-9_]{3,20}$/.test(username)){$('am').innerHTML=msg('Le pseudo doit contenir de 3 à 20 lettres, chiffres ou tirets bas.',1);return}const {error}=await sb.auth.signUp({email:e,password:p,options:{data:{username}}});$('am').innerHTML=error?msg(error.message,1):msg('Compte créé. Confirme ton adresse via l’e-mail reçu, puis connecte-toi.')}}
 async function ageGate(){app.innerHTML=`<div class="box"><h2>Réservé aux 18 ans et plus</h2><p>Ce site contient de l’humour adulte. Confirmez que vous avez 18 ans ou plus. Il s’agit d’une déclaration, pas d’une vérification d’identité.</p><button class="btn" id="ok">J’ai 18 ans ou plus</button><div id="am"></div></div>`;
 $('ok').onclick=async()=>{const {error}=await sb.rpc('confirm_age');error?$('am').innerHTML=msg(error.message,1):go('booster')}}
 async function collection(){app.innerHTML='<h1>Ma collection</h1><p>Chargement…</p>';
@@ -236,7 +306,7 @@ function bindCardFilters(mode,counts={}){const grid=app.querySelector('.cards-gr
 function bindCollectionActions(){app.querySelectorAll('[data-conv]').forEach(b=>{if(b.dataset.bound)return;b.dataset.bound='1';b.onclick=async()=>{b.disabled=true;const {data:g,error:e}=await sb.rpc('convert_duplicates',{p_card:b.dataset.conv,p_qty:+b.dataset.n,p_key:crypto.randomUUID()});if(e){if($('cm'))$('cm').innerHTML=msg(e.message,1);b.disabled=false;return}await refresh();collection()}});app.querySelectorAll('[data-sell]').forEach(b=>{if(b.dataset.bound)return;b.dataset.bound='1';b.onclick=async()=>{const pr=prompt('Prix de vente en 💰 (1 à 1 000 000) ?');if(!pr)return;const {data:ins}=await sb.from('card_instances').select('id').eq('card_id',b.dataset.sell).eq('locked',false).order('acquired_at',{ascending:false}).limit(1);if(!ins?.length){if($('cm'))$('cm').innerHTML=msg('Aucun exemplaire disponible (déjà en vente ?).',1);return}const {error:e}=await sb.rpc('list_card',{p_instance:ins[0].id,p_price:parseInt(pr,10)});if(e){if($('cm'))$('cm').innerHTML=msg(e.message,1)}else market()}})}
 function catalog(){app.innerHTML='<div class="hero-panel"><div class="eyebrow">Collection de cartes · édition premium</div><h1>Bienvenue au GAYCHA CLUB</h1><p>Des cartes à découvrir, des raretés à chasser et un album à compléter. Chaque tirage peut cacher une pépite.</p><button class="btn" id="catalogBoost">Ouvrir un booster</button></div><h2>Le catalogue</h2><p>Explore les cartes et clique sur l’une d’elles pour la voir en grand.</p>'+cardTools()+'<div class="grid cards-grid"></div>';bindCardFilters('catalog');$('catalogBoost').onclick=()=>go('booster')}
 async function collection(){app.innerHTML='<h1>Mon album</h1><p>Chargement de tes cartes…</p>';const {data,error}=await sb.from('card_instances').select('card_id,acquired_at').order('acquired_at',{ascending:false});if(error)return app.innerHTML=msg(error.message,1);const cnt={};(data||[]).forEach(d=>cnt[d.card_id]=(cnt[d.card_id]||0)+1);const unique=Object.keys(cnt).length,pct=cards.length?Math.round(unique/cards.length*100):0;app.innerHTML='<div class="hero-panel"><div class="eyebrow">Ton album personnel</div><h1>Chaque carte compte.</h1><p>Retrouve tes découvertes, repère les manquantes et échange tes doublons pour faire grandir ta collection.</p><div class="stat-grid"><div class="stat"><span class="eyebrow">Complété</span><strong>'+pct+' %</strong></div><div class="stat"><span class="eyebrow">Cartes uniques</span><strong>'+unique+' / '+cards.length+'</strong></div><div class="stat"><span class="eyebrow">Doublons</span><strong>'+Object.values(cnt).reduce((a,n)=>a+Math.max(0,n-1),0)+'</strong></div></div><div class="progress-track" style="margin-top:18px"><span style="width:'+pct+'%"></span></div></div><h2>Mon album de cartes</h2><p>Filtre les cartes possédées ou celles qu’il te reste à trouver.</p>'+cardTools()+'<div class="grid cards-grid"></div><div id="cm"></div>';bindCardFilters('collection',cnt);bindCollectionActions()}
-function profilePage(){if(!user)return auth();const balance=Number(profile?.balance||0),username=profile?.username||user.email?.split('@')[0]||'Membre';app.innerHTML='<div class="hero-panel"><div class="eyebrow">Espace membre</div><h1>Ton univers GAYCHA</h1><p>Ta collection, ton style et tes prochaines cartes à découvrir.</p></div><div class="stat-grid"><div class="stat"><span class="eyebrow">Pseudo</span><strong style="font-size:22px">'+esc(username)+'</strong></div><div class="stat"><span class="eyebrow">Solde</span><strong>'+balance.toLocaleString('fr-FR')+' 💰</strong></div><div class="stat"><span class="eyebrow">Cartes découvertes</span><strong id="profileOwned">…</strong></div><div class="stat"><span class="eyebrow">Compte</span><strong style="font-size:22px">Actif</strong></div></div><div class="box" style="max-width:none"><h2>Progression de l’album</h2><p id="profileProgress">Calcul de la progression…</p><div class="progress-track"><span id="profileBar" style="width:0%"></span></div><p style="margin-top:18px"><button class="btn" id="goAlbum">Ouvrir mon album</button> <button class="btn alt" id="goBoosters">Découvrir des boosters</button></p></div>';sb.from('card_instances').select('card_id').then(({data,error})=>{if(error)return;const n=new Set((data||[]).map(x=>x.card_id)).size,pct=cards.length?Math.round(n/cards.length*100):0;if($('profileOwned'))$('profileOwned').textContent=n+' / '+cards.length;if($('profileProgress'))$('profileProgress').textContent=pct+' % de la collection complétée';if($('profileBar'))$('profileBar').style.width=pct+'%'});$('goAlbum').onclick=()=>go('collection');$('goBoosters').onclick=()=>go('booster')}
+function profilePage(){if(!user)return auth();const balance=Number(profile?.balance||0),username=profile?.username||user.email?.split('@')[0]||'Membre';app.innerHTML='<div class="hero-panel"><div class="eyebrow">Espace membre</div><h1>Ton univers GAYCHA</h1><p>Ta collection, ton style et tes prochaines cartes à découvrir.</p></div><div class="stat-grid"><div class="stat"><span class="eyebrow">Pseudo</span><strong style="font-size:22px">'+esc(username)+'</strong></div><div class="stat"><span class="eyebrow">Solde</span><strong>'+balance.toLocaleString('fr-FR')+' 💰</strong></div><div class="stat"><span class="eyebrow">Cartes découvertes</span><strong id="profileOwned">…</strong></div><div class="stat"><span class="eyebrow">Compte</span><strong style="font-size:22px">Actif</strong></div></div><div class="box" style="max-width:none"><h2>Progression de l’album</h2><p id="profileProgress">Calcul de la progression…</p><div class="progress-track"><span id="profileBar" style="width:0%"></span></div><p style="margin-top:18px"><button class="btn" id="goAlbum">Ouvrir mon album</button> <button class="btn alt" id="goBoosters">Découvrir des boosters</button></p></div><div class="box account-box" style="max-width:none"><h2>Connexion et sécurité</h2><p>Tu peux rattacher Google à cette session pour retrouver ton compte avec les deux méthodes de connexion.</p><button class="btn alt" id="linkGoogle" type="button">Lier mon compte Google</button><div id="linkGoogleMsg" aria-live="polite"></div><p class="account-note">Pour éviter de séparer ta collection et ton solde, connecte-toi d’abord à ton compte Gaycha existant, puis lance la liaison depuis ici.</p></div>';sb.from('card_instances').select('card_id').then(({data,error})=>{if(error)return;const n=new Set((data||[]).map(x=>x.card_id)).size,pct=cards.length?Math.round(n/cards.length*100):0;if($('profileOwned'))$('profileOwned').textContent=n+' / '+cards.length;if($('profileProgress'))$('profileProgress').textContent=pct+' % de la collection complétée';if($('profileBar'))$('profileBar').style.width=pct+'%'});$('goAlbum').onclick=()=>go('collection');$('goBoosters').onclick=()=>go('booster');$('linkGoogle').onclick=async()=>{const b=$('linkGoogle');b.disabled=true;$('linkGoogleMsg').innerHTML=msg('Préparation de la liaison Google…');const {error}=await sb.auth.linkIdentity({provider:'google',options:{redirectTo:window.location.origin+window.location.pathname}});if(error){$('linkGoogleMsg').innerHTML=msg('Liaison Google impossible : '+error.message,1);b.disabled=false}}}
 
 go('catalog');
 </script></body></html>

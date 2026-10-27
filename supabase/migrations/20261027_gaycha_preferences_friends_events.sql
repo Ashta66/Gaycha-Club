@@ -98,3 +98,28 @@ CREATE OR REPLACE VIEW public.leaderboard AS
   ORDER BY p.xp DESC,
     (SELECT count(DISTINCT ci.card_id) FROM public.card_instances ci WHERE ci.owner_id=p.id) DESC
   LIMIT 50;
+
+
+-- Index de la clé étrangère créée par le calendrier.
+CREATE INDEX IF NOT EXISTS club_events_created_by_idx ON public.club_events(created_by);
+
+-- Une visite de la page Échanges ne doit expirer que les offres de l'utilisateur connecté.
+CREATE OR REPLACE FUNCTION public.expire_offers()
+RETURNS void LANGUAGE plpgsql SECURITY DEFINER SET search_path TO 'public'
+AS $function$
+declare u uuid := auth.uid();
+begin
+  if u is null then raise exception 'auth required'; end if;
+  with expired as (
+    update trade_offers set status = 'expired', resolved_at = now()
+    where status = 'pending' and expires_at < now()
+      and (proposer_id = u or recipient_id = u)
+    returning id
+  )
+  update card_instances set locked = false
+  where id in (select ti.instance_id from trade_items ti
+               where ti.side = 'give' and ti.offer_id in (select id from expired));
+end
+$function$;
+REVOKE EXECUTE ON FUNCTION public.expire_offers() FROM PUBLIC, anon;
+GRANT EXECUTE ON FUNCTION public.expire_offers() TO authenticated;

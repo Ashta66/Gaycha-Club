@@ -31,7 +31,7 @@ input,select,textarea{background:#101010;color:var(--cream);border:1px solid #4a
 .box::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:var(--rb);opacity:.9}
 .note{background:var(--ch);border-left:4px solid #FF477E;padding:12px 16px;border-radius:0 8px 8px 0;color:var(--mut);margin:14px 0}
 .err{border-color:#ff5555;color:#ffb4b4}
-.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.section-shortcuts{display:flex;gap:7px;flex-wrap:wrap;margin:0 0 20px;padding:0 0 14px;border-bottom:1px solid #ffffff18}.section-shortcuts .btn{min-height:36px;padding:7px 12px;font-size:13px;border-radius:999px}
 table{width:100%;border-collapse:collapse}td,th{padding:8px;border-bottom:1px solid #333;text-align:left;font-size:14px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:22px;margin-top:18px}
 /* ===== Cartes ===== */
@@ -254,7 +254,22 @@ $('me').innerHTML=user?`${user.user_metadata?.avatar_url?`<img class="profile-av
 if(user)$('profile-open').onclick=()=>openSettings();setTimeout(refreshNotificationBadges,0)}
 async function go(v){currentView=v;await refresh();try{if(!cards.length)await loadCards()}catch(e){app.innerHTML=msg('Impossible de charger le catalogue : '+e.message,1);return}
 if(v!=='catalog'&&v!=='universe'&&!user)return auth();
-await ({catalog,universe,collection,booster,missions,market,leaderboard,playercard:playerCard,trades,messages,notifications,admin,dashboard,stats,history,friends,events})[v]();applyLanguage();document.querySelectorAll('[data-v]').forEach(b=>{const active=b.dataset.v===v;b.classList.toggle('nav-active',active);if(active)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')})}
+await ({catalog,universe,collection,booster,missions,market,leaderboard,playercard:playerCard,trades,messages,notifications,admin,dashboard,stats,history,friends,events})[v]();
+const sectionMap={
+ collection:{title:'Collection',items:[['collection','Ma collection'],['catalog','Catalogue'],['history','Historique'],['stats','Statistiques'],['playercard','Carte joueur']]},
+ booster:{title:'Boosters',items:[['booster','Tous les boosters']]},
+ events:{title:'Activités',items:[['events','Événements'],['missions','Missions'],['stats','Statistiques']]},
+ friends:{title:'Communauté',items:[['friends','Amis'],['messages','Messages'],['trades','Échanges'],['market','Marché'],['leaderboard','Classement'],['notifications','Notifications'],['playercard','Carte joueur']]},
+ admin:{title:'Administration',items:[['admin','Tableau admin']]}
+};
+const sectionKey=v==='catalog'?'collection':v==='history'||v==='stats'||v==='playercard'?'collection':v==='missions'?'events':v==='messages'||v==='trades'||v==='market'||v==='leaderboard'||v==='notifications'?'friends':v;
+const section=sectionMap[sectionKey];
+if(section&&v!=='dashboard'&&v!=='universe'&&v!=='auth'){
+ const bar=document.createElement('nav');bar.className='section-shortcuts';bar.setAttribute('aria-label','Sous-navigation '+section.title);
+ bar.innerHTML=section.items.map(item=>'<button type="button" class="btn '+(item[0]===v?'':'alt')+'" data-section-go="'+item[0]+'">'+item[1]+'</button>').join('');
+ app.prepend(bar);bar.querySelectorAll('[data-section-go]').forEach(b=>b.onclick=()=>go(b.dataset.sectionGo));
+}
+applyLanguage();document.querySelectorAll('[data-v]').forEach(b=>{const active=b.dataset.v===v;b.classList.toggle('nav-active',active);if(active)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')})}
 const mobileMore=$('mobile-more-menu'),mobileMoreToggle=$('mobile-more-toggle');
 function closeMobileMore(){if(mobileMore){mobileMore.hidden=true;mobileMoreToggle?.setAttribute('aria-expanded','false')}}
 mobileMoreToggle?.addEventListener('click',()=>{const opening=mobileMore.hidden;mobileMore.hidden=!opening;mobileMoreToggle.setAttribute('aria-expanded',String(opening))});

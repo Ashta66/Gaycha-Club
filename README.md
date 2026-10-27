@@ -20,7 +20,7 @@ Trois séries sont préparées dans Supabase :
 
 Les premières fiches sont enregistrées en brouillon. Elles sont volontairement non publiées tant que l'équipe n'a pas vérifié l'activité de l'établissement, la description et les droits de l'image.
 
-La table `venue_sources` associe une carte à son type de lieu, sa ville, son pays, son site officiel, la source de description, l'origine du visuel, son statut de vérification et sa licence. Les fiches de lieu affichent les liens de source et le statut des droits dans le détail de la carte.
+La table `venue_sources` associe une carte à son type de lieu, sa ville, son pays, son site officiel, la source de description, l'origine du visuel, son statut de vérification et sa licence. L'onglet d'administration **Lieux LGBTQ+** permet de compléter ces champs et le visuel ; les fiches de lieu affichent ensuite les liens de source et le statut des droits dans le détail de la carte. Six premières fiches sont préparées en brouillon : Le Cox, La Federica, Gibus Club, Safari Disco Club, Sun City et Sauna Bruc.
 
 ### Règles éditoriales pour les établissements réels
 

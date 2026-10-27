@@ -97,6 +97,8 @@ main{max-width:1440px;padding:34px clamp(14px,3vw,42px) 70px}main h1{font-size:c
 .trade-review{padding:16px;margin:16px 0;border:1px solid #ffffff23;border-radius:14px;background:linear-gradient(135deg,#ffffff0a,#ffffff03)}
 .trade-review p{color:var(--mut);overflow-wrap:anywhere}.review-columns>div{padding:10px;border-radius:10px;background:#ffffff07}.review-columns p{font-size:14px}.trade-review-foot{font-size:13px;margin-bottom:0}
 @media(max-width:620px){.booster-options{grid-template-columns:1fr;gap:14px}.booster-pack{min-height:330px}.pack-art{width:170px}.trade-picks,.trade-coins,.review-columns{grid-template-columns:1fr}.trade-picks select{min-height:130px}}
+
+.nav-count{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 5px;margin-left:4px;border-radius:99px;background:var(--pink);color:#fff;font:700 11px/1 Fraunces;box-shadow:0 0 12px #ff4fa355}
 </style></head><body>
 <header><div class="logo">GAYCHA<small>CLUB</small></div>
 <nav><button class="btn alt" data-v="catalog">Catalogue</button><button class="btn alt" data-v="collection">Ma collection</button><button class="btn alt" data-v="booster">Boosters</button><button class="btn alt" data-v="missions">Missions</button><button class="btn alt" data-v="market">Marché</button><button class="btn alt" data-v="leaderboard">Classement</button><button class="btn alt" data-v="trades">Échanges</button><button class="btn alt" data-v="messages">Messages</button><button class="btn alt" data-v="profile">Profil</button></nav>
@@ -117,6 +119,8 @@ return `<div class="card r-${c.rarity}" style="--s1:${esc(s.color_a)};--s2:${esc
 async function loadCards(){const {data,error}=await sb.from('cards').select('id,name,rarity,number,spec,series(name,color_a,color_b)').order('number');if(error)throw error;cards=data}
 async function refresh(){const {data:{session}}=await sb.auth.getSession();user=session?.user||null;profile=null;
 if(user){const {data}=await sb.from('profiles').select('username,balance,age_confirmed_at').eq('id',user.id).maybeSingle();profile=data}
+const tradeNav=document.querySelector('[data-v="trades"]');
+if(tradeNav){if(user){const {data:offers}=await sb.from('trades_view').select('proposer_id,status');const count=(offers||[]).filter(t=>t.status==='pending'&&t.proposer_id!==user.id).length;tradeNav.innerHTML='Échanges'+(count?' <span class="nav-count">'+count+'</span>':'');tradeNav.setAttribute('aria-label',count?count+' proposition(s) d’échange en attente':'Échanges')}else{tradeNav.textContent='Échanges';tradeNav.removeAttribute('aria-label')}}
 $('me').innerHTML=user?`${esc(profile?.username||user.email)} · ${profile?.balance??0} 💰 <button class="btn alt" id="out">Déconnexion</button>`:'';
 if(user)$('out').onclick=async()=>{await sb.auth.signOut();go('catalog')}}
 async function go(v){await refresh();try{if(!cards.length)await loadCards()}catch(e){app.innerHTML=msg('Impossible de charger le catalogue : '+e.message,1);return}
@@ -167,10 +171,12 @@ async function leaderboard(){const {data,error}=await sb.from('leaderboard').sel
 if(error)return app.innerHTML=msg(error.message,1);
 app.innerHTML=`<h1>Classement</h1><div class="box" style="max-width:none">${data.map((r,i)=>`<div>${i+1}. <b>${esc(r.username)}</b> · ${r.xp} XP · ${r.cards_found} cartes</div>`).join('')}</div>`}
 async function trades(){if(profile&&!profile.age_confirmed_at)return ageGate();await sb.rpc('expire_offers');
-const [a,b,c]=await Promise.all([sb.from('trades_view').select('*').order('created_at',{ascending:false}),sb.from('trade_items_view').select('*'),sb.from('card_instances').select('id,card_id').eq('locked',false)]);
+const [a,b,c,d]=await Promise.all([sb.from('trades_view').select('*').order('created_at',{ascending:false}),sb.from('trade_items_view').select('*'),sb.from('card_instances').select('id,card_id').eq('locked',false),sb.from('market_view').select('card_id,price')]);
 if(a.error)return app.innerHTML=msg(a.error.message,1);
-const T=a.data||[],I=b.data||[],by={};(c.data||[]).forEach(m=>{(by[m.card_id]=by[m.card_id]||[]).push(m.id)});
-const opt=(v,c)=>`<option value="${v}">${esc(c.name)} (${RN[c.rarity][0]})</option>`;
+const T=a.data||[],I=b.data||[],by={},prices={};(c.data||[]).forEach(m=>{(by[m.card_id]=by[m.card_id]||[]).push(m.id)});
+(d.data||[]).forEach(m=>{const p=Number(m.price);if(Number.isFinite(p)&&p>0)(prices[m.card_id]=prices[m.card_id]||[]).push(p)});
+const indicative=id=>prices[id]?.length?' · ~'+Math.round(prices[id].reduce((n,p)=>n+p,0)/prices[id].length)+' 💰':'';
+const opt=(v,c)=>`<option value="${v}">${esc(c.name)} (${RN[c.rarity][0]})${esc(indicative(c.id))}</option>`;
 const its=(id,s)=>I.filter(i=>i.offer_id===id&&i.side===s).map(i=>esc(i.name)).join(', ')||'aucune carte';
 const SL={pending:'en attente',accepted:'acceptée',declined:'refusée',cancelled:'annulée',expired:'expirée'};
 const incoming=T.filter(t=>t.status==='pending'&&t.proposer_id!==user.id).length;

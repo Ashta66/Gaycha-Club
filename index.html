@@ -385,24 +385,26 @@ document.addEventListener('keydown',e=>{if(e.key==='Enter'){const c=document.act
 async function dashboard(){
  if(!user)return auth();
  app.innerHTML='<h1>Mon tableau de bord</h1><p>Chargement de ton espace…</p>';
- const [ir,lr,mr,sr]=await Promise.all([
+ const [ir,lr,mr,sr,ar]=await Promise.all([
   sb.from('card_instances').select('card_id,acquired_at').order('acquired_at',{ascending:false}),
   sb.from('ledger').select('delta,reason,created_at,balance_after').order('created_at',{ascending:false}).limit(5),
   sb.from('missions').select('id,title,kind,goal,reward,xp_reward').eq('active',true).limit(4),
-  sb.from('series').select('id,name')
+  sb.from('series').select('id,name'),
+  sb.rpc('sync_user_achievements')
  ]);
  if(ir.error)return app.innerHTML=msg('Chargement de la collection impossible : '+ir.error.message,1);
  const items=ir.data||[],counts={};items.forEach(x=>counts[x.card_id]=(counts[x.card_id]||0)+1);
  const owned=Object.keys(counts).length,dupes=items.length-owned,series=sr.data||[];
  const month=items.filter(x=>x.acquired_at&&new Date(x.acquired_at)>new Date(Date.now()-30*86400000)).length;
  const recent=(lr.data||[]).map(x=>({date:x.created_at,label:x.reason||'Mouvement de monnaie',value:Number(x.delta||0)}));
+ const achievedKeys=new Set((ar.data||[]).map(x=>x.achievement_key));
  const milestones=[
-  ['🌱','Première carte',owned>=1,'Obtenir une première carte'],
-  ['💎','Collectionneur·euse',owned>=10,'Découvrir 10 cartes différentes'],
-  ['🌈','Arc-en-ciel',new Set(cards.filter(c=>counts[c.id]).map(c=>c.rarity)).size>=4,'Posséder 4 raretés différentes'],
-  ['🃏','Anti-doublon',dupes>=5,'Cumuler 5 doublons'],
-  ['✨','Complétion',cards.length>0&&owned>=cards.length,'Découvrir tout le catalogue']
- ];
+  ['first_card','🌱','Première carte',owned>=1,'Obtenir une première carte'],
+  ['collector_10','💎','Collectionneur·euse',owned>=10,'Découvrir 10 cartes différentes'],
+  ['rainbow_4','🌈','Arc-en-ciel',new Set(cards.filter(c=>counts[c.id]).map(c=>c.rarity)).size>=4,'Posséder 4 raretés différentes'],
+  ['duplicates_5','🃏','Anti-doublon',dupes>=5,'Cumuler 5 doublons'],
+  ['completion','✨','Complétion',cards.length>0&&owned>=cards.length,'Découvrir tout le catalogue']
+ ].map(a=>({...a,unlocked:ar.error?a[3]:achievedKeys.has(a[0])}));
  app.innerHTML=`<div class="hero"><h1>Salut, ${esc(profile?.username||user.user_metadata?.name||'collectionneur·euse')} !</h1><p>Ton espace personnel, ta progression et les nouveautés du Club.</p><div class="rainbow-line"></div></div>
  <div class="dashboard-grid">
  <div class="dash-tile"><span>Cartes découvertes</span><strong>${owned}</strong><small>sur ${cards.length} cartes au catalogue</small></div>
@@ -410,7 +412,7 @@ async function dashboard(){
  <div class="dash-tile"><span>Solde</span><strong>${Number(profile?.balance||0).toLocaleString('fr-FR')} 💰</strong><small>Monnaie virtuelle</small></div>
  <div class="dash-tile"><span>Activité récente</span><strong>${month}</strong><small>carte(s) obtenue(s) sur 30 jours</small></div></div>
  <div class="section-panel"><h2 style="margin-top:0">Raccourcis</h2><div class="tabs"><button class="btn" data-go="booster">Ouvrir un booster</button><button class="btn alt" data-go="collection">Voir ma collection</button><button class="btn alt" data-go="stats">Mes statistiques</button><button class="btn alt" data-go="history">Mon historique</button></div></div>
- <div class="section-panel"><h2 style="margin-top:0">Succès de collection</h2><div class="achievement-grid">${milestones.map(a=>`<div class="achievement ${a[2]?'unlocked':''}"><div class="medal">${a[0]}</div><b>${esc(a[1])}</b><p class="muted">${esc(a[3])}</p><span>${a[2]?'Débloqué ✓':'À débloquer'}</span></div>`).join('')}</div></div>
+ <div class="section-panel"><h2 style="margin-top:0">Succès de collection</h2><div class="achievement-grid">${milestones.map(a=>`<div class="achievement ${a.unlocked?'unlocked':''}"><div class="medal">${a[1]}</div><b>${esc(a[2])}</b><p class="muted">${esc(a[4])}</p><span>${a.unlocked?'Débloqué ✓':'À débloquer'}</span></div>`).join('')}</div></div>
  <div class="section-panel"><h2 style="margin-top:0">Missions du moment</h2>${mr.error?msg('Les missions ne sont pas disponibles pour le moment.'):((mr.data||[]).length?(mr.data||[]).map(m=>`<div class="history-row"><span>🎯 Mission</span><b>${esc(m.title)}</b><span class="history-value">+${Number(m.reward||0)} 💰</span></div>`).join(''):msg('Aucune mission active pour le moment.'))}</div>
  <div class="section-panel"><h2 style="margin-top:0">Derniers mouvements de monnaie</h2>${lr.error?msg('Historique de monnaie indisponible.'):recent.length?recent.map(x=>`<div class="history-row"><time>${x.date?new Date(x.date).toLocaleDateString('fr-FR'):''}</time><span>${esc(x.label)}</span><span class="history-value ${x.value>=0?'positive':'negative'}">${x.value>0?'+':''}${x.value.toLocaleString('fr-FR')} 💰</span></div>`).join(''):'Aucun mouvement enregistré pour le moment.'}</div>`;
  app.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));

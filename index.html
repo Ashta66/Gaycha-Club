@@ -435,6 +435,26 @@ document.addEventListener('keydown',e=>{if(e.key==='Enter'){const c=document.act
 
 
 /* ===== Tableau de bord personnel ===== */
+async function universe(){
+ const key='gaycha-universe-seals-v1';
+ let found=[];try{found=JSON.parse(localStorage.getItem(key)||'[]')}catch(_){}
+ const seals=[
+  {id:'mirror',icon:'🪞',name:'Le miroir fêlé',clue:'Le premier secret se cache là où chacun vient chercher son reflet.',hint:'La piste commence ici. Ouvre ce sceau.'},
+  {id:'rose',icon:'🥀',name:'La rose noire',clue:'Le plus grand scandale du Club aurait commencé par un compliment.',hint:'Les apparences sont rarement innocentes.'},
+  {id:'key',icon:'🗝️',name:'La clé du vestiaire',clue:'Trois témoins, trois versions : la vérité ne tient jamais dans une seule carte.',hint:'Aucun booster ni achat n’est nécessaire.'}
+ ];
+ const draw=()=>{
+  const count=seals.filter(x=>found.includes(x.id)).length;
+  app.innerHTML=`<h1>L’Univers Gaycha</h1><section class="universe-hero"><div class="universe-kicker">Archives du Club · Saison 01</div><h1>Le Bal des Masques</h1><p>À minuit, les lumières du Club s’éteignent une seconde. Quand elles se rallument, une carte a disparu des archives et trois sceaux ont été dispersés dans les couloirs. Personne ne sait qui les a cachés. Tout le monde prétend le savoir.</p><span class="universe-stamp">✦ Une histoire à découvrir entre amis</span><span class="universe-stamp">◈ Secrets gratuits</span></section>
+  <section class="universe-section"><h2>Les sceaux oubliés</h2><p class="universe-intro">Découvre les trois sceaux pour déverrouiller le premier fragment de l’histoire. Cette chasse est gratuite ; ta progression est conservée sur cet appareil.</p><div class="universe-count">${count} / 3 sceaux découverts</div><div class="universe-progress" style="height:7px;border-radius:8px;background:#ffffff18;overflow:hidden;margin:12px 0"><div style="height:100%;width:${count/3*100}%;background:linear-gradient(90deg,#d6b46a,#b23a87);transition:width .2s"></div></div><div class="universe-chapters">${seals.map((x,i)=>`<button class="universe-chapter ${found.includes(x.id)?'':'universe-locked'}" data-seal="${x.id}" aria-pressed="${found.includes(x.id)}" style="color:var(--cream);text-align:left;font:inherit;cursor:pointer"><span class="lock-icon">${found.includes(x.id)?x.icon:'◈'}</span><h3>${found.includes(x.id)?x.name:'Sceau '+(i+1)+' — archive scellée'}</h3><p>${found.includes(x.id)?x.clue:x.hint}</p><span class="universe-count">${found.includes(x.id)?'DÉCOUVERT':'TOUCHER POUR EXAMINER'}</span></button>`).join('')}</div></section>
+  ${count===3?`<section class="universe-section universe-secret"><div class="sigil">🗝️</div><div><div class="universe-kicker">Dossier déclassifié · 001</div><h2>La carte fantôme</h2><p>La carte disparue n’a pas été volée : elle n’a jamais été imprimée. Elle apparaît uniquement lorsque trois personnes racontent la même histoire… de trois façons différentes.</p><p><b>Note des archives :</b> « Méfiez-vous des versions officielles. Surtout quand elles sont très bien maquillées. »</p><button class="btn alt" id="universe-reset">Rejouer la chasse</button></div></section>`:''}
+  <section class="universe-section"><h2>Ce qui se prépare dans les coulisses</h2><div class="universe-chapters"><article class="universe-chapter"><div class="universe-kicker">Prochainement</div><h3>⚖️ Tribunal Gaycha</h3><p>Des votes entre amis pour attribuer des titres absurdes aux cartes et faire basculer la légende du Club.</p></article><article class="universe-chapter"><div class="universe-kicker">Prochainement</div><h3>🖼️ Vitrines des amis</h3><p>Mettre en scène ses cartes préférées et partager sa collection avec son cercle.</p></article><article class="universe-chapter"><div class="universe-kicker">En cours</div><h3>🕵️ Secrets cachés</h3><p>Un premier fragment jouable : découvre les sceaux pour ouvrir le dossier fantôme.</p></article></div></section>`;
+  app.querySelectorAll('[data-seal]').forEach(b=>b.onclick=()=>{if(!found.includes(b.dataset.seal)){found.push(b.dataset.seal);try{localStorage.setItem(key,JSON.stringify(found))}catch(_){}draw()}});
+  const reset=$('universe-reset');if(reset)reset.onclick=()=>{found=[];try{localStorage.removeItem(key)}catch(_){}draw()};
+ };
+ draw();
+}
+
 async function dashboard(){
  if(!user)return auth();
  app.innerHTML='<h1>Mon tableau de bord</h1><p>Chargement de ton espace…</p>';

@@ -15,6 +15,9 @@ create index if not exists gifted_boosters_owner_opened_idx
 
 alter table public.gifted_boosters enable row level security;
 
+revoke all on table public.gifted_boosters from anon, authenticated;
+grant select on table public.gifted_boosters to authenticated;
+
 drop policy if exists gifted_boosters_read_own on public.gifted_boosters;
 create policy gifted_boosters_read_own on public.gifted_boosters
   for select to authenticated using (owner_id = auth.uid());

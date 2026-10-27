@@ -179,5 +179,38 @@ function catalog(){app.innerHTML='<div class="hero-panel"><div class="eyebrow">C
 async function collection(){app.innerHTML='<h1>Mon album</h1><p>Chargement de tes cartes…</p>';const {data,error}=await sb.from('card_instances').select('card_id,acquired_at').order('acquired_at',{ascending:false});if(error)return app.innerHTML=msg(error.message,1);const cnt={};(data||[]).forEach(d=>cnt[d.card_id]=(cnt[d.card_id]||0)+1);const unique=Object.keys(cnt).length,pct=cards.length?Math.round(unique/cards.length*100):0;app.innerHTML='<div class="hero-panel"><div class="eyebrow">Ton album personnel</div><h1>Chaque carte compte.</h1><p>Retrouve tes découvertes, repère les manquantes et échange tes doublons pour faire grandir ta collection.</p><div class="stat-grid"><div class="stat"><span class="eyebrow">Complété</span><strong>'+pct+' %</strong></div><div class="stat"><span class="eyebrow">Cartes uniques</span><strong>'+unique+' / '+cards.length+'</strong></div><div class="stat"><span class="eyebrow">Doublons</span><strong>'+Object.values(cnt).reduce((a,n)=>a+Math.max(0,n-1),0)+'</strong></div></div><div class="progress-track" style="margin-top:18px"><span style="width:'+pct+'%"></span></div></div><h2>Mon album de cartes</h2><p>Filtre les cartes possédées ou celles qu’il te reste à trouver.</p>'+cardTools()+'<div class="grid cards-grid"></div><div id="cm"></div>';bindCardFilters('collection',cnt);bindCollectionActions()}
 function profilePage(){if(!user)return auth();const balance=Number(profile?.balance||0),username=profile?.username||user.email?.split('@')[0]||'Membre';app.innerHTML='<div class="hero-panel"><div class="eyebrow">Espace membre</div><h1>Ton univers GAYCHA</h1><p>Ta collection, ton style et tes prochaines cartes à découvrir.</p></div><div class="stat-grid"><div class="stat"><span class="eyebrow">Pseudo</span><strong style="font-size:22px">'+esc(username)+'</strong></div><div class="stat"><span class="eyebrow">Solde</span><strong>'+balance.toLocaleString('fr-FR')+' 💰</strong></div><div class="stat"><span class="eyebrow">Cartes découvertes</span><strong id="profileOwned">…</strong></div><div class="stat"><span class="eyebrow">Compte</span><strong style="font-size:22px">Actif</strong></div></div><div class="box" style="max-width:none"><h2>Progression de l’album</h2><p id="profileProgress">Calcul de la progression…</p><div class="progress-track"><span id="profileBar" style="width:0%"></span></div><p style="margin-top:18px"><button class="btn" id="goAlbum">Ouvrir mon album</button> <button class="btn alt" id="goBoosters">Découvrir des boosters</button></p></div>';sb.from('card_instances').select('card_id').then(({data,error})=>{if(error)return;const n=new Set((data||[]).map(x=>x.card_id)).size,pct=cards.length?Math.round(n/cards.length*100):0;if($('profileOwned'))$('profileOwned').textContent=n+' / '+cards.length;if($('profileProgress'))$('profileProgress').textContent=pct+' % de la collection complétée';if($('profileBar'))$('profileBar').style.width=pct+'%'});$('goAlbum').onclick=()=>go('collection');$('goBoosters').onclick=()=>go('booster')}
 
+
+/* === GAYCHA CLUB V3: boosters visuels + finition responsive === */
+const v3style=document.createElement('style');
+v3style.textContent=`
+.booster-stage{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(14px,3vw,28px);margin:28px auto;max-width:850px}
+.booster-pack{--pack-a:#ff4fa3;--pack-b:#6b7cff;position:relative;isolation:isolate;min-height:290px;overflow:hidden;border:1px solid #ffffff35;border-radius:22px;padding:22px 18px;background:radial-gradient(ellipse at 50% 30%,color-mix(in srgb,var(--pack-a) 35%,transparent),transparent 55%),linear-gradient(145deg,#252033,#0d0d16 70%);box-shadow:0 20px 55px #0007;display:flex;flex-direction:column;align-items:center;justify-content:space-between;text-align:center;transition:transform .25s,border-color .25s}
+.booster-pack:before{content:"";position:absolute;z-index:-1;inset:8px;border:1px solid color-mix(in srgb,var(--pack-a) 60%,transparent);border-radius:15px;clip-path:polygon(0 0,100% 0,100% 85%,50% 100%,0 85%)}
+.booster-pack:after{content:"";position:absolute;z-index:-1;inset:-70% 20%;background:linear-gradient(90deg,transparent,#ffffff19,transparent);transform:rotate(25deg);animation:packShine 5s linear infinite}
+.booster-pack:hover{transform:translateY(-7px) rotate(-.5deg);border-color:var(--pack-a);box-shadow:0 25px 70px color-mix(in srgb,var(--pack-a) 22%,transparent)}
+.pack-seal{display:grid;place-items:center;width:92px;height:92px;border-radius:50%;border:2px solid var(--pack-a);background:#0a0a12;box-shadow:0 0 30px color-mix(in srgb,var(--pack-a) 40%,transparent);font:32px Anton;color:var(--pack-a);text-shadow:0 0 20px var(--pack-a)}
+.pack-title{font:clamp(22px,3vw,30px) Anton;line-height:1.05}
+.pack-sub{font-size:13px;color:var(--mut);max-width:230px}
+.pack-price{font:20px Anton;color:var(--gold)}
+.booster-pack .btn{width:100%;margin-top:12px}
+.booster-notice{margin:22px auto;max-width:850px}
+.cards-grid .card{min-width:0}
+@keyframes packShine{0%{transform:translateX(-90%) rotate(25deg)}100%{transform:translateX(90%) rotate(25deg)}}
+@media(max-width:560px){.booster-stage{grid-template-columns:1fr}.booster-pack{min-height:245px}.pack-seal{width:76px;height:76px}}
+`;
+document.head.appendChild(v3style);
+function booster(){
+ if(profile&&!profile.age_confirmed_at)return ageGate();
+ app.innerHTML=`<div class="hero-panel"><div class="eyebrow">Le moment du tirage</div><h1>Choisis ton booster.</h1><p>Cinq cartes à chaque ouverture. Le tirage est vérifié côté serveur : laisse la chance décider.</p><div class="stat-grid"><div class="stat"><span class="eyebrow">Cartes par paquet</span><strong>05</strong></div><div class="stat"><span class="eyebrow">Raretés</span><strong>06</strong></div><div class="stat"><span class="eyebrow">Collection</span><strong>${cards.length}</strong></div></div></div>
+ <div class="booster-stage">
+ <article class="booster-pack" style="--pack-a:#55e7df;--pack-b:#7187ff"><div class="eyebrow">Édition quotidienne</div><div class="pack-seal">G</div><div><div class="pack-title">LE PETIT<br>MALAISE</div><p class="pack-sub">Un petit frisson, cinq nouvelles occasions de compléter ton album.</p></div><div style="width:100%"><div class="pack-price">GRATUIT</div><button class="btn" data-b="petit-malaise">Ouvrir le paquet</button></div></article>
+ <article class="booster-pack" style="--pack-a:#ff4fa3;--pack-b:#ffd56e"><div class="eyebrow">Édition premium</div><div class="pack-seal">✦</div><div><div class="pack-title">LE RED FLAG</div><p class="pack-sub">Le paquet qui sent le drama. Cinq cartes, et peut-être une rareté explosive.</p></div><div style="width:100%"><div class="pack-price">100 💰</div><button class="btn alt" data-b="red-flag">Ouvrir le paquet</button></div></article>
+ </div><div id="odds" class="note booster-notice">Chargement des probabilités…</div><div id="pk" class="grid cards-grid"></div>`;
+ app.querySelectorAll('[data-b]').forEach(b=>b.onclick=()=>open5(b.dataset.b));
+ sb.from('booster_types').select('name,odds,pity_threshold').eq('active',true).then(({data,error})=>{
+  if(error){$('odds').innerHTML=msg('Probabilités indisponibles pour le moment.',1);return}
+  $('odds').innerHTML=(data||[]).map(t=>'<b>'+esc(t.name)+'</b> : '+Object.entries(t.odds||{}).map(([k,v])=>(RN[k]?.[0]||k)+' '+v+' %').join(' · ')+'. Garantie : une Rare ou mieux après '+t.pity_threshold+' cartes sans.').join('<br>')||'Les probabilités seront affichées ici.';
+ });
+}
 go('catalog');
 </script></body></html>

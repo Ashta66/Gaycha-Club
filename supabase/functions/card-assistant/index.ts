@@ -39,15 +39,28 @@ Deno.serve(async (req: Request) => {
     return reply(403, { error: "Accès réservé aux administrateurs et gestionnaires du catalogue." });
   }
 
-  let input: { mode?: string; prompt?: string; existing?: Record<string, unknown>; seriesName?: string };
+  let input: { action?: string; mode?: string; prompt?: string; existing?: Record<string, unknown>; seriesName?: string; style?: string; cardName?: string };
   try { input = await req.json(); } catch { return reply(400, { error: "Requête JSON invalide." }); }
   const prompt = String(input.prompt || "").trim();
+  if (input.action === "illustration") {
+    if (prompt.length < 8 || prompt.length > 1800) return reply(400, { error: "Décrivez l’illustration en 8 à 1800 caractères." });
+    const imageResponse = await fetch("https://api.openai.com/v1/images/generations", {
+      method: "POST",
+      headers: { "Authorization": "Bearer " + openaiKey, "Content-Type": "application/json" },
+      body: JSON.stringify({ model: "gpt-image-1", prompt: "Illustration originale pour une carte à collectionner Gaycha Club, public adulte. Visuel portrait stylisé, composition lisible en petit format. Aucun texte, signature ou logo. Concept: " + prompt.slice(0, 1500), size: "1024x1536", quality: "medium", n: 1 }),
+    });
+    if (!imageResponse.ok) { const detail = await imageResponse.text(); console.error("OpenAI image API error", imageResponse.status, detail.slice(0, 300)); return reply(502, { error: imageResponse.status === 401 ? "La clé OpenAI est invalide." : "La génération d’illustration a échoué. Vérifiez que votre compte API a accès à gpt-image-1." }); }
+    const imageData = await imageResponse.json(); const image = imageData.data?.[0]?.b64_json;
+    if (!image) return reply(502, { error: "L’API n’a pas retourné de fichier image exploitable." });
+    return reply(200, { image, mimeType: "image/png" });
+  }
   if (!["create", "edit"].includes(input.mode || "") || prompt.length < 8 || prompt.length > 1800) {
     return reply(400, { error: "Choisissez création/modification et décrivez la carte (8 à 1800 caractères)." });
   }
   if (input.mode === "edit" && !input.existing) return reply(400, { error: "Choisissez une carte à modifier." });
 
-  const system = `Tu es l'assistant éditorial de Gaycha Club, un jeu satirique de cartes à collectionner pour adultes. Tu proposes des brouillons amusants, bienveillants et originaux en français. Ne prétends jamais qu'une citation est réelle. Ne crée pas de faits biographiques, accusations ou citations attribués à une personne réelle. Pour une personne réelle, propose une caricature clairement satirique et demande que les droits soient vérifiés avant publication. Réponds uniquement selon le schéma JSON imposé. La rareté doit être une des valeurs commun, peu_commun, rare, epique, legendaire, secrete. status doit toujours être brouillon. rights_checked doit toujours être false. is_fictional est true sauf si l'utilisateur demande explicitement une personne réelle.`;
+  const system = `Tu es l’assistant éditorial de Gaycha Club, un jeu satirique de cartes à collectionner pour adultes. Tu proposes des brouillons amusants, bienveillants et originaux en français. Adapte le ton à la série et au style demandé: ${String(input.style || "auto").slice(0, 40)}. Pour un lot, produis des concepts distincts, sans répéter les mêmes blagues ou noms.
+Ne prétends jamais qu’une citation est réelle. Ne crée pas de faits biographiques, accusations ou citations attribués à une personne réelle. Pour une personne réelle, propose une caricature clairement satirique et demande que les droits soient vérifiés avant publication. Réponds uniquement selon le schéma JSON imposé. La rareté doit être une des valeurs commun, peu_commun, rare, epique, legendaire, secrete. status doit toujours être brouillon. rights_checked doit toujours être false. is_fictional est true sauf si l’utilisateur demande explicitement une personne réelle.`
   const userPrompt = JSON.stringify({
     mode: input.mode,
     serie: String(input.seriesName || "").slice(0, 120),

@@ -73,9 +73,60 @@ dialog::before{content:"";position:absolute;inset:0;border-radius:16px;padding:2
 .zx{position:absolute;top:12px;right:12px;z-index:2;min-height:40px;padding:6px 14px}
 .zi h2{margin-top:0}
 @media(prefers-reduced-motion:reduce){header::after,.r-secrete,.r-epique::after,.r-legendaire::after,.r-secrete::after,.sealed,.fl.hi.on{animation:none}.fi,.card,.btn,.zc{transition:none}.card:hover{transform:none}}
+
+/* Phase 2 — tactile, editorial, less synthetic */
+:root{--bg:#111014;--ch:#1d1a20;--cream:#f6eee5;--mut:#b8aeb6;--gold:#e8bf72;--pink:#e86b9b;--blue:#7886a8;--cyan:#a7d8cf}
+main h1{letter-spacing:-.025em}
+.hero{background:linear-gradient(115deg,#25202a,#17171d 72%);border-color:#ffffff19;box-shadow:0 14px 36px #0003}
+.card{box-shadow:0 8px 18px #0005;transition:transform .18s,border-color .18s}
+.card:hover{transform:translateY(-3px) rotate(-.25deg);box-shadow:0 12px 24px #0006;filter:none}
+.r-epique,.r-legendaire,.r-secrete{animation:none}
+.btn{box-shadow:none}
+.btn:hover{box-shadow:0 4px 0 #0003;transform:translateY(-1px)}
+.btn.alt{border-color:#6b5d65;background:#ffffff04}
+header{background:#17151bea;box-shadow:0 5px 20px #0003}
+.nav-more{display:contents}.nav-more-toggle{display:none}
+.auth-box{max-width:480px;padding:clamp(22px,4vw,34px)}
+.auth-box h2{margin:5px 0 4px}.auth-intro,.auth-footnote,.account-note{color:var(--mut)}
+.auth-box label{display:block;margin-top:10px;color:var(--cream);font-weight:600;font-size:14px}
+.auth-box label span{color:var(--mut);font-weight:400}
+.auth-box input{margin:5px 0 0}
+.auth-buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.google-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;margin:18px 0 16px;background:#f6eee5;color:#22202a}
+.google-mark{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:#fff;color:#4285f4;font:800 17px Arial,sans-serif}
+.auth-divider{display:flex;align-items:center;gap:12px;color:var(--mut);font-size:12px;margin:12px 0}
+.auth-divider:before,.auth-divider:after{content:"";height:1px;background:#ffffff20;flex:1}
+.auth-footnote,.account-note{font-size:12px;margin-top:16px}
+.account-box{margin-top:18px}
+.trade-estimate{padding:10px 12px;border-radius:10px;background:#ffffff08;color:var(--cream)!important;font-size:14px}
+.trade-warning{padding:10px 12px;border-left:3px solid #e8bf72;background:#e8bf7212;color:#f3dba8!important;border-radius:0 8px 8px 0;font-size:14px}
+@media(max-width:680px){
+ body{padding-bottom:82px}
+ header{position:relative;top:auto;padding:12px 14px;gap:10px}
+ header .logo{font-size:25px}
+ header .me{margin-left:auto;font-size:12px;max-width:58%;text-align:right}
+ header nav{position:fixed;z-index:100;left:0;right:0;bottom:0;top:auto;width:100%;padding:8px 7px calc(8px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;background:#17151bf5;border-top:1px solid #ffffff20;box-shadow:0 -8px 24px #0005;backdrop-filter:blur(16px)}
+ header nav .btn{min-width:0;padding:8px 3px;font-size:11px;line-height:1.15;min-height:46px;border-radius:12px;white-space:normal}
+ .nav-more{display:none;position:absolute;bottom:calc(100% + 8px);right:8px;left:auto;width:min(250px,calc(100vw - 16px));padding:8px;grid-template-columns:1fr;gap:5px;background:#211c25;border:1px solid #ffffff24;border-radius:16px;box-shadow:0 14px 40px #0008}
+ .nav-more.is-open{display:grid}
+ .nav-more .btn{width:100%;text-align:left;padding:10px 14px}
+ .nav-more-toggle{display:block}
+ main{padding:20px 13px 26px}
+ .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ .card{padding:6px;border-radius:13px}
+ .card .band{font-size:9px;padding:4px 5px;letter-spacing:.04em}
+ .card .nm{font-size:clamp(13px,3.6vw,17px)}
+ .card .spec{font-size:10px}.card .meta{font-size:9px}
+ .hero{padding:22px 18px;border-radius:18px}
+ .stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .auth-buttons{grid-template-columns:1fr}
+ .trade-picks,.trade-coins,.review-columns{grid-template-columns:1fr}
+}
+@media(max-width:380px){header .me{font-size:11px;max-width:55%}header nav .btn{font-size:10px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 </style></head><body>
 <header><div class="logo">GAYCHA<small>CLUB</small></div>
-<nav><button class="btn alt" data-v="catalog">Catalogue</button><button class="btn alt" data-v="collection">Ma collection</button><button class="btn alt" data-v="booster">Boosters</button><button class="btn alt" data-v="missions">Missions</button><button class="btn alt" data-v="market">Marché</button><button class="btn alt" data-v="leaderboard">Classement</button><button class="btn alt" data-v="trades">Échanges</button><button class="btn alt" data-v="messages">Messages</button><button class="btn alt" data-v="admin" id="nadm" hidden>Admin</button></nav>
+<nav aria-label="Navigation principale"><button class="btn alt nav-main" data-v="booster">Boosters</button><button class="btn alt nav-main" data-v="collection">Ma collection</button><button class="btn alt nav-main" data-v="trades">Échanges</button><button class="btn alt nav-main" data-v="market">Marché</button><button class="btn alt nav-more-toggle" id="navMoreToggle" type="button" aria-expanded="false" aria-controls="navMore">Plus <span aria-hidden="true">＋</span></button><div class="nav-more" id="navMore"><button class="btn alt" data-v="catalog">Catalogue</button><button class="btn alt" data-v="missions">Missions</button><button class="btn alt" data-v="leaderboard">Classement</button><button class="btn alt" data-v="messages">Messages</button><button class="btn alt" data-v="profile">Profil</button><button class="btn alt" data-v="admin" id="nadm" hidden>Admin</button></div></nav>
 <div class="me" id="me"></div></header>
 <main id="app" aria-live="polite"></main>
 <script>
@@ -99,12 +150,13 @@ if(user)$('out').onclick=async()=>{await sb.auth.signOut();go('catalog')}}
 async function go(v){await refresh();try{if(!cards.length)await loadCards()}catch(e){app.innerHTML=msg('Impossible de charger le catalogue : '+e.message,1);return}
 if(v!=='catalog'&&!user)return auth();
 ({catalog,collection,booster,missions,market,leaderboard,trades,messages,admin})[v]()}
-document.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>go(b.dataset.v));
+document.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{const menu=$('navMore');if(menu)menu.classList.remove('is-open');const toggle=$('navMoreToggle');if(toggle)toggle.setAttribute('aria-expanded','false');go(b.dataset.v)});const navToggle=$('navMoreToggle');if(navToggle)navToggle.onclick=()=>{const menu=$('navMore');if(!menu)return;const open=menu.classList.toggle('is-open');navToggle.setAttribute('aria-expanded',String(open))};
 function catalog(){app.innerHTML=`<div class="hero"><h1>Catalogue</h1><p>Touchez une carte pour l’admirer en grand.</p><div class="rbar"></div></div>${cards.length?'':msg('Aucune carte publiée. Vérifiez que phase2_seed.sql a été exécuté.')}<div class="grid">${cards.map(c=>card(c)).join('')}</div>`}
-function auth(){app.innerHTML=`<div class="box"><h2>Connexion</h2><input id="em" type="email" placeholder="E-mail" autocomplete="email"><input id="pw" type="password" placeholder="Mot de passe (8 caractères min.)" autocomplete="current-password"><input id="un" placeholder="Pseudo (inscription : 3 à 20 lettres, chiffres, _)"><button class="btn" id="li">Se connecter</button> <button class="btn alt" id="su">Créer un compte</button><div id="am"></div></div>`;
+function auth(){app.innerHTML=`<div class="box auth-box"><div class="eyebrow">GAYCHA CLUB · Espace membre</div><h2>Ravi de te revoir</h2><p class="auth-intro">Retrouve ton album, ton solde et tes échanges.</p><button class="btn google-btn" id="googleAuth" type="button"><span class="google-mark" aria-hidden="true">G</span> Continuer avec Google</button><div class="auth-divider"><span>ou avec ton e-mail</span></div><label for="em">Adresse e-mail</label><input id="em" type="email" placeholder="toi@exemple.fr" autocomplete="email"><label for="pw">Mot de passe</label><input id="pw" type="password" placeholder="Mot de passe (8 caractères min.)" autocomplete="current-password"><label for="un">Pseudo <span>(à l’inscription)</span></label><input id="un" placeholder="3 à 20 lettres, chiffres ou _" autocomplete="nickname" maxlength="20"><div class="auth-buttons"><button class="btn" id="li" type="button">Se connecter</button><button class="btn alt" id="su" type="button">Créer un compte</button></div><div id="am" aria-live="polite"></div><p class="auth-footnote">Tes cartes et ton solde restent rattachés au compte avec lequel tu te connectes.</p></div>`;
 const v=()=>[$('em').value.trim(),$('pw').value];
-$('li').onclick=async()=>{const[e,p]=v();const {error}=await sb.auth.signInWithPassword({email:e,password:p});error?$('am').innerHTML=msg(error.message,1):go('collection')};
-$('su').onclick=async()=>{const[e,p]=v();const {error}=await sb.auth.signUp({email:e,password:p,options:{data:{username:$('un').value.trim()}}});$('am').innerHTML=error?msg(error.message,1):msg('Compte créé. Confirmez votre adresse via l’e-mail reçu, puis connectez-vous.')}}
+$('googleAuth').onclick=async()=>{const b=$('googleAuth');b.disabled=true;$('am').innerHTML=msg('Redirection vers Google…');const {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.origin+window.location.pathname}});if(error){$('am').innerHTML=msg('Connexion Google impossible : '+error.message,1);b.disabled=false}};
+$('li').onclick=async()=>{const[e,p]=v();if(!e||!p){$('am').innerHTML=msg('Saisis ton e-mail et ton mot de passe.',1);return}const {error}=await sb.auth.signInWithPassword({email:e,password:p});error?$('am').innerHTML=msg(error.message,1):go('collection')};
+$('su').onclick=async()=>{const[e,p]=v(),username=$('un').value.trim();if(!e||!p||!username){$('am').innerHTML=msg('Renseigne l’e-mail, le mot de passe et le pseudo.',1);return}if(!/^[a-zA-Z0-9_]{3,20}$/.test(username)){$('am').innerHTML=msg('Le pseudo doit contenir de 3 à 20 lettres, chiffres ou tirets bas.',1);return}const {error}=await sb.auth.signUp({email:e,password:p,options:{data:{username}}});$('am').innerHTML=error?msg(error.message,1):msg('Compte créé. Confirme ton adresse via l’e-mail reçu, puis connecte-toi.')}}
 async function ageGate(){app.innerHTML=`<div class="box"><h2>Réservé aux 18 ans et plus</h2><p>Ce site contient de l’humour adulte. Confirmez que vous avez 18 ans ou plus. Il s’agit d’une déclaration, pas d’une vérification d’identité.</p><button class="btn" id="ok">J’ai 18 ans ou plus</button><div id="am"></div></div>`;
 $('ok').onclick=async()=>{const {error}=await sb.rpc('confirm_age');error?$('am').innerHTML=msg(error.message,1):go('booster')}}
 async function collection(){app.innerHTML='<h1>Ma collection</h1><p>Chargement…</p>';
@@ -190,6 +242,7 @@ zoom.addEventListener('click',e=>{if(e.target===zoom)zoom.close()});
 document.addEventListener('click',e=>{const c=e.target.closest('.card[data-cid]');if(c&&!c.closest('dialog'))openZoom(c.dataset.cid)});
 document.addEventListener('keydown',e=>{if(e.key==='Enter'){const c=document.activeElement;if(c&&c.matches&&c.matches('.card[data-cid]')&&!c.closest('dialog'))openZoom(c.dataset.cid)}});
 
+function profilePage(){if(!user)return auth();const username=profile?.username||user.email?.split('@')[0]||'Membre',balance=Number(profile?.balance||0);app.innerHTML='<div class="hero"><h1>Mon profil</h1><p>Ton compte et ta collection, au même endroit.</p></div><div class="box account-box" style="max-width:none"><div class="stat-grid"><div><small>Pseudo</small><h2>'+esc(username)+'</h2></div><div><small>Solde</small><h2>'+balance.toLocaleString('fr-FR')+' 💰</h2></div><div><small>Adresse</small><p>'+esc(user.email||'Connexion Google')+'</p></div></div><p><button class="btn" id="profileAlbum">Ouvrir ma collection</button></p></div><div class="box account-box" style="max-width:none"><h2>Associer Google à mon compte</h2><p>Connecte-toi d’abord avec ton compte actuel, puis lie Google ici. Cela permet de garder la collection et le solde du compte existant.</p><button class="btn alt" id="linkGoogle" type="button">Lier mon compte Google</button><div id="linkGoogleMsg" aria-live="polite"></div><p class="account-note">La liaison dépend aussi des paramètres du fournisseur Google et des redirections autorisées dans Supabase.</p></div>'; $('profileAlbum').onclick=()=>go('collection');$('linkGoogle').onclick=async()=>{const b=$('linkGoogle');b.disabled=true;$('linkGoogleMsg').innerHTML=msg('Préparation de la liaison Google…');const {error}=await sb.auth.linkIdentity({provider:'google',options:{redirectTo:window.location.origin+window.location.pathname}});if(error){$('linkGoogleMsg').innerHTML=msg('Liaison Google impossible : '+error.message,1);b.disabled=false}}}
 /* ===== Administration (les droits sont vérifiés par le serveur) ===== */
 async function admin(tab){const R=profile?.role;if(!['admin','moderator','catalog_manager'].includes(R))return app.innerHTML=msg('Accès réservé au staff.',1);
 tab=tab||'stats';const T={stats:'Stats',reports:'Signalements',users:'Comptes',cards:'Cartes',boosters:'Boosters',audit:'Audit'};

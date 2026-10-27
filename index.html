@@ -630,6 +630,7 @@ if(tab==='venues'){
 }
 if(tab==='audit'){const {data,error}=await sb.from('audit_log').select('*').order('id',{ascending:false}).limit(100);body=error?fail(error):`<table><tr><th>Date</th><th>Action</th><th>Détails</th></tr>${(data||[]).map(a=>`<tr><td>${new Date(a.created_at).toLocaleString('fr-FR')}</td><td>${esc(a.action)}</td><td><small>${esc(JSON.stringify(a.details))}</small></td></tr>`).join('')}</table>`}
 app.innerHTML=`<h1>Administration</h1>${bar}${body}`;
+app.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>admin(b.dataset.t));
 
 if(tab==='cards'){
  const controls=document.createElement('div');controls.className='admin-view-controls';controls.innerHTML='<b>Catalogue visuel</b><span><button class="btn" type="button" data-admin-view="grid">Grille visuelle</button> <button class="btn alt" type="button" data-admin-view="list">Liste compacte</button></span>';

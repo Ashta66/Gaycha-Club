@@ -2,7 +2,7 @@
 <html lang="fr"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>GAYCHA CLUB — Phase 2</title>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Fraunces:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <style>
 :root{color-scheme:dark;--bg:#101010;--ch:#1D1D20;--gold:#D6B46A;--cream:#F4EBDD;--mut:#a9a39a;--rb:linear-gradient(90deg,#FF477E,#FF8A00,#FFDA45,#8CCF35,#00A9A5,#3867FF,#C9A7FF)}
@@ -73,6 +73,105 @@ dialog::before{content:"";position:absolute;inset:0;border-radius:16px;padding:2
 .zx{position:absolute;top:12px;right:12px;z-index:2;min-height:40px;padding:6px 14px}
 .zi h2{margin-top:0}
 @media(prefers-reduced-motion:reduce){header::after,.r-secrete,.r-epique::after,.r-legendaire::after,.r-secrete::after,.sealed,.fl.hi.on{animation:none}.fi,.card,.btn,.zc{transition:none}.card:hover{transform:none}}
+
+/* ===== GAYCHA CLUB — matière, papier et fabrication humaine ===== */
+:root{color-scheme:dark;--bg:#171414;--ch:#24201f;--gold:#d8b779;--cream:#f2e8d8;--mut:#b9aaa0;--rb:linear-gradient(90deg,#e66c79,#d8b779,#7eaa8d)}
+body{background-color:var(--bg);background-image:radial-gradient(ellipse at 12% 0%,#743d4020,transparent 34%),radial-gradient(ellipse at 100% 42%,#b99a6b0e,transparent 30%),repeating-linear-gradient(0deg,#ffffff02 0 1px,transparent 1px 4px);color:var(--cream);font-family:'DM Sans',sans-serif;letter-spacing:.005em}
+h1,h2,.logo{font-family:'DM Serif Display',Georgia,serif;letter-spacing:0;font-weight:400}
+h1{font-size:clamp(36px,5vw,56px);line-height:1.06}
+h2{font-size:clamp(24px,3vw,32px)}
+main>h1::after,.rbar{height:3px;width:72px;background:linear-gradient(90deg,#d8b779,#e66c79,#7eaa8d);border-radius:0}
+header{background:#201c1bf2;border-bottom:1px solid #ffffff12;backdrop-filter:blur(14px);padding:13px clamp(12px,3vw,28px)}
+header::after{height:2px;opacity:.68;animation:none;background:linear-gradient(90deg,#e66c79 0 18%,#d8b779 18% 35%,#7eaa8d 35% 52%,transparent 52% 100%)}
+.logo{color:#e4c38b;text-shadow:none;font-size:30px}
+.logo small{font-family:'DM Sans',sans-serif;letter-spacing:.28em;font-size:9px}
+header nav .btn{font-size:13px;border-radius:4px;min-height:38px}
+.btn{border-radius:5px;background:#d8b779;color:#211b19;box-shadow:none;font-family:'DM Sans',sans-serif;font-weight:700;transition:transform .18s,background .18s,border-color .18s}
+.btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 5px 14px #0003;background:#e7cb96}
+.btn.alt{background:transparent;color:var(--cream);border:1px solid #786b5b;border-radius:5px}
+.btn.alt:hover:not(:disabled){background:#ffffff0a;border-color:#d8b779}
+input,select,textarea{background:#171414;color:var(--cream);border:1px solid #554a40;border-radius:5px;font-family:'DM Sans',sans-serif}
+.box{background:#24201f;border:1px solid #55473b;border-radius:5px;box-shadow:0 10px 26px #00000012}
+.box::before{height:2px;opacity:.7;background:linear-gradient(90deg,#d8b779,#e66c79,#7eaa8d)}
+.note{background:#2a2422;border-left:3px solid #d8b779;border-radius:0 4px 4px 0;color:#d0c1b3}
+.grid{gap:24px}
+.card{border-radius:5px;box-shadow:0 5px 12px #0005, inset 0 0 0 1px #ffffff12}
+.card:hover{transform:translateY(-4px) rotate(-.4deg);box-shadow:0 14px 26px #0006}
+.band{letter-spacing:.08em;border-radius:2px}
+.art{border-radius:2px}
+.r-rare{box-shadow:0 0 0 1px #3867FF,inset 0 0 0 1px #9bb0ff}
+.r-epique{box-shadow:0 0 0 1px #e03bd0}
+.r-legendaire{box-shadow:0 0 0 1px #D6B46A,inset 0 0 0 1px #7a5f22}
+.r-secrete{box-shadow:0 0 0 1px #c9a7ff}
+.hero{padding:12px 0 18px}
+.section-kicker{font-size:11px;text-transform:uppercase;letter-spacing:.18em;color:#d8b779;font-weight:700;margin:0 0 8px}
+.lead{max-width:690px;color:#c5b8ac;font-size:16px}
+.panel-heading{display:flex;justify-content:space-between;align-items:end;gap:12px;flex-wrap:wrap;margin:28px 0 12px}
+.panel-heading h2{margin:0}
+.small-muted{font-size:13px;color:#b9aaa0}
+.booster-intro{display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,.8fr);gap:24px;align-items:center;padding:18px 0 28px}
+.booster-copy{max-width:560px}
+.booster-shelf{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:center;perspective:1000px}
+.booster-choice{border:0;background:transparent;color:var(--cream);padding:8px;display:flex;flex-direction:column;align-items:center;gap:12px;min-width:0}
+.pack-3d{--pack-a:#743f47;--pack-b:#d4a46f;position:relative;display:block;width:min(100%,190px);aspect-ratio: .63;isolation:isolate;transform-style:preserve-3d;transform:rotateY(-13deg) rotateX(3deg) rotateZ(-2deg);transition:transform .35s,filter .35s;filter:drop-shadow(10px 16px 10px #0008)}
+.pack-3d::before{content:"";position:absolute;z-index:-1;top:3%;bottom:3%;right:-7px;width:10px;background:linear-gradient(90deg,#5a3034,#c18b68,#43262b);transform:skewY(-2deg) translateZ(-3px);border-radius:1px 4px 4px 1px}
+.pack-3d::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(112deg,transparent 0 19%,#ffffff22 22%,transparent 28% 55%,#ffffff17 58%,transparent 66%),repeating-linear-gradient(176deg,#ffffff0a 0 2px,transparent 2px 7px);mix-blend-mode:screen}
+.pack-face{position:absolute;inset:0;overflow:hidden;border:1px solid #f5d5a080;border-radius:4px;background:radial-gradient(ellipse at 50% 33%,color-mix(in srgb,var(--pack-b),transparent 15%),transparent 35%),linear-gradient(145deg,var(--pack-a),#1b1517 65%,var(--pack-b));box-shadow:inset 0 0 0 3px #17141455,inset 0 0 25px #0008;display:flex;flex-direction:column;align-items:center;text-align:center;padding:8% 7%}
+.pack-crimp{height:5%;width:100%;border-top:2px solid #f2d8a466;border-bottom:2px solid #100d0d88;background:repeating-linear-gradient(90deg,#e3c08b55 0 2px,transparent 2px 5px);flex:none}
+.pack-brand{font-family:'DM Serif Display',Georgia,serif;font-size:clamp(14px,2vw,22px);line-height:1.05;margin-top:12%;color:#f6e8d5;text-shadow:0 2px 2px #0008}
+.pack-stamp{margin-top:auto;width:78%;aspect-ratio:1;border:1px solid #e6c48b99;border-radius:50%;display:grid;place-items:center;font-family:'DM Serif Display',Georgia,serif;font-size:clamp(32px,6vw,58px);color:#f6e8d5;background:radial-gradient(circle,#e7c58a25,transparent 67%);box-shadow:inset 0 0 0 5px #ffffff08}
+.pack-sub{font-size:9px;letter-spacing:.18em;text-transform:uppercase;margin-top:12%;color:#f1d7ad}
+.pack-bottom{font-size:9px;letter-spacing:.12em;margin-top:auto;color:#f2e3d2}
+.pack-label{font-size:14px;font-weight:700}
+.pack-price{font-size:12px;color:#c9b9a9}
+.booster-choice:hover .pack-3d,.booster-choice:focus-visible .pack-3d{transform:rotateY(0deg) rotateX(-2deg) rotateZ(2deg) translateY(-7px) scale(1.025);filter:drop-shadow(14px 22px 14px #0009) brightness(1.08)}
+.booster-choice:active .pack-3d{transform:rotateY(12deg) scale(.97)}
+.pack-red{--pack-a:#6d263b;--pack-b:#df897b}
+.pack-gold{--pack-a:#665034;--pack-b:#e5c58b}
+.pack-spark{position:absolute;inset:0;pointer-events:none;background:linear-gradient(110deg,transparent 40%,#ffffff20 50%,transparent 60%);opacity:.65}
+.booster-opening{grid-column:1/-1;min-height:180px;display:grid;place-items:center;position:relative}
+.sealed{width:210px;aspect-ratio:.63;margin:20px auto;background:linear-gradient(145deg,#6d263b,#1a1416 56%,#d4a46f);border:1px solid #e6c48b;border-radius:4px;display:grid;place-content:center;text-align:center;box-shadow:0 22px 38px #0008;animation:packTear .9s ease-in-out 1;position:relative;overflow:hidden}
+.sealed::before{content:"";position:absolute;inset:5px;border:1px solid #e6c48b77}
+.sealed .logo{position:relative;z-index:1;color:#f6e8d5}
+@keyframes packTear{0%{transform:rotate(-5deg) scale(.85);clip-path:inset(0 0 0 0)}30%{transform:rotate(5deg) scale(1.04)}65%{transform:rotate(-2deg) scale(1.08);filter:brightness(1.8)}100%{transform:rotate(0) scale(1);clip-path:inset(0 0 0 0)}}
+.cards-grid{grid-template-columns:repeat(auto-fill,minmax(205px,1fr))}
+.trade-layout{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:20px;align-items:start}
+.trade-panel{background:#24201f;border:1px solid #514438;padding:20px;border-radius:5px}
+.trade-panel h2{font-size:24px;margin:0 0 8px}
+.trade-field{display:grid;gap:7px;margin:14px 0}
+.trade-field label{font-size:13px;color:#cbbba9;font-weight:700}
+.trade-field select{min-height:130px;padding:8px}
+.trade-summary{padding:12px;border:1px dashed #796b5a;color:#d5c4b4;font-size:13px;margin:12px 0}
+.offer-row{border:1px solid #514438;background:#24201f;padding:18px;margin:12px 0;border-radius:5px}
+.offer-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.status-pill{display:inline-block;border:1px solid #796b5a;border-radius:3px;padding:3px 8px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#d8c4a8}
+.offer-columns{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0}
+.offer-side{border-left:2px solid #796b5a;padding-left:12px}
+.offer-side b{display:block;font-size:12px;color:#d8b779;margin-bottom:5px;text-transform:uppercase;letter-spacing:.08em}
+.offer-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.messenger-layout{display:grid;grid-template-columns:minmax(210px,.7fr) minmax(0,1.3fr);gap:18px;align-items:stretch;margin-top:18px}
+.conversation-list{border:1px solid #514438;background:#211d1c;border-radius:5px;overflow:hidden}
+.conversation-list h2{font-size:20px;margin:0;padding:16px;border-bottom:1px solid #514438}
+.conversation-item{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid #514438;background:transparent;color:var(--cream);padding:14px 16px;min-height:68px}
+.conversation-item:hover,.conversation-item.active{background:#ffffff0a;border-left:3px solid #d8b779;padding-left:13px}
+.conversation-item strong{display:block;font-size:14px}
+.conversation-item small{display:block;color:#b9aaa0;font-size:12px;margin-top:4px}
+.unread-dot{display:inline-block;width:7px;height:7px;background:#e66c79;border-radius:50%;margin-right:6px}
+.chat-panel{min-width:0;border:1px solid #514438;border-radius:5px;background:#211d1c;display:flex;flex-direction:column;min-height:390px}
+.chat-header{padding:15px 18px;border-bottom:1px solid #514438;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.chat-stream{padding:18px;display:flex;flex-direction:column;gap:10px;flex:1;max-height:460px;overflow:auto}
+.chat-empty{padding:30px 20px;color:#b9aaa0;text-align:center;margin:auto}
+.chat-bubble{max-width:min(85%,520px);padding:10px 13px;border-radius:4px;background:#342c29;border:1px solid #514438;align-self:flex-start;overflow-wrap:anywhere}
+.chat-bubble.mine{align-self:flex-end;background:#4a3538;border-color:#8d5b60}
+.chat-bubble p{margin:0;white-space:pre-wrap}
+.chat-bubble small{display:block;color:#c4b3a5;font-size:10px;margin-top:6px}
+.chat-compose{display:flex;gap:8px;align-items:flex-end;padding:12px;border-top:1px solid #514438}
+.chat-compose input{margin:0;flex:1;min-width:0}
+.chat-compose .btn{flex:none}
+.message-new{border:1px dashed #796b5a;padding:12px 14px;margin-top:16px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.message-new input{flex:1;min-width:180px;margin:0}
+@media(max-width:760px){.booster-intro{grid-template-columns:1fr}.booster-shelf{max-width:440px;width:100%;margin:0 auto}.trade-layout,.messenger-layout{grid-template-columns:1fr}.chat-panel{min-height:330px}.offer-columns{grid-template-columns:1fr}.cards-grid{grid-template-columns:repeat(auto-fill,minmax(155px,1fr))}}
+@media(prefers-reduced-motion:reduce){.pack-3d,.booster-choice:hover .pack-3d{transition:none;transform:none}.sealed{animation:none}}
 </style></head><body>
 <header><div class="logo">GAYCHA<small>CLUB</small></div>
 <nav><button class="btn alt" data-v="catalog">Catalogue</button><button class="btn alt" data-v="collection">Ma collection</button><button class="btn alt" data-v="booster">Boosters</button><button class="btn alt" data-v="missions">Missions</button><button class="btn alt" data-v="market">Marché</button><button class="btn alt" data-v="leaderboard">Classement</button><button class="btn alt" data-v="trades">Échanges</button><button class="btn alt" data-v="messages">Messages</button><button class="btn alt" data-v="admin" id="nadm" hidden>Admin</button></nav>
@@ -100,7 +199,7 @@ async function go(v){await refresh();try{if(!cards.length)await loadCards()}catc
 if(v!=='catalog'&&!user)return auth();
 ({catalog,collection,booster,missions,market,leaderboard,trades,messages,admin})[v]()}
 document.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>go(b.dataset.v));
-function catalog(){app.innerHTML=`<div class="hero"><h1>Catalogue</h1><p>Touchez une carte pour l’admirer en grand.</p><div class="rbar"></div></div>${cards.length?'':msg('Aucune carte publiée. Vérifiez que phase2_seed.sql a été exécuté.')}<div class="grid">${cards.map(c=>card(c)).join('')}</div>`}
+function catalog(){app.innerHTML=`<div class="hero"><p class="section-kicker">L’encyclopédie des séries</p><h1>Les cartes connues.</h1><p class="lead">Explore les séries et admire les cartes en grand. Pour garder le plaisir de la découverte, cette encyclopédie peut évoluer vers des silhouettes pour les cartes que tu n’as pas encore trouvées.</p><div class="rbar"></div></div>${cards.length?'':msg('Aucune carte publiée. Vérifiez que phase2_seed.sql a été exécuté.')}<div class="grid cards-grid">${cards.map(c=>card(c)).join('')}</div>`}
 function auth(){app.innerHTML=`<div class="box"><h2>Connexion</h2><input id="em" type="email" placeholder="E-mail" autocomplete="email"><input id="pw" type="password" placeholder="Mot de passe (8 caractères min.)" autocomplete="current-password"><input id="un" placeholder="Pseudo (inscription : 3 à 20 lettres, chiffres, _)"><button class="btn" id="li">Se connecter</button> <button class="btn alt" id="su">Créer un compte</button><div id="am"></div></div>`;
 const v=()=>[$('em').value.trim(),$('pw').value];
 $('li').onclick=async()=>{const[e,p]=v();const {error}=await sb.auth.signInWithPassword({email:e,password:p});error?$('am').innerHTML=msg(error.message,1):go('collection')};
@@ -116,11 +215,11 @@ app.innerHTML=`<h1>Ma collection</h1><p>${own.length} / ${cards.length} cartes d
 app.querySelectorAll('[data-conv]').forEach(b=>b.onclick=async()=>{b.disabled=true;const {data:g,error:e}=await sb.rpc('convert_duplicates',{p_card:b.dataset.conv,p_qty:+b.dataset.n,p_key:crypto.randomUUID()});if(e){$('cm').innerHTML=msg(e.message,1);b.disabled=false;return}await refresh();collection();$('cm').innerHTML=msg('+'+g+' 💰 ajoutés à votre solde.')});
 app.querySelectorAll('[data-sell]').forEach(b=>b.onclick=async()=>{const pr=prompt('Prix de vente en 💰 (1 à 1 000 000) ?');if(!pr)return;const {data:ins}=await sb.from('card_instances').select('id').eq('card_id',b.dataset.sell).eq('locked',false).order('acquired_at',{ascending:false}).limit(1);if(!ins?.length){$('cm').innerHTML=msg('Aucun exemplaire disponible (déjà en vente ?).',1);return}const {error:e}=await sb.rpc('list_card',{p_instance:ins[0].id,p_price:parseInt(pr,10)});$('cm').innerHTML=e?msg(e.message,1):msg('Carte mise en vente. Retrouvez-la dans le Marché.')})}
 function booster(){if(profile&&!profile.age_confirmed_at)return ageGate();
-app.innerHTML=`<h1>Boosters</h1><p>5 cartes par booster. Le tirage est fait par le serveur.</p><button class="btn" data-b="petit-malaise">Le Petit Malaise (gratuit, 1 par jour)</button> <button class="btn alt" data-b="red-flag">Le Red Flag (100 💰)</button><div id="odds" class="note">Chargement des probabilités…</div><div id="pk" class="grid"></div>`;
+app.innerHTML=`<div class="booster-intro"><div class="booster-copy"><p class="section-kicker">Séries scellées · tirage serveur</p><h1>Le plaisir d’ouvrir.</h1><p class="lead">Choisis un paquet, regarde-le prendre la lumière, puis découvre tes cinq cartes une à une. Chaque paquet a son caractère ; les tirages, eux, restent décidés par le serveur.</p><div class="note">Les probabilités et les garanties sont affichées ici en toute transparence. Une animation peut être passée à tout moment.</div></div><div class="booster-shelf"><button class="booster-choice" data-b="petit-malaise" aria-label="Ouvrir Le Petit Malaise"><span class="pack-3d pack-red"><span class="pack-face"><span class="pack-crimp"></span><span class="pack-brand">GAYCHA<br>CLUB</span><span class="pack-stamp">!</span><span class="pack-sub">Le Petit Malaise</span><span class="pack-bottom">SÉRIE COLLECTOR · 05 CARTES</span><span class="pack-crimp"></span></span><span class="pack-spark"></span></span><span class="pack-label">Le Petit Malaise</span><span class="pack-price">Gratuit · 1 par jour</span></button><button class="booster-choice" data-b="red-flag" aria-label="Ouvrir Le Red Flag"><span class="pack-3d pack-gold"><span class="pack-face"><span class="pack-crimp"></span><span class="pack-brand">GAYCHA<br>CLUB</span><span class="pack-stamp">⚑</span><span class="pack-sub">Le Red Flag</span><span class="pack-bottom">SÉRIE COLLECTOR · 05 CARTES</span><span class="pack-crimp"></span></span><span class="pack-spark"></span></span><span class="pack-label">Le Red Flag</span><span class="pack-price">100 💰</span></button></div></div><div class="panel-heading"><h2>Ouverture</h2><span class="small-muted">5 cartes · une à une</span></div><div id="odds" class="note">Chargement des probabilités…</div><div id="pk" class="grid cards-grid"></div>`;
 app.querySelectorAll('[data-b]').forEach(b=>b.onclick=()=>open5(b.dataset.b));
-sb.from('booster_types').select('name,odds,pity_threshold').eq('active',true).then(({data})=>{$('odds').innerHTML=(data||[]).map(t=>esc(t.name)+' : '+Object.entries(t.odds).map(([k,v])=>(RN[k]?.[0]||k)+' '+v+' %').join(' · ')+'. Garantie : une Rare ou mieux après '+t.pity_threshold+' cartes sans.').join('<br>')})}
+sb.from('booster_types').select('name,odds,pity_threshold').eq('active',true).then(({data,error})=>{$('odds').innerHTML=error?'Les probabilités sont momentanément indisponibles.':(data||[]).map(t=>'<b>'+esc(t.name)+'</b> : '+Object.entries(t.odds).map(([k,v])=>(RN[k]?.[0]||k)+' '+v+' %').join(' · ')+'. Garantie : une Rare ou mieux après '+t.pity_threshold+' cartes sans.').join('<br>')})}
 async function open5(slug){if(busy)return;busy=true;document.querySelectorAll('[data-b]').forEach(b=>b.disabled=true);const pk=$('pk');
-pk.innerHTML='<div class="sealed" style="grid-column:1/-1;justify-self:center"><div class="logo">GAYCHA<small>CLUB</small></div></div>';
+pk.innerHTML='<div class="booster-opening"><div class="sealed"><div class="logo">GAYCHA<small>CLUB</small></div></div></div>';
 const {data,error}=await sb.rpc('open_booster',{p_booster:slug,p_key:crypto.randomUUID()});
 busy=false;document.querySelectorAll('[data-b]').forEach(b=>b.disabled=false);
 if(error){pk.innerHTML=msg('Ouverture impossible : '+error.message,1);return}
@@ -140,45 +239,40 @@ async function leaderboard(){const {data,error}=await sb.from('leaderboard').sel
 if(error)return app.innerHTML=msg(error.message,1);
 app.innerHTML=`<h1>Classement</h1><div class="box" style="max-width:none">${data.map((r,i)=>`<div>${i+1}. <b>${esc(r.username)}</b> · ${r.xp} XP · ${r.cards_found} cartes</div>`).join('')}</div>`}
 async function trades(){if(profile&&!profile.age_confirmed_at)return ageGate();await sb.rpc('expire_offers');
-const [a,b,c]=await Promise.all([sb.from('trades_view').select('*').order('created_at',{ascending:false}),sb.from('trade_items_view').select('*'),sb.from('card_instances').select('id,card_id').eq('locked',false)]);
+const [a,b,d]=await Promise.all([sb.from('trades_view').select('*').order('created_at',{ascending:false}),sb.from('trade_items_view').select('*'),sb.from('card_instances').select('id,card_id').eq('locked',false)]);
 if(a.error)return app.innerHTML=msg(a.error.message,1);
-const T=a.data||[],I=b.data||[],by={};(c.data||[]).forEach(m=>{(by[m.card_id]=by[m.card_id]||[]).push(m.id)});
-const opt=(v,c)=>`<option value="${v}">${esc(c.name)} (${RN[c.rarity][0]})</option>`;
-const its=(id,s)=>I.filter(i=>i.offer_id===id&&i.side===s).map(i=>esc(i.name)).join(', ')||'aucune carte';
-const SL={pending:'en attente',accepted:'acceptée',declined:'refusée',cancelled:'annulée',expired:'expirée'};
-app.innerHTML=`<h1>Échanges</h1><div class="box" style="max-width:none"><b>Nouvelle proposition</b><input id="tu" placeholder="Pseudo du destinataire"><label>Je donne (Ctrl/Cmd pour plusieurs)</label><select id="tg" multiple size="5" style="width:100%;background:#101010;color:#F4EBDD">${cards.filter(x=>by[x.id]).map(x=>opt(by[x.id][0],x)).join('')}</select><label>Je demande</label><select id="tw" multiple size="5" style="width:100%;background:#101010;color:#F4EBDD">${cards.map(x=>opt(x.id,x)).join('')}</select><input id="t1" type="number" min="0" placeholder="💰 que je donne (0)"><input id="t2" type="number" min="0" placeholder="💰 que je demande (0)"><button class="btn" id="tp">Proposer</button><div id="tm"></div></div>
-<h2 style="margin-top:24px">Historique et offres</h2>${T.length?'':msg('Aucun échange pour le moment.')}${T.map(t=>{const mine=t.proposer_id===user.id;return `<div class="box" style="max-width:none;margin:12px 0"><b>${mine?'Vous → '+esc(t.recipient):esc(t.proposer)+' → vous'}</b> · ${SL[t.status]}<br>${mine?'Vous donnez':esc(t.proposer)+' donne'} : ${its(t.id,'give')}${t.offer_coins?' + '+t.offer_coins+' 💰':''}<br>${mine?'Vous demandez':esc(t.proposer)+' demande'} : ${its(t.id,'get')}${t.request_coins?' + '+t.request_coins+' 💰':''}<br><small>Expire le ${new Date(t.expires_at).toLocaleString('fr-FR')}</small><br>${t.status==='pending'?(mine?`<button class="btn alt" data-x="cancel" data-t="${t.id}">Annuler</button>`:`<button class="btn" data-x="accept" data-t="${t.id}">Accepter</button> <button class="btn alt" data-x="decline" data-t="${t.id}">Refuser</button>`):''}</div>`}).join('')}`;
-$('tp').onclick=async()=>{$('tp').disabled=true;const sel=id=>[...$(id).selectedOptions].map(o=>o.value);
-const {error}=await sb.rpc('propose_trade',{p_recipient:$('tu').value.trim(),p_give:sel('tg'),p_get:sel('tw'),p_offer_coins:+$('t1').value||0,p_request_coins:+$('t2').value||0});
-if(error){$('tm').innerHTML=msg(error.message,1);$('tp').disabled=false}else trades()};
-app.querySelectorAll('[data-x]').forEach(bt=>bt.onclick=async()=>{const k=bt.dataset.x,id=bt.dataset.t;
-if(k==='accept'&&!confirm('Confirmer cet échange ? Il sera définitif.'))return;bt.disabled=true;
+const T=a.data||[],I=b.data||[],by={};(d.data||[]).forEach(m=>{(by[m.card_id]=by[m.card_id]||[]).push(m.id)});
+const opt=(v,c)=>`<option value="${v}">${esc(c.name)} · ${RN[c.rarity][0]}</option>`;
+const its=(id,s)=>I.filter(i=>i.offer_id===id&&i.side===s).map(i=>esc(i.name)).join(', ')||'Aucune carte';
+const SL={pending:'En attente',accepted:'Acceptée',declined:'Refusée',cancelled:'Annulée',expired:'Expirée'};
+const countSelected=id=>$(id)?[...$(id).selectedOptions].length:0;
+app.innerHTML=`<div class="hero"><p class="section-kicker">Échanges entre collectionneurs</p><h1>À toi, à moi.</h1><p class="lead">Compose une offre claire, compare les deux côtés et confirme uniquement quand tout te convient.</p></div><div class="trade-layout"><section class="trade-panel"><p class="section-kicker">Nouvelle proposition</p><h2>Composer un échange</h2><div class="trade-field"><label for="tu">Pseudo du destinataire</label><input id="tu" placeholder="Ex. : DivaDu66" autocomplete="off"></div><div class="trade-field"><label for="tg">Tes cartes à proposer</label><select id="tg" multiple size="6" aria-describedby="give-help">${cards.filter(x=>by[x.id]).map(x=>opt(by[x.id][0],x)).join('')}</select><span id="give-help" class="small-muted">Sélection multiple : Ctrl (Windows) ou Cmd (Mac).</span></div><div class="trade-field"><label for="tw">Cartes que tu souhaites recevoir</label><select id="tw" multiple size="6">${cards.map(x=>opt(x.id,x)).join('')}</select><span class="small-muted">Choisis les cartes que tu recherches.</span></div><div class="trade-layout" style="grid-template-columns:1fr 1fr;gap:12px"><div class="trade-field"><label for="t1">Monnaie offerte 💰</label><input id="t1" type="number" min="0" max="1000000" value="0"></div><div class="trade-field"><label for="t2">Monnaie demandée 💰</label><input id="t2" type="number" min="0" max="1000000" value="0"></div></div><div class="trade-summary" id="trade-summary">0 carte(s) offertes · 0 carte(s) demandées</div><button class="btn" id="tp" style="width:100%">Envoyer la proposition</button><div id="tm" aria-live="polite"></div></section><aside><div class="trade-panel"><p class="section-kicker">Bon à savoir</p><h2>Un échange net</h2><p>Vérifie les deux listes avant d’envoyer ton offre. Une proposition en attente peut être refusée ou annulée ; un échange accepté est définitif.</p><div class="trade-summary">Tes cartes sont sélectionnées parmi tes exemplaires disponibles. Les vérifications finales sont faites côté serveur.</div></div><div class="panel-heading"><h2>Mes offres</h2><span class="small-muted">${T.length} au total</span></div><p class="small-muted">Les offres reçues et envoyées restent accessibles ici, avec leur état et leur date d’expiration.</p></aside></div><div class="panel-heading"><h2>Historique des échanges</h2><span class="small-muted">Récentes en premier</span></div>${T.length?'':msg('Aucun échange pour le moment.')}<div>${T.map(t=>{const mine=t.proposer_id===user.id;return `<article class="offer-row"><div class="offer-top"><b>${mine?'Vous → '+esc(t.recipient):esc(t.proposer)+' → vous'}</b><span class="status-pill">${SL[t.status]||esc(t.status)}</span></div><div class="offer-columns"><div class="offer-side"><b>${mine?'Vous donnez':'Ça donne'}</b>${its(t.id,'give')}${t.offer_coins?' + '+t.offer_coins+' 💰':''}</div><div class="offer-side"><b>${mine?'Vous recevez':'Ça demande'}</b>${its(t.id,'get')}${t.request_coins?' + '+t.request_coins+' 💰':''}</div></div><small class="small-muted">Expire le ${new Date(t.expires_at).toLocaleString('fr-FR')}</small>${t.status==='pending'?'<div class="offer-actions">'+(mine?`<button class="btn alt" data-x="cancel" data-t="${t.id}">Annuler l’offre</button>`:`<button class="btn" data-x="accept" data-t="${t.id}">Accepter l’échange</button> <button class="btn alt" data-x="decline" data-t="${t.id}">Refuser</button>`)+'</div>':''}</article>`}).join('')}</div>`;
+const updateSummary=()=>{const give=countSelected('tg'),get=countSelected('tw');$('trade-summary').textContent=give+' carte(s) offertes · '+get+' carte(s) demandées';};
+$('tg').onchange=updateSummary;$('tw').onchange=updateSummary;
+$('tp').onclick=async()=>{const btn=$('tp');btn.disabled=true;const sel=id=>[...$(id).selectedOptions].map(o=>o.value);const recipient=$('tu').value.trim();
+if(!recipient){$('tm').innerHTML=msg('Indique le pseudo du destinataire.',1);btn.disabled=false;return}
+if(!sel('tg').length&&!sel('tw').length&&!(+$('t1').value)&&!(+$('t2').value)){$('tm').innerHTML=msg('Ajoute au moins une carte ou de la monnaie à la proposition.',1);btn.disabled=false;return}
+const {error}=await sb.rpc('propose_trade',{p_recipient:recipient,p_give:sel('tg'),p_get:sel('tw'),p_offer_coins:+$('t1').value||0,p_request_coins:+$('t2').value||0});
+if(error){$('tm').innerHTML=msg(error.message,1);btn.disabled=false}else trades()};
+app.querySelectorAll('[data-x]').forEach(bt=>bt.onclick=async()=>{const k=bt.dataset.x,id=bt.dataset.t;if(k==='accept'&&!confirm('Confirmer cet échange ? Le transfert sera définitif.'))return;bt.disabled=true;
 const {error}=k==='accept'?await sb.rpc('accept_trade',{p_offer:id,p_key:crypto.randomUUID()}):await sb.rpc('close_trade',{p_offer:id,p_as:k});
-await refresh();if(error){bt.disabled=false;$('tm').innerHTML=msg(error.message,1)}else trades()})}
+if(error){bt.disabled=false;const target=$('tm');if(target)target.innerHTML=msg(error.message,1)}else trades()})}
 async function messages(openId){if(profile&&!profile.age_confirmed_at)return ageGate();
 const [a,b]=await Promise.all([sb.from('conversations_view').select('*').order('last_at',{ascending:false,nullsFirst:false}),sb.from('blocked_view').select('*')]);
 if(a.error)return app.innerHTML=msg(a.error.message,1);
-const cv=a.data||[],bl=b.data||[];let th='';
-if(openId){const c=cv.find(x=>x.id===openId);
-if(c){const {data:ms}=await sb.from('messages').select('id,sender_id,body,created_at').eq('conversation_id',openId).order('created_at');
-await sb.rpc('mark_read',{p_conversation:openId});
-const ask=c.status==='pending'&&c.requested_by!==user.id;
-th=`<div class="box" style="max-width:none"><b>${esc(c.other)}</b> <button class="btn alt" data-blk="${esc(c.other)}">Bloquer</button>
-${ask?`<div class="note">${esc(c.other)} souhaite vous écrire. <button class="btn" data-rsp="1" data-cv="${c.id}">Accepter</button> <button class="btn alt" data-rsp="0" data-cv="${c.id}">Refuser</button></div>`:''}
-${c.status==='pending'&&!ask?'<div class="note">En attente de l’acceptation du destinataire.</div>':''}
-<div>${(ms||[]).map(m=>`<p style="${m.sender_id===user.id?'text-align:right':''}">${esc(m.body)}<br><small>${new Date(m.created_at).toLocaleString('fr-FR')}${m.sender_id!==user.id?` · <a href="#" data-rep="${m.id}" style="color:#D6B46A">Signaler</a>`:''}</small></p>`).join('')}</div>
-<input id="mb" maxlength="1000" placeholder="Votre message"><button class="btn" id="ms" data-to="${esc(c.other)}">Envoyer</button></div>`}}
-app.innerHTML=`<h1>Messages</h1><div id="mq"></div>${th}<div class="box" style="max-width:none"><b>Nouveau message</b><input id="nu" placeholder="Pseudo du destinataire"><input id="nb" maxlength="1000" placeholder="Premier message (une demande de contact sera envoyée)"><button class="btn" id="ns">Envoyer</button></div>
-<h2>Conversations</h2>${cv.length?'':msg('Aucune conversation.')}${cv.map(c=>`<div class="box" style="max-width:none;margin:10px 0"><a href="#" data-c="${c.id}" style="color:#D6B46A"><b>${esc(c.other)}</b></a> ${c.status==='pending'?'(demande en attente)':c.status==='declined'?'(refusée)':''}${c.unread?` · ${c.unread} non lu(s)`:''}</div>`).join('')}
-${bl.length?`<h2>Utilisateurs bloqués</h2>${bl.map(x=>`<div>${esc(x.username)} <button class="btn alt" data-unb="${x.blocked_id}">Débloquer</button></div>`).join('')}`:''}`;
-const fail=e=>{$('mq').innerHTML=msg(e.message,1)};
-$('ns').onclick=async()=>{const {error:e}=await sb.rpc('send_message',{p_recipient:$('nu').value.trim(),p_body:$('nb').value});e?fail(e):messages()};
-if($('ms'))$('ms').onclick=async()=>{const {error:e}=await sb.rpc('send_message',{p_recipient:$('ms').dataset.to,p_body:$('mb').value});e?fail(e):messages(openId)};
-app.querySelectorAll('[data-c]').forEach(l=>l.onclick=ev=>{ev.preventDefault();messages(l.dataset.c)});
-app.querySelectorAll('[data-rsp]').forEach(x=>x.onclick=async()=>{const {error:e}=await sb.rpc('respond_request',{p_conversation:x.dataset.cv,p_accept:x.dataset.rsp==='1'});e?fail(e):messages(openId)});
-app.querySelectorAll('[data-blk]').forEach(x=>x.onclick=async()=>{if(!confirm('Bloquer '+x.dataset.blk+' ? Cette personne ne pourra plus vous écrire ni vous proposer d’échange.'))return;const {error:e}=await sb.rpc('block_user',{p_username:x.dataset.blk});e?fail(e):messages()});
-app.querySelectorAll('[data-unb]').forEach(x=>x.onclick=async()=>{const {error:e}=await sb.rpc('unblock_user',{p_blocked:x.dataset.unb});e?fail(e):messages(openId)});
-app.querySelectorAll('[data-rep]').forEach(x=>x.onclick=async ev=>{ev.preventDefault();const r=prompt('Pourquoi signalez-vous ce message ? (3 à 500 caractères)');if(!r)return;const {error:e}=await sb.rpc('report_message',{p_message:x.dataset.rep,p_reason:r});$('mq').innerHTML=e?msg(e.message,1):msg('Signalement envoyé à la modération.')})}
+const cv=a.data||[],bl=b.data||[];let active=cv.find(x=>x.id===openId);if(!active&&openId)active=null;
+let ms=[];if(active){const {data}=await sb.from('messages').select('id,sender_id,body,created_at').eq('conversation_id',openId).order('created_at');ms=data||[];await sb.rpc('mark_read',{p_conversation:openId})}
+const ask=active&&active.status==='pending'&&active.requested_by!==user.id;
+const chat=active?`<section class="chat-panel"><div class="chat-header"><div><p class="section-kicker" style="margin:0">Conversation</p><b>${esc(active.other)}</b><div class="small-muted">${active.status==='pending'?(ask?'Demande de contact reçue':'Demande en attente'):'Discussion privée'}</div></div><button class="btn alt" data-blk="${esc(active.other)}">Bloquer</button></div>${ask?`<div class="note" style="margin:12px">Cette personne souhaite vous écrire. <button class="btn" data-rsp="1" data-cv="${active.id}">Accepter</button> <button class="btn alt" data-rsp="0" data-cv="${active.id}">Refuser</button></div>`:''}${active.status==='pending'&&!ask?'<div class="note" style="margin:12px">Ton message est envoyé. La conversation s’activera quand la demande sera acceptée.</div>':''}<div class="chat-stream" id="chat-stream">${ms.length?ms.map(m=>`<div class="chat-bubble ${m.sender_id===user.id?'mine':''}"><p>${esc(m.body)}</p><small>${new Date(m.created_at).toLocaleString('fr-FR')}${m.sender_id!==user.id?` · <a href="#" data-rep="${m.id}" style="color:#e4c38b">Signaler</a>`:''}</small></div>`).join(''):'<div class="chat-empty">Pas encore de message. À toi de lancer la conversation.</div>'}</div><form class="chat-compose" id="message-form"><input id="mb" maxlength="1000" placeholder="Écrire un message…" aria-label="Écrire un message" ${active.status==='pending'&&!ask?'disabled':''}><button class="btn" id="ms" data-to="${esc(active.other)}" ${active.status==='pending'&&!ask?'disabled':''}>Envoyer</button></form></section>`:'<section class="chat-panel"><div class="chat-empty"><p class="section-kicker">Ta messagerie</p><h2>Choisis une conversation</h2><p>Ou démarre une discussion avec un collectionneur à droite.</p></div></section>';
+app.innerHTML=`<div class="hero"><p class="section-kicker">Communauté Gaycha</p><h1>On se parle ?</h1><p class="lead">Tes conversations au même endroit. Les demandes de contact restent sous ton contrôle.</p></div><div class="messenger-layout"><aside class="conversation-list"><h2>Conversations <span class="small-muted">(${cv.length})</span></h2>${cv.length?cv.map(c=>`<button class="conversation-item ${c.id===openId?'active':''}" data-c="${c.id}"><strong>${c.unread?'<span class="unread-dot"></span>':''}${esc(c.other)}</strong><small>${c.status==='pending'?(c.requested_by===user.id?'Demande envoyée':'Nouvelle demande'):'Ouvrir la conversation'} · ${c.last_at?new Date(c.last_at).toLocaleDateString('fr-FR'):''}</small></button>`).join(''):'<p class="chat-empty">Pas encore de conversation.</p>'}</aside><div><div id="mq" aria-live="polite"></div>${chat}<form class="message-new" id="new-message-form"><span class="section-kicker" style="margin:0">Nouveau message</span><input id="nu" placeholder="Pseudo du collectionneur" autocomplete="off" aria-label="Pseudo du destinataire"><input id="nb" maxlength="1000" placeholder="Ton premier message…" aria-label="Premier message"><button class="btn" id="ns">Envoyer</button></form></div></div>${bl.length?`<div class="panel-heading"><h2>Utilisateurs bloqués</h2></div>${bl.map(x=>`<div class="offer-row"><b>${esc(x.username)}</b> <button class="btn alt" data-unb="${x.blocked_id}">Débloquer</button></div>`).join('')}`:''}`;
+const fail=e=>{const q=$('mq');if(q)q.innerHTML=msg(e.message,1)};
+$('new-message-form').onsubmit=async ev=>{ev.preventDefault();const btn=$('ns');if(!$('nu').value.trim()||!$('nb').value.trim()){fail({message:'Indique un pseudo et écris un premier message.'});return}btn.disabled=true;const {error}=await sb.rpc('send_message',{p_recipient:$('nu').value.trim(),p_body:$('nb').value.trim()});if(error){fail(error);btn.disabled=false}else messages()};
+if($('message-form'))$('message-form').onsubmit=async ev=>{ev.preventDefault();const body=$('mb').value.trim();if(!body)return;const btn=$('ms');btn.disabled=true;const {error}=await sb.rpc('send_message',{p_recipient:btn.dataset.to,p_body:body});if(error){fail(error);btn.disabled=false}else messages(openId)};
+app.querySelectorAll('[data-c]').forEach(l=>l.onclick=()=>messages(l.dataset.c));
+app.querySelectorAll('[data-rsp]').forEach(x=>x.onclick=async()=>{const {error}=await sb.rpc('respond_request',{p_conversation:x.dataset.cv,p_accept:x.dataset.rsp==='1'});error?fail(error):messages(openId)});
+app.querySelectorAll('[data-blk]').forEach(x=>x.onclick=async()=>{if(!confirm('Bloquer '+x.dataset.blk+' ? Cette personne ne pourra plus vous écrire ni vous proposer d’échange.'))return;const {error}=await sb.rpc('block_user',{p_username:x.dataset.blk});error?fail(error):messages()});
+app.querySelectorAll('[data-unb]').forEach(x=>x.onclick=async()=>{const {error}=await sb.rpc('unblock_user',{p_blocked:x.dataset.unb});error?fail(error):messages(openId)});
+app.querySelectorAll('[data-rep]').forEach(x=>x.onclick=async ev=>{ev.preventDefault();const r=prompt('Pourquoi signalez-vous ce message ? (3 à 500 caractères)');if(!r)return;const {error}=await sb.rpc('report_message',{p_message:x.dataset.rep,p_reason:r});$('mq').innerHTML=error?msg(error.message,1):msg('Signalement envoyé à la modération.')})}
 /* ===== Vue en grand ===== */
 const zoom=document.createElement('dialog');zoom.setAttribute('aria-label','Carte en grand');document.body.appendChild(zoom);
 function openZoom(id){const c=cards.find(x=>x.id===id);if(!c)return;const r=RN[c.rarity];

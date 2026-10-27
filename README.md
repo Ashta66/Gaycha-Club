@@ -13,14 +13,14 @@ Gaycha Club est un site de cartes à collectionner avec boosters, collection, é
 
 ## Séries de lieux LGBTQ+
 
-Trois séries sont préparées dans Supabase, avec **60 fiches de lieux réels en brouillon** après l’extension du 27 octobre 2026 :
+Trois séries sont préparées dans Supabase, avec **70 fiches de lieux réels en brouillon** après l’extension du 27 octobre 2026 :
 - **Bars gays & LGBTQ+ de France** — inclut également les lieux LGBTQ+ de Barcelone.
 - **Discothèques gays & LGBTQ+** — inclut également les clubs LGBTQ+ de Barcelone.
 - **Saunas gays** — inclut également les établissements de Barcelone.
 
-Répartition actuelle : **25 bars dans 14 villes**, **14 clubs/discothèques dans 11 villes** et **21 saunas dans 14 villes**. Les fiches sont volontairement non publiées tant que l'équipe n'a pas vérifié l'activité de l'établissement, la description et les droits de l'image.
+Répartition actuelle : **30 bars dans 15 villes**, **16 clubs/discothèques dans 12 villes** et **24 saunas dans 15 villes**. Perpignan est désormais représentée dans les trois séries : Backstage (bar), UBA Club (discothèque, activité à confirmer) et L’Équateur (sauna, fermeture à confirmer). Les fiches sont volontairement non publiées tant que l'équipe n'a pas vérifié l'activité de l'établissement, la description et les droits de l'image.
 
-La table `venue_sources` associe une carte à son type de lieu, sa ville, son pays, son site officiel, la source de description, l'origine du visuel, son statut de vérification et sa licence. L'onglet d'administration **Lieux LGBTQ+** permet de compléter ces champs et le visuel ; les fiches de lieu affichent ensuite les liens de source et le statut des droits dans le détail de la carte. Les fiches couvrent notamment Paris, Lyon, Marseille, Toulouse, Bordeaux, Lille, Nantes, Montpellier, Nice, Strasbourg, Rennes, Biarritz et Barcelone. Elles comprennent les six fiches initiales (Le Cox, La Federica, Gibus Club, Safari Disco Club, Sun City et Sauna Bruc) ainsi que de nouvelles fiches pour les autres établissements. Les villes et établissements varient selon le type de lieu ; aucune photo n'est intégrée tant que les droits ne sont pas vérifiés.
+La table `venue_sources` associe une carte à son type de lieu, sa ville, son pays, son site officiel, la source de description, l'origine du visuel, son statut de vérification et sa licence. L'onglet d'administration **Lieux LGBTQ+** permet de compléter ces champs et le visuel ; les fiches de lieu affichent ensuite les liens de source et le statut des droits dans le détail de la carte. Les fiches couvrent notamment Paris, Lyon, Marseille, Toulouse, Bordeaux, Lille, Nantes, Montpellier, Nice, Strasbourg, Rennes, Biarritz, Barcelone et Perpignan. Elles comprennent les six fiches initiales (Le Cox, La Federica, Gibus Club, Safari Disco Club, Sun City et Sauna Bruc) ainsi que des fiches supplémentaires comme Madrediosa, La Gougnotte, Le Pulse, Boys Bar BCN, Arena Xperience, Sauna Soho et L’Éclipse. Les villes et établissements varient selon le type de lieu ; aucune photo n'est intégrée tant que les droits ne sont pas vérifiés.
 
 ### Règles éditoriales pour les établissements réels
 

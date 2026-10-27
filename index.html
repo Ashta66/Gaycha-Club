@@ -78,6 +78,7 @@ dialog::before{content:"";position:absolute;inset:0;border-radius:16px;padding:2
 @media(max-width:560px){.cards-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}}
 body::before{content:"";position:fixed;z-index:-1;inset:0;pointer-events:none;background:linear-gradient(125deg,#ff477e08,#ff8a0005,#ffda4508,#8ccf3505,#00a9a508,#3867ff08,#c9a7ff08);background-size:250% 250%;animation:pride-drift 22s ease infinite}
 @keyframes pride-drift{50%{background-position:100% 100%}}
+body:not([data-pride])::before{background:linear-gradient(135deg,#d6b46a12,transparent 48%,#c9a7ff08);background-size:100% 100%;animation:none}
 .rainbow-line{height:4px;border-radius:99px;background:var(--rb);margin:12px 0 18px;box-shadow:0 0 18px #c9a7ff25}
 .trade-layout{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
 .trade-side{padding:14px;border:1px solid #ffffff20;border-radius:14px;background:linear-gradient(145deg,#ffffff08,#ffffff02);min-width:0}
@@ -366,7 +367,7 @@ async function openSettings(){
 
  $('settings-out').onclick=async()=>{settings.close();await sb.auth.signOut();go('dashboard')};
  $('settings-name').pattern='[A-Za-z0-9_]{3,20}';
- $('settings-rainbow').value=localStorage.getItem('gaycha-rainbow')||'bright';
+ $('settings-rainbow').value=localStorage.getItem('gaycha-rainbow')||'soft';
  $('settings-motion').checked=localStorage.getItem('gaycha-motion')==='1';
  $('settings-visual-save').onclick=()=>{localStorage.setItem('gaycha-rainbow',$('settings-rainbow').value);localStorage.setItem('gaycha-motion',$('settings-motion').checked?'1':'0');document.body.dataset.pride=$('settings-rainbow').value;document.body.classList.toggle('reduced-motion',$('settings-motion').checked);$('settings-msg').innerHTML=msg('Préférences enregistrées sur cet appareil.')};
  $('settings-avatar-save').onclick=async()=>{const file=$('settings-avatar').files?.[0];if(!file){$('avatar-msg').innerHTML=msg('Choisis d’abord une image.',1);return}if(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>2*1024*1024){$('avatar-msg').innerHTML=msg('Format non pris en charge ou fichier supérieur à 2 Mo.',1);return}const path=user.id+'/'+Date.now()+'-'+file.name.replace(/[^a-zA-Z0-9._-]/g,'_');const {error:upError}=await sb.storage.from('avatars').upload(path,file,{upsert:true,contentType:file.type});if(upError){$('avatar-msg').innerHTML=msg('Envoi impossible : '+upError.message+' (vérifie que le bucket public « avatars » existe dans Supabase).',1);return}const {data:pub}=sb.storage.from('avatars').getPublicUrl(path);const {error:metaError}=await sb.auth.updateUser({data:{avatar_url:pub.publicUrl}});if(metaError){$('avatar-msg').innerHTML=msg(metaError.message,1);return}await refresh();$('avatar-msg').innerHTML=msg('Photo de profil mise à jour.');openSettings()};

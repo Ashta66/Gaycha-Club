@@ -13,14 +13,14 @@ Gaycha Club est un site de cartes à collectionner avec boosters, collection, é
 
 ## Séries de lieux LGBTQ+
 
-Trois séries sont préparées dans Supabase :
+Trois séries sont préparées dans Supabase, avec **36 fiches de lieux réels en brouillon** après l’extension du 27 octobre 2026 :
 - **Bars gays & LGBTQ+ de France** — inclut également les lieux LGBTQ+ de Barcelone.
 - **Discothèques gays & LGBTQ+** — inclut également les clubs LGBTQ+ de Barcelone.
 - **Saunas gays** — inclut également les établissements de Barcelone.
 
-Les premières fiches sont enregistrées en brouillon. Elles sont volontairement non publiées tant que l'équipe n'a pas vérifié l'activité de l'établissement, la description et les droits de l'image.
+Répartition actuelle : **15 bars dans 13 villes**, **9 clubs/discothèques dans 8 villes** et **12 saunas dans 11 villes**. Les fiches sont volontairement non publiées tant que l'équipe n'a pas vérifié l'activité de l'établissement, la description et les droits de l'image.
 
-La table `venue_sources` associe une carte à son type de lieu, sa ville, son pays, son site officiel, la source de description, l'origine du visuel, son statut de vérification et sa licence. L'onglet d'administration **Lieux LGBTQ+** permet de compléter ces champs et le visuel ; les fiches de lieu affichent ensuite les liens de source et le statut des droits dans le détail de la carte. Six premières fiches sont préparées en brouillon : Le Cox, La Federica, Gibus Club, Safari Disco Club, Sun City et Sauna Bruc.
+La table `venue_sources` associe une carte à son type de lieu, sa ville, son pays, son site officiel, la source de description, l'origine du visuel, son statut de vérification et sa licence. L'onglet d'administration **Lieux LGBTQ+** permet de compléter ces champs et le visuel ; les fiches de lieu affichent ensuite les liens de source et le statut des droits dans le détail de la carte. Les fiches couvrent notamment Paris, Lyon, Marseille, Toulouse, Bordeaux, Lille, Nantes, Montpellier, Nice, Strasbourg, Rennes, Biarritz et Barcelone. Elles comprennent les six fiches initiales (Le Cox, La Federica, Gibus Club, Safari Disco Club, Sun City et Sauna Bruc) ainsi que de nouvelles fiches pour les autres établissements. Les villes et établissements varient selon le type de lieu ; aucune photo n'est intégrée tant que les droits ne sont pas vérifiés.
 
 ### Règles éditoriales pour les établissements réels
 

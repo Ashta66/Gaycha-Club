@@ -28,3 +28,12 @@ Enable Google in Supabase Authentication, configure the OAuth client credentials
 - Live browser testing, Supabase RPC/RLS behavior, Google provider configuration, mobile-device layout, and real account-linking behavior: not yet tested.
 - No database migration was applied.
 - `main` has not been modified by this branch.
+
+
+## Booster gifts (migration drafted, not applied)
+
+- Admins can choose between adding unopened gift packs to a player's inventory and opening packs for free immediately.
+- Quantity is limited to 1–10 per request. The new server RPC checks admin role, target player, booster configuration, and writes an audit event.
+- Unopened gifts are stored in a new `gifted_boosters` table with owner-only read access; the player can open a gift through `open_gifted_booster`. The open operation is transactional and does not debit credits or use the normal purchase cooldown.
+- The SQL migration is in `supabase/migrations/20261027000100_admin_gift_boosters.sql`. It has **not** been applied to the connected Supabase project, so the new controls will return an error until the migration is reviewed and applied in a test environment.
+- SQL was reviewed against the current live schema and existing `open_booster` / `admin_grant_coins` patterns, but the migration has not been executed or tested. Run it on a staging project, test admin/non-admin access and both gift modes, then review the security advisors before production.

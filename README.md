@@ -22,3 +22,10 @@ Les fiches récentes n'ont pas de photo intégrée. Les droits des images, les d
 ## Données et sécurité
 
 Les changements de base de données de la chasse aux secrets et du catalogue de lieux sont appliqués au projet Supabase. Avant de recréer le projet, exporter et versionner ces changements dans une migration SQL dédiée.
+
+### Renforcement du profil et expérience de collection
+
+- Les lectures directes de `profiles` sont limitées aux champs communautaires (`id`, `username`, `bio`, `xp`, `created_at`). Les données privées (solde, rôle, confirmation d’âge et suspension) passent par `get_my_profile()`, qui ne renvoie que le profil de la session authentifiée.
+- La progression de l’album affiche le taux global de cartes découvertes et la progression par série.
+- La recherche d’amis montre la bio publique et l’XP, avec un raccourci vers les messages pour les amis déjà acceptés.
+- Migration appliquée au projet Supabase : `20261028194650_harden_profile_column_visibility`.

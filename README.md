@@ -13,7 +13,7 @@ Gaycha Club est un site de cartes à collectionner avec boosters, collection, é
 
 ## Séries de lieux LGBTQ+
 
-Les trois séries couvrent la France et l'Espagne. État après l'extension du 27 octobre 2026 : **93 fiches de lieux en brouillon**, dont **41 bars dans 17 villes**, **22 discothèques/clubs dans 15 villes** et **30 saunas dans 16 villes**. Cette opération a ajouté **23 fiches** avec leurs métadonnées de source.
+Les trois séries couvrent la France et l'Espagne. **État vérifié dans Supabase le 28 octobre 2026 : 112 fiches de lieux réels, dont 103 brouillons et 9 archivées ; aucune fiche de lieu n'est publiée.** Répartition actuelle : **55 bars**, **24 discothèques/clubs** et **33 saunas**. Le catalogue complet compte 124 cartes : 12 cartes publiées hors de ces séries de lieux. Les fiches de lieux ne doivent pas être publiées avant validation éditoriale et vérification manuelle des droits des visuels.
 
 Perpignan est représentée dans les trois séries : Backstage (bar), UBA Club (lieu historique, signalé comme fermé depuis 2020 dans une source secondaire) et L'Équateur (sauna dont l'ouverture actuelle doit être confirmée). Les fiches peuvent désigner des lieux fermés ou non vérifiés ; elles ne doivent pas être publiées avant contrôle manuel.
 

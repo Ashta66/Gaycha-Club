@@ -112,7 +112,7 @@ LANGUAGE sql
 STABLE
 SECURITY DEFINER
 SET search_path = ''
-AS $
+AS $$
   SELECT p.username,
          p.xp,
          COUNT(DISTINCT ci.card_id)::bigint AS cards_found
@@ -123,7 +123,7 @@ AS $
   GROUP BY p.id, p.username, p.xp
   ORDER BY p.xp DESC, COUNT(DISTINCT ci.card_id) DESC
   LIMIT 50;
-$;
+$$;
 REVOKE ALL ON FUNCTION public.public_leaderboard() FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.public_leaderboard() TO anon, authenticated;
 

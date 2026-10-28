@@ -23,6 +23,12 @@ Les fiches récentes n'ont pas de photo intégrée. Les droits des images, les d
 
 Les changements de base de données de la chasse aux secrets et du catalogue de lieux sont appliqués au projet Supabase. Avant de recréer le projet, exporter et versionner ces changements dans une migration SQL dédiée.
 
+### Intégrité et performance des données
+
+- Ajout d'une clé primaire UUID à `trade_items` après contrôle des données existantes.
+- Ajout d'index pour les tentatives, défis et découvertes secrets, ainsi que pour les clés étrangères de l'historique des versions de cartes.
+- Les migrations ont été appliquées au projet Supabase connecté et sont versionnées dans `supabase/migrations/`.
+
 ### Renforcement du profil et expérience de collection
 
 - Les lectures directes de `profiles` sont limitées aux champs communautaires (`id`, `username`, `bio`, `xp`, `created_at`). Les données privées (solde, rôle, confirmation d’âge et suspension) passent par `get_my_profile()`, qui ne renvoie que le profil de la session authentifiée.

@@ -43,3 +43,10 @@ ON CONFLICT (card_id) DO UPDATE SET
   verification_status = excluded.verification_status,
   last_verified_at = excluded.last_verified_at,
   notes = excluded.notes;
+
+-- Editorial confirmation from the project administrator: retain Jet Set in the LGBTQ+ venue selection.
+UPDATE public.venue_sources
+SET verification_status='en attente de droits',
+    last_verified_at=now(),
+    notes=concat_ws(E'\\n',nullif(notes,''),'Confirmation de l’administrateur du projet le 28/10/2026 : conserver Jet Set dans la sélection des lieux LGBTQ+ de Perpignan. La carte reste en brouillon tant que les droits de réutilisation de la photo ne sont pas confirmés ; cette réserve concerne le visuel, pas la décision éditoriale de l’inclure.')
+WHERE card_id='b32a605a-508f-4be6-b5fe-51ee39eaa7e9';

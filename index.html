@@ -323,7 +323,7 @@ function catalog(){
  <select id="cat-city" aria-label="Filtrer par ville"><option value="">Toutes les villes</option>${cities.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('')}</select>
  <select id="cat-type" aria-label="Filtrer par catégorie"><option value="">Toutes les catégories</option>${categories.map(x=>`<option value="${esc(x)}">${esc(categoryLabel(x))}</option>`).join('')}</select>
  <select id="cat-series" aria-label="Filtrer par série"><option value="">Toutes les séries</option>${seriesNames.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('')}</select>
- <select id="cat-rarity" aria-label="Filtrer par rareté"><option value="">Toutes les raretés</option>${Object.entries(RN).map(([k,v])=>`<option value="${esc(k)}">${esc(v.label||k)}</option>`).join('')}</select>
+ <select id="cat-rarity" aria-label="Filtrer par rareté"><option value="">Toutes les raretés</option>${Object.entries(RN).map(([k,v])=>`<option value="${esc(k)}">${esc(v[0]||k)}</option>`).join('')}</select>
  <button class="btn alt" id="cat-layout" type="button" aria-pressed="false">☷ Liste compacte</button>
  <button class="btn alt" id="cat-reset" type="button">Réinitialiser</button>
  </div><p id="cat-count" class="catalogue-count" aria-live="polite"></p><div id="cat-results" class="grid cards-grid"></div><div id="cat-empty"></div>`;

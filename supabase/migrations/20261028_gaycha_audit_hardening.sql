@@ -96,8 +96,41 @@ CREATE POLICY card_instances_market_visible ON public.card_instances
 
 -- Les vues publiques et relationnelles s'exécutent avec les droits de l'appelant,
 -- puis s'appuient sur les politiques ci-dessus et les politiques RLS déjà existantes.
-ALTER VIEW public.public_profiles SET (security_invoker = true);
-ALTER VIEW public.leaderboard SET (security_invoker = true);
+CREATE OR REPLACE VIEW public.public_profiles
+WITH (security_invoker = true)
+AS
+SELECT p.id, p.username, p.bio, p.xp, p.created_at
+FROM public.profiles p
+WHERE public.is_profile_public(p.id);
+
+-- Le classement expose uniquement des agrégats des profils explicitement publics.
+-- Le calcul agrégé reste dans une fonction étroitement limitée, plutôt que de donner
+-- à chaque visiteur un accès en lecture aux collections complètes des autres joueurs.
+CREATE OR REPLACE FUNCTION public.public_leaderboard()
+RETURNS TABLE(username text, xp bigint, cards_found bigint)
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = ''
+AS $
+  SELECT p.username,
+         p.xp,
+         COUNT(DISTINCT ci.card_id)::bigint AS cards_found
+  FROM public.profiles p
+  LEFT JOIN public.card_instances ci ON ci.owner_id = p.id
+  WHERE NOT p.is_suspended
+    AND public.is_profile_public(p.id)
+  GROUP BY p.id, p.username, p.xp
+  ORDER BY p.xp DESC, COUNT(DISTINCT ci.card_id) DESC
+  LIMIT 50;
+$;
+REVOKE ALL ON FUNCTION public.public_leaderboard() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.public_leaderboard() TO anon, authenticated;
+
+CREATE OR REPLACE VIEW public.leaderboard
+WITH (security_invoker = true)
+AS SELECT username, xp, cards_found FROM public.public_leaderboard();
+
 ALTER VIEW public.market_view SET (security_invoker = true);
 ALTER VIEW public.conversations_view SET (security_invoker = true);
 ALTER VIEW public.trades_view SET (security_invoker = true);

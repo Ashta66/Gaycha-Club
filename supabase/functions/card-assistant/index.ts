@@ -22,6 +22,10 @@ Deno.serve(async (req: Request) => {
   }
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
   if (req.method !== "POST") return reply(405, { error: "Méthode non autorisée." });
+  const declaredLength = Number(req.headers.get("content-length") || "0");
+  if (Number.isFinite(declaredLength) && declaredLength > 16000) {
+    return reply(413, { error: "Requête trop volumineuse." });
+  }
 
   const openaiKey = Deno.env.get("OPENAI_API_KEY");
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
@@ -41,17 +45,32 @@ Deno.serve(async (req: Request) => {
   const { data: { user }, error: authError } = await supabase.auth.getUser(token);
   if (authError || !user) return reply(401, { error: "Session invalide." });
 
-  const { data: profile, error: profileError } = await supabase
-    .from("profiles").select("role").eq("id", user.id).maybeSingle();
-  if (profileError || !["admin", "catalog_manager"].includes(profile?.role || "")) {
-    return reply(403, { error: "Accès réservé aux administrateurs et gestionnaires du catalogue." });
+  // Use the private self-profile RPC: direct SELECT of role is intentionally revoked.
+  const { data: profile, error: profileError } = await supabase.rpc("get_my_profile");
+  if (
+    profileError ||
+    profile?.is_suspended === true ||
+    !["admin", "catalog_manager"].includes(profile?.role || "")
+  ) {
+    return reply(403, { error: "Accès réservé aux administrateurs et gestionnaires du catalogue actifs." });
   }
 
   let input: { action?: string; mode?: string; prompt?: string; existing?: Record<string, unknown>; seriesName?: string; style?: string; cardName?: string };
-  try { input = await req.json(); } catch { return reply(400, { error: "Requête JSON invalide." }); }
+  try {
+    const rawBody = await req.text();
+    if (new TextEncoder().encode(rawBody).byteLength > 16000) {
+      return reply(413, { error: "Requête trop volumineuse." });
+    }
+    input = JSON.parse(rawBody);
+  } catch { return reply(400, { error: "Requête JSON invalide." }); }
   const prompt = String(input.prompt || "").trim();
   if (input.action === "illustration") {
     if (prompt.length < 8 || prompt.length > 1800) return reply(400, { error: "Décrivez l’illustration en 8 à 1800 caractères." });
+    const { error: quotaError } = await supabase.rpc("consume_card_assistant_quota", { p_action: "illustration" });
+    if (quotaError) {
+      const limited = /rate limit/i.test(quotaError.message || "");
+      return reply(limited ? 429 : 403, { error: limited ? "Quota de génération atteint. Réessayez plus tard." : "Accès à la génération refusé." });
+    }
     const imageResponse = await fetch("https://api.openai.com/v1/images/generations", {
       method: "POST",
       headers: { "Authorization": "Bearer " + openaiKey, "Content-Type": "application/json" },
@@ -66,6 +85,11 @@ Deno.serve(async (req: Request) => {
     return reply(400, { error: "Choisissez création/modification et décrivez la carte (8 à 1800 caractères)." });
   }
   if (input.mode === "edit" && !input.existing) return reply(400, { error: "Choisissez une carte à modifier." });
+  const { error: quotaError } = await supabase.rpc("consume_card_assistant_quota", { p_action: "text" });
+  if (quotaError) {
+    const limited = /rate limit/i.test(quotaError.message || "");
+    return reply(limited ? 429 : 403, { error: limited ? "Quota de génération atteint. Réessayez plus tard." : "Accès à la génération refusé." });
+  }
 
   const system = `Tu es l’assistant éditorial de Gaycha Club, un jeu satirique de cartes à collectionner pour adultes. Tu proposes des brouillons amusants, bienveillants et originaux en français. Adapte le ton à la série et au style demandé: ${String(input.style || "auto").slice(0, 40)}. Pour un lot, produis des concepts distincts, sans répéter les mêmes blagues ou noms.
 Ne prétends jamais qu’une citation est réelle. Ne crée pas de faits biographiques, accusations ou citations attribués à une personne réelle. Pour une personne réelle, propose une caricature clairement satirique et demande que les droits soient vérifiés avant publication. Réponds uniquement selon le schéma JSON imposé. La rareté doit être une des valeurs commun, peu_commun, rare, epique, legendaire, secrete. status doit toujours être brouillon. rights_checked doit toujours être false. is_fictional est true sauf si l’utilisateur demande explicitement une personne réelle.`

@@ -632,6 +632,30 @@ if(tab==='audit'){const {data,error}=await sb.from('audit_log').select('*').orde
 app.innerHTML=`<h1>Administration</h1>${bar}${body}`;
 app.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>admin(b.dataset.t));
 
+if(tab==='venues'){
+ const search=$('venue-admin-search'), listHost=$('venue-admin-list'), count=$('venue-admin-count');
+ const filterVenues=()=>{const q=(search.value||'').trim().toLocaleLowerCase('fr');let shown=0;listHost.querySelectorAll('[data-venue-search-row]').forEach(row=>{const match=!q||row.dataset.venueSearchRow.includes(q);row.hidden=!match;if(match)shown++});count.textContent=shown+' lieu(x) affiché(s)'};
+ search.oninput=filterVenues;
+ $('venue-admin-collapse').onclick=()=>listHost.querySelectorAll('details.venue-admin-item').forEach(d=>d.open=false);
+ $('venue-admin-expand').onclick=()=>listHost.querySelectorAll('details.venue-admin-item:not([hidden])').forEach(d=>d.open=true);
+ app.querySelectorAll('.venue-admin-form').forEach(form=>form.addEventListener('submit',async e=>{
+  e.preventDefault();const button=form.querySelector('button[type="submit"]'),status=form.querySelector('.venue-save-status'),fd=new FormData(form),cardId=form.dataset.venueCard;
+  const value=k=>String(fd.get(k)||'').trim();
+  const venue={card_id:cardId,venue_type:value('venue_type'),city:value('city'),country:value('country'),official_url:value('official_url')||null,description_source_url:value('description_source_url')||null,image_source_url:value('image_source_url')||null,image_license:value('image_license')||'à vérifier',verification_status:value('verification_status'),notes:value('notes')||null};
+  if(!venue.city||!venue.country){status.textContent='Renseigne la ville et le pays.';return}
+  button.disabled=true;status.textContent='Enregistrement…';
+  try{
+   const {error:sourceError}=await sb.from('venue_sources').upsert(venue,{onConflict:'card_id'});
+   if(sourceError)throw sourceError;
+   const {error:cardError}=await sb.from('cards').update({image_path:value('image_path')||null,rights_checked:fd.has('rights_checked')}).eq('id',cardId);
+   if(cardError)throw cardError;
+   status.textContent='Sources enregistrées.';
+   const row=form.closest('details');if(row){const summary=row.querySelector('summary');const city=row.querySelector('[name="city"]').value.trim(),country=row.querySelector('[name="country"]').value.trim(),state=row.querySelector('[name="verification_status"]').value;const spans=summary.querySelectorAll('.note');if(spans[0])spans[0].textContent=city+' · '+country;if(spans[1])spans[1].textContent=state;row.dataset.venueSearchRow=(row.querySelector('strong').textContent+' '+city+' '+country+' '+state+' '+(form.querySelector('.note')?.textContent||'')).toLocaleLowerCase('fr')}
+  }catch(err){status.textContent='Échec : '+(err.message||'erreur inconnue')}
+  finally{button.disabled=false}
+ }));
+}
+
 if(tab==='cards'){
  const controls=document.createElement('div');controls.className='admin-view-controls';controls.innerHTML='<b>Catalogue visuel</b><span><button class="btn" type="button" data-admin-view="grid">Grille visuelle</button> <button class="btn alt" type="button" data-admin-view="list">Liste compacte</button></span>';
  const grid=document.createElement('div');grid.id='admin-card-grid';grid.className='admin-card-grid';

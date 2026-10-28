@@ -48,6 +48,22 @@ table{width:100%;border-collapse:collapse}td,th{padding:8px;border-bottom:1px so
  .venue-art .venue-mark{position:absolute;top:10%;left:10%;font-family:Anton,sans-serif;font-size:clamp(9px,5cqw,15px);letter-spacing:.22em;opacity:.85}
  .venue-art .venue-city{position:absolute;bottom:13%;left:0;right:0;text-align:center;font-size:clamp(7px,4cqw,12px);letter-spacing:.16em;text-transform:uppercase;opacity:.82}
  .venue-art .venue-icon{font-size:30cqw;filter:drop-shadow(0 8px 10px #0009);transform:none}
+.venue-art{background:radial-gradient(ellipse at 50% 34%,color-mix(in srgb,var(--s1) 60%,white 4%),transparent 48%),linear-gradient(155deg,#24202d,#09090d 76%)!important}
+.venue-art .venue-scene{position:absolute;left:15%;right:15%;top:27%;height:43%;display:grid;place-items:center;overflow:hidden;border:1px solid #ffffff50;border-radius:10px 10px 3px 3px;background:linear-gradient(180deg,#ffffff12,#0008);box-shadow:0 12px 24px #0008,inset 0 0 24px #ffffff0b}
+.venue-art .venue-scene::before,.venue-art .venue-scene::after{content:"";position:absolute;inset:8% 12%;border:1px solid #ffffff25;border-radius:3px}
+.venue-art .venue-scene::after{inset:0 50%;border-width:0 1px;border-radius:0}
+.venue-art .venue-glow{position:absolute;inset:-20%;background:radial-gradient(ellipse at 50% 40%,color-mix(in srgb,var(--s1) 65%,white 15%),transparent 55%);opacity:.65}
+.venue-art .venue-line{position:absolute;bottom:10%;left:8%;right:8%;height:2px;background:linear-gradient(90deg,transparent,var(--s1),#fff,var(--s2),transparent);box-shadow:0 0 14px var(--s1)}
+.venue-art .venue-icon{position:relative;z-index:2;font-size:30cqw;line-height:1;filter:drop-shadow(0 6px 9px #000b)}
+.venue-art .venue-mark{top:9%;font-size:clamp(11px,6cqw,19px);text-shadow:0 2px 8px #000}
+.venue-art .venue-kind{z-index:3;top:8%;right:7%;font-weight:700;backdrop-filter:blur(4px)}
+.venue-art .venue-city{bottom:14%;font-weight:600;text-shadow:0 2px 8px #000}
+.venue-art.venue-club .venue-scene{border-color:color-mix(in srgb,var(--s1) 75%,white);box-shadow:0 0 18px color-mix(in srgb,var(--s1) 40%,transparent),0 12px 24px #0008}
+.venue-art.venue-club .venue-glow{background:radial-gradient(ellipse at 25% 30%,#3867ff99,transparent 40%),radial-gradient(ellipse at 75% 65%,#ff477e99,transparent 40%),radial-gradient(ellipse at 50% 50%,var(--s1),transparent 55%)}
+.venue-art.venue-club .venue-line{height:4px;box-shadow:0 0 18px var(--s1)}
+.venue-art.venue-sauna .venue-scene{border-radius:18px 18px 5px 5px;background:repeating-linear-gradient(90deg,#ffffff0a 0 9px,#0002 9px 13px),linear-gradient(180deg,#ffffff10,#0008)}
+.venue-art.venue-sauna .venue-glow{background:radial-gradient(ellipse at 50% 45%,#ffca7a99,transparent 58%)}
+.venue-art.venue-sauna .venue-line{background:linear-gradient(90deg,transparent,#f4c78c,transparent);box-shadow:0 0 14px #f4c78c}
  .venue-art .venue-kind{position:absolute;top:3%;right:5%;font-size:clamp(7px,3.2cqw,10px);letter-spacing:.12em;border:1px solid #ffffff55;border-radius:99px;padding:3px 5px;background:#0005}
 .nm{font-family:Anton,sans-serif;font-size:max(11px,9cqw);letter-spacing:.03em}
 .spec{font-size:max(8.5px,5.4cqw);line-height:1.25;color:#d8d2c8}
@@ -223,6 +239,8 @@ main{min-height:65vh}
 .universe-secret .sigil{font-size:2rem;flex-shrink:0}
 .universe-secret p{margin:5px 0;color:var(--mut);line-height:1.6}
 @media(max-width:500px){.universe-secret{padding:14px;gap:10px}.universe-stamp{font-size:.74rem}}
+
+.catalogue-compact .catalogue-item{grid-template-columns:88px minmax(0,1fr);align-items:center;gap:14px;padding:12px;background:#ffffff05;border:1px solid #d6b46a30;border-radius:14px}.catalogue-compact .catalogue-item .card{width:88px;min-width:0;aspect-ratio:5/7;cursor:pointer}.catalogue-compact .catalogue-item .catalogue-list-details{min-width:0;display:flex;flex-direction:column;gap:4px;color:var(--mut);font-size:.86rem}.catalogue-list-details strong{color:var(--cream);font-size:1rem;overflow-wrap:anywhere}.catalogue-list-details p{margin:4px 0 0;color:#d8d2c8}.catalogue-filters select{overflow:hidden;text-overflow:ellipsis}@media(max-width:520px){.catalogue-compact .catalogue-item{grid-template-columns:74px minmax(0,1fr);gap:10px;padding:9px}.catalogue-compact .catalogue-item .card{width:74px}.catalogue-list-details{font-size:.8rem}}
 </style></head><body>
 <header><button class="logo logo-home" type="button" data-v="dashboard" aria-label="Gaycha Club — accueil" title="Retour à l’accueil">GAYCHA<small>CLUB</small></button>
 <nav aria-label="Navigation principale"><button class="btn alt" data-v="collection">Collection</button><button class="btn alt" data-v="booster">Boosters</button><button class="btn alt" data-v="events">Activités</button><button class="btn alt" data-v="friends">Communauté</button><button class="btn alt" data-v="admin" id="nadm" hidden>Administration</button></nav>
@@ -251,8 +269,8 @@ function applyLanguage(root=document.body){document.documentElement.lang=current
 const languageObserver=new MutationObserver(()=>applyLanguage());languageObserver.observe(document.body,{subtree:true,childList:true,characterData:true});
 const msg=(t,e)=>`<div class="note ${e?'err':''}">${esc(t)}</div>`;
 function cardIcon(name){const n=String(name||'').toLowerCase();if(n.includes('inavouable'))return '🤫';if(n.includes('drama'))return '🎭';if(n.includes('red flag'))return '🚩';if(n.includes('cupidon'))return '💘';if(n.includes('verre'))return '🍸';if(n.includes('marieur'))return '💞';if(n.includes('karaoké'))return '🎤';if(n.includes('sphinx'))return '🐈‍⬛';if(n.includes('ghosteur'))return '👻';if(n.includes('afters'))return '🪩';if(n.includes('masc'))return '🕶️';return '✦'}
-function venueCardArt(c){const v=Array.isArray(c.venue_sources)?c.venue_sources[0]:c.venue_sources||{};const type=String(v.venue_type||'').toLowerCase();const icon=type==='sauna'?'♨':type==='discotheque'?'🪩':'🍸';const kind=type==='sauna'?'SAUNA':type==='discotheque'?'CLUB':'BAR';const city=v.city||'';const initials=String(c.name||'').trim().split(/\\s+/).slice(0,2).map(x=>x[0]||'').join('').toUpperCase();return `<div class="card-illustration venue-art" aria-hidden="true"><span class="venue-mark">${esc(initials)}</span><span class="venue-icon">${icon}</span><span class="venue-kind">${kind}</span><span class="venue-city">${esc(city||'LGBTQ+')}</span><i>ILLUSTRATION ORIGINALE · GAYCHA CLUB</i></div>`}
-function card(c,n){const r=RN[c.rarity],s=c.series||{};
+function venueCardArt(c){const v=Array.isArray(c.venue_sources)?c.venue_sources[0]:c.venue_sources||{};const type=String(v.venue_type||'').toLowerCase();const isSauna=type==='sauna',isClub=type==='discotheque'||type==='club';const icon=isSauna?'♨':isClub?'🪩':'🍸';const kind=isSauna?'SAUNA':isClub?'CLUB':'BAR';const city=v.city||'';const initials=String(c.name||'').trim().split(/\s+/).slice(0,2).map(x=>x[0]||'').join('').toUpperCase();const motif=isSauna?'tile':isClub?'light':'window';return `<div class="card-illustration venue-art ${isSauna?'venue-sauna':isClub?'venue-club':'venue-bar'}" aria-hidden="true"><span class="venue-mark">${esc(initials)}</span><span class="venue-kind">${kind}</span><span class="venue-scene ${motif}"><span class="venue-glow"></span><span class="venue-icon">${icon}</span><span class="venue-line"></span></span><span class="venue-city">${esc(city||'LGBTQ+')}</span><i>ILLUSTRATION ORIGINALE · GAYCHA CLUB</i></div>}
+function card(c,n){const r=RN[c.rarity],s=Array.isArray(c.series)?(c.series[0]||{}):(c.series||{});
  const venue=!c.is_fictional&&(Array.isArray(c.venue_sources)?c.venue_sources.length>0:!!c.venue_sources);
  return `<div class="card r-${c.rarity}" data-cid="${esc(c.id)}" tabindex="0" role="button" aria-label="Agrandir ${esc(c.name)}" style="--s1:${esc(s.color_a)};--s2:${esc(s.color_b)}"><div class="band"><span>${esc((s.name||'').toUpperCase())}</span><span>${r[1]} ${r[0].toUpperCase()}</span></div>${n>1?`<span class="x">×${n}</span>`:''}<div class="art">${c.image_path?'<img src="'+esc(c.image_path)+'" alt="" loading="lazy" decoding="async">':venue?venueCardArt(c):`<div class="card-illustration" aria-hidden="true"><span>${cardIcon(c.name)}</span><i>GAYCHA CLUB</i></div>`}</div><div class="nm">${esc(c.name)}</div><div class="spec">${esc(c.spec)}</div><div class="meta"><span class="rar">${r[1]} ${r[0]}</span><span>N° ${String(c.number).padStart(3,'0')}</span></div></div>`}
 async function loadCards(){const {data,error}=await sb.from('cards').select('id,series_id,name,rarity,number,spec,anecdote,bio,image_path,is_fictional,rights_checked,is_secret,series(name,color_a,color_b),venue_sources(venue_type,city,country,official_url,description_source_url,image_source_url,image_license,verification_status,notes)').order('number');if(error)throw error;cards=data}
@@ -312,33 +330,51 @@ async function universe(){
  app.querySelectorAll('[data-v]').forEach(btn=>btn.onclick=()=>go(btn.dataset.v));
 }
 function catalog(){
- const venueMeta=c=>{const raw=c.venue_sources;return Array.isArray(raw)?(raw[0]||{}):(raw||{})};
- const categoryLabel=v=>({'bar':'Bars','discotheque':'Discothèques','sauna':'Saunas','club':'Clubs','autre':'Autres lieux'})[v]||'Autres cartes';
+ const relationOne=raw=>Array.isArray(raw)?(raw[0]||{}):(raw||{});
+ const venueMeta=c=>relationOne(c.venue_sources);
+ const seriesMeta=c=>relationOne(c.series);
+ const normalize=value=>String(value??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('fr').trim();
+ const categoryLabel=v=>({'bar':'Bars gays & LGBTQ+','discotheque':'Discothèques gays & LGBTQ+','sauna':'Saunas gays','club':'Clubs','autre':'Autres lieux','__other__':'Autres cartes'})[v]||String(v||'Autres cartes').replace(/(^|\s)\S/g,m=>m.toLocaleUpperCase('fr'));
  const cities=[...new Set(cards.map(c=>venueMeta(c).city).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'fr'));
- const categories=[...new Set(cards.map(c=>venueMeta(c).venue_type).filter(Boolean))].sort();
- const seriesNames=[...new Set(cards.map(c=>c.series?.name).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'fr'));
- app.innerHTML=`<div class="hero"><h1>Catalogue des cartes</h1><p>Explore les cartes par ville, type de lieu, série ou rareté. Les établissements réels restent identifiables grâce à leur catégorie et leur ville.</p><div class="rainbow-line"></div></div>
- <div class="catalogue-filters" aria-label="Filtres du catalogue">
- <input id="cat-search" type="search" placeholder="Rechercher un nom, une ville…" aria-label="Rechercher dans le catalogue">
- <select id="cat-city" aria-label="Filtrer par ville"><option value="">Toutes les villes</option>${cities.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('')}</select>
- <select id="cat-type" aria-label="Filtrer par catégorie"><option value="">Toutes les catégories</option>${categories.map(x=>`<option value="${esc(x)}">${esc(categoryLabel(x))}</option>`).join('')}</select>
- <select id="cat-series" aria-label="Filtrer par série"><option value="">Toutes les séries</option>${seriesNames.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('')}</select>
- <select id="cat-rarity" aria-label="Filtrer par rareté"><option value="">Toutes les raretés</option>${Object.entries(RN).map(([k,v])=>`<option value="${esc(k)}">${esc(v[0]||k)}</option>`).join('')}</select>
- <button class="btn alt" id="cat-layout" type="button" aria-pressed="false">☷ Liste compacte</button>
- <button class="btn alt" id="cat-reset" type="button">Réinitialiser</button>
- </div><p id="cat-count" class="catalogue-count" aria-live="polite"></p><div id="cat-results" class="grid cards-grid"></div><div id="cat-empty"></div>`;
+ const categoryValues=[...new Set(cards.map(c=>venueMeta(c).venue_type).filter(Boolean))];
+ if(cards.some(c=>!venueMeta(c).venue_type))categoryValues.push('__other__');
+ categoryValues.sort((a,b)=>categoryLabel(a).localeCompare(categoryLabel(b),'fr'));
+ const seriesNames=[...new Set(cards.map(c=>seriesMeta(c).name).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'fr'));
+ app.innerHTML='<div class="hero"><h1>Catalogue des cartes</h1><p>Explore les cartes par établissement, ville, catégorie, série ou rareté.</p><div class="rainbow-line"></div></div>'+
+ '<div class="catalogue-filters" aria-label="Filtres du catalogue">'+
+ '<input id="cat-search" type="search" placeholder="Nom, ville, pays, série, mot-clé…" aria-label="Rechercher dans le catalogue" autocomplete="off">'+
+ '<select id="cat-city" aria-label="Filtrer par ville"><option value="">Toutes les villes</option>'+cities.map(x=>'<option value="'+esc(x)+'">'+esc(x)+'</option>').join('')+'</select>'+
+ '<select id="cat-type" aria-label="Filtrer par catégorie"><option value="">Toutes les catégories</option>'+categoryValues.map(x=>'<option value="'+esc(x)+'">'+esc(categoryLabel(x))+'</option>').join('')+'</select>'+
+ '<select id="cat-series" aria-label="Filtrer par série"><option value="">Toutes les séries</option>'+seriesNames.map(x=>'<option value="'+esc(x)+'">'+esc(x)+'</option>').join('')+'</select>'+
+ '<select id="cat-rarity" aria-label="Filtrer par rareté"><option value="">Toutes les raretés</option>'+Object.entries(RN).map(([k,v])=>'<option value="'+esc(k)+'">'+esc(v[0]||k)+'</option>').join('')+'</select>'+
+ '<button class="btn alt" id="cat-layout" type="button" aria-pressed="false">☷ Liste compacte</button>'+
+ '<button class="btn alt" id="cat-reset" type="button">Réinitialiser</button></div>'+
+ '<p id="cat-count" class="catalogue-count" aria-live="polite" role="status"></p><div id="cat-results" class="grid cards-grid"></div><div id="cat-empty"></div>';
  const results=$('cat-results'),count=$('cat-count'),search=$('cat-search'),city=$('cat-city'),type=$('cat-type'),series=$('cat-series'),rarity=$('cat-rarity'),layout=$('cat-layout');
  let compact=false;
  const draw=()=>{
-  const q=search.value.trim().toLocaleLowerCase('fr');
-  const shown=cards.filter(c=>{const v=venueMeta(c),hay=[c.name,c.spec,c.anecdote,c.bio,v.city,v.country,v.venue_type,c.series?.name].filter(Boolean).join(' ').toLocaleLowerCase('fr');
-   return (!q||hay.includes(q))&&(!city.value||v.city===city.value)&&(!type.value||v.venue_type===type.value)&&(!series.value||(c.series?.name||'')===series.value)&&(!rarity.value||c.rarity===rarity.value);
-  }).sort((a,b)=>{const va=venueMeta(a),vb=venueMeta(b);return (va.city||'').localeCompare(vb.city||'','fr')||a.name.localeCompare(b.name,'fr')});
-  count.textContent=`${shown.length} carte${shown.length!==1?'s':''} sur ${cards.length}${city.value?' · '+city.value:''}`;
+  const q=normalize(search.value);
+  const shown=cards.filter(c=>{
+   const v=venueMeta(c),s=seriesMeta(c);
+   const hay=normalize([c.name,c.spec,c.anecdote,c.bio,v.city,v.country,v.venue_type,s.name].filter(Boolean).join(' '));
+   const categoryMatches=!type.value||(type.value==='__other__'?!v.venue_type:v.venue_type===type.value);
+   return (!q||hay.includes(q))&&(!city.value||v.city===city.value)&&categoryMatches&&(!series.value||s.name===series.value)&&(!rarity.value||c.rarity===rarity.value);
+  }).sort((a,b)=>{
+   const va=venueMeta(a),vb=venueMeta(b);
+   return (va.city||'').localeCompare(vb.city||'','fr')||a.name.localeCompare(b.name,'fr');
+  });
+  const active=[search.value.trim(),city.value,type.value,series.value,rarity.value].filter(Boolean).length;
+  count.textContent=shown.length+' carte'+(shown.length!==1?'s':'')+' affichée'+(shown.length!==1?'s':'')+' sur '+cards.length+(active?' · '+active+' filtre'+(active>1?'s':'')+' actif'+(active>1?'s':''):'');
   results.classList.toggle('catalogue-compact',compact);
-  layout.textContent=compact?'▦ Grille visuelle':'☷ Liste compacte';layout.setAttribute('aria-pressed',String(compact));
-  results.innerHTML=shown.map(c=>{const v=venueMeta(c);return `<article class="catalogue-item">${card(c)}<div class="catalogue-meta">${v.city?`<span>📍 ${esc(v.city)}${v.country?' · '+esc(v.country):''}</span>`:''}${v.venue_type?`<span>${esc(categoryLabel(v.venue_type))}</span>`:''}</div></article>`}).join('');
-  $('cat-empty').innerHTML=shown.length?'':msg('Aucune carte ne correspond à ces filtres.');
+  layout.textContent=compact?'▦ Grille visuelle':'☷ Liste compacte';
+  layout.setAttribute('aria-pressed',String(compact));
+  results.innerHTML=shown.map(c=>{
+   const v=venueMeta(c),s=seriesMeta(c),r=RN[c.rarity]||[c.rarity||'Rareté inconnue',''];
+   const meta='<div class="catalogue-meta">'+(v.city?'<span>📍 '+esc(v.city)+(v.country?' · '+esc(v.country):'')+'</span>':'')+(v.venue_type?'<span>'+esc(categoryLabel(v.venue_type))+'</span>':'<span>Carte de collection</span>')+'</div>';
+   const details=compact?'<div class="catalogue-list-details"><strong>'+esc(c.name)+'</strong><span>'+(v.city?'📍 '+esc(v.city)+(v.country?' · '+esc(v.country):''):'Lieu non renseigné')+'</span><span>'+esc(v.venue_type?categoryLabel(v.venue_type):'Autres cartes')+'</span><span>'+esc(s.name||'Série non renseignée')+' · '+esc(r[0])+'</span>'+(c.spec?'<p>'+esc(c.spec)+'</p>':'')+'</div>':'';
+   return '<article class="catalogue-item">'+card(c)+(compact?details:meta)+'</article>';
+  }).join('');
+  $('cat-empty').innerHTML=shown.length?'':msg('Aucune carte ne correspond à ces critères. Modifie la recherche ou réinitialise les filtres.');
  };
  [search,city,type,series,rarity].forEach(el=>el.addEventListener(el===search?'input':'change',draw));
  layout.onclick=()=>{compact=!compact;draw()};

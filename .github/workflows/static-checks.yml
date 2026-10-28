@@ -1,0 +1,35 @@
+name: Static checks
+
+on:
+  push:
+    branches: ["main", "fix/**"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  static-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Check inline JavaScript syntax
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const html = fs.readFileSync('index.html', 'utf8');
+          const scripts = [...html.matchAll(/<script\b(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/gi)]
+            .map(match => match[1])
+            .filter(script => script.trim().length > 0);
+          if (scripts.length === 0) throw new Error('No inline JavaScript found in index.html');
+          fs.writeFileSync('/tmp/gaycha-inline.js', scripts.join('\n;\n'));
+          console.log(`Extracted ${scripts.length} inline script block(s).`);
+          NODE
+          node --check /tmp/gaycha-inline.js
+      - name: Check security migration safeguards
+        run: |
+          test -f supabase/migrations/20261028_gaycha_audit_hardening.sql
+          grep -q "security_invoker = true" supabase/migrations/20261028_gaycha_audit_hardening.sql
+          grep -q "profile_visible SET DEFAULT false" supabase/migrations/20261028_gaycha_audit_hardening.sql
+          grep -q "is_secret" supabase/migrations/20261028_gaycha_audit_hardening.sql

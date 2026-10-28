@@ -643,6 +643,9 @@ if(tab==='venues'){
   const value=k=>String(fd.get(k)||'').trim();
   const venue={card_id:cardId,venue_type:value('venue_type'),city:value('city'),country:value('country'),official_url:value('official_url')||null,description_source_url:value('description_source_url')||null,image_source_url:value('image_source_url')||null,image_license:value('image_license')||'à vérifier',verification_status:value('verification_status'),notes:value('notes')||null};
   if(!venue.city||!venue.country){status.textContent='Renseigne la ville et le pays.';return}
+  const imagePath=value('image_path'),rightsChecked=fd.has('rights_checked'),imageLicense=value('image_license');
+  if(imagePath&&!rightsChecked){status.textContent='Enregistrement bloqué : coche « Droits du visuel vérifiés » uniquement après avoir obtenu une autorisation ou vérifié une licence valable.';return}
+  if(imagePath&&(!venue.image_source_url||!imageLicense||/à vérifier|autorisation requise|non identifié|non validé|droits gérés/i.test(imageLicense))){status.textContent='Enregistrement bloqué : renseigne la source exacte et une licence ou autorisation réellement validée.';return}
   button.disabled=true;status.textContent='Enregistrement…';
   try{
    const {error:sourceError}=await sb.from('venue_sources').upsert(venue,{onConflict:'card_id'});

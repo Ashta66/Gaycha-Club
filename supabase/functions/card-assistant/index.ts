@@ -2,16 +2,24 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.0";
 
 const cors = {
-  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Origin": "https://ashta66.github.io",
   "Access-Control-Allow-Headers": "authorization, apikey, content-type, x-client-info",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
   "Content-Type": "application/json; charset=utf-8",
+  "Vary": "Origin",
 };
 
 const reply = (status: number, body: unknown) =>
   new Response(JSON.stringify(body), { status, headers: cors });
 
 Deno.serve(async (req: Request) => {
+  const origin = req.headers.get("Origin");
+  if (origin && origin !== "https://ashta66.github.io") {
+    return new Response(JSON.stringify({ error: "Origine non autorisée." }), {
+      status: 403,
+      headers: cors,
+    });
+  }
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
   if (req.method !== "POST") return reply(405, { error: "Méthode non autorisée." });
 

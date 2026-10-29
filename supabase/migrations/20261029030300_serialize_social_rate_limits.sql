@@ -16,7 +16,9 @@ declare
 begin
   if u is null then raise exception 'auth required'; end if;
   select * into pr from public.profiles where id = u for update;
-  if pr.is_suspended or pr.age_confirmed_at is null then raise exception 'forbidden'; end if;
+  if pr.id is null or pr.is_suspended is distinct from false or pr.age_confirmed_at is null then
+    raise exception 'forbidden';
+  end if;
   select * into rc from public.profiles where lower(username) = lower(p_recipient);
   if rc.id is null or rc.id = u or rc.is_suspended then raise exception 'unknown recipient'; end if;
 
@@ -68,7 +70,9 @@ declare
 begin
   if u is null then raise exception 'auth required'; end if;
   select * into pr from public.profiles where id = u for update;
-  if pr.is_suspended or pr.age_confirmed_at is null then raise exception 'forbidden'; end if;
+  if pr.id is null or pr.is_suspended is distinct from false or pr.age_confirmed_at is null then
+    raise exception 'forbidden';
+  end if;
   if char_length(body) not between 1 and 1000 then raise exception 'invalid message'; end if;
   select * into rc from public.profiles where lower(username) = lower(p_recipient);
   if rc.id is null or rc.id = u or rc.is_suspended then raise exception 'cannot message this user'; end if;

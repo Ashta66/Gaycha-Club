@@ -41,7 +41,7 @@ BEGIN
   image_source_value := NULLIF(BTRIM(p_venue->>'image_source_url'), '');
   image_license_value := COALESCE(NULLIF(BTRIM(p_venue->>'image_license'), ''), 'à vérifier');
 
-  IF venue_type_value NOT IN ('bar','discotheque','sauna')
+  IF venue_type_value IS NULL OR venue_type_value NOT IN ('bar','discotheque','sauna')
      OR city_value IS NULL OR country_value IS NULL
      OR status_value NOT IN ('à vérifier','vérifié','fermé','en attente de droits') THEN
     RAISE EXCEPTION 'invalid venue fields';

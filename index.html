@@ -373,6 +373,41 @@ main{padding-top:clamp(20px,3vw,34px)}
  .section-heading-note{max-width:none;text-align:left}
 }
 @media(prefers-reduced-motion:reduce){.achievement,.collection-card-item{transition:none}.achievement:hover,.collection-card-item:hover{transform:none}}
+
+/* ===== GAYCHA expressive visual identity: gold × rainbow × silver ===== */
+:root{--gc-gold:#e5c16d;--gc-gold-bright:#ffe7a2;--gc-silver:#d8dce8;--gc-rainbow:conic-gradient(from 15deg,#ff4f87,#ff9d45,#ffe16a,#73df9a,#63d8ed,#8b8aff,#e47bea,#ff4f87)}
+body{background-image:radial-gradient(ellipse at 12% 0%,#8d5c9b14,transparent 32%),radial-gradient(ellipse at 92% 12%,#d6b46a10,transparent 28%),radial-gradient(ellipse at 50% 100%,#6a7fd20b,transparent 40%)}
+.dashboard-welcome,.collection-hero,.admin-hero{border-color:transparent;background:linear-gradient(125deg,#17151b 0%,#101012 56%,#19151d 100%) padding-box,linear-gradient(115deg,#f5d98d 0%,#d6b46a 22%,#e8eaf2 39%,#b5a4ff 53%,#ff80b8 67%,#8be4ce 81%,#f5d98d 100%) border-box;box-shadow:0 18px 46px #0004,0 0 28px #d6b46a0a;isolation:isolate}
+.dashboard-welcome:after,.collection-hero:after,.admin-hero:after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.32;background-image:radial-gradient(circle at 12% 25%,#fff 0 1px,transparent 1.7px),radial-gradient(circle at 75% 30%,#e5c16d 0 1px,transparent 1.8px),radial-gradient(circle at 58% 78%,#a6e7ff 0 1px,transparent 1.8px),radial-gradient(circle at 91% 65%,#f3b8f4 0 1px,transparent 1.8px);background-size:97px 83px,131px 107px,113px 139px,151px 121px;mask-image:linear-gradient(90deg,transparent,black)}
+.dashboard-welcome-mark{border-color:#f0d58c88;background:linear-gradient(145deg,#d6b46a20,#ffffff03);box-shadow:inset 0 0 32px #d6b46a12,0 0 30px #d6b46a14,0 10px 35px #0005}
+.dashboard-welcome-mark span{background:linear-gradient(135deg,#fff4ca,#d6b46a 48%,#f5f5ff 72%,#c7a3ef);background-clip:text;-webkit-background-clip:text;color:transparent;filter:drop-shadow(0 0 14px #d6b46a35)}
+.eyebrow{background:linear-gradient(90deg,#ffe7a2,#d6b46a 40%,#e4e6f1 72%,#ffb3d8);background-clip:text;-webkit-background-clip:text;color:transparent}
+.dash-tile{border-color:#d6b46a2e;background:linear-gradient(145deg,#ffffff09,#ffffff02);box-shadow:inset 0 1px #ffffff09,0 10px 26px #0003}
+.dash-tile:after{height:2px;background:linear-gradient(90deg,#ffe7a2,#d6b46a 30%,#b6a5ff 62%,#ff8fbe 82%,transparent)}
+.dash-tile strong,.collection-hero-score strong{background:linear-gradient(120deg,#fff0bc,#d6b46a 43%,#e4e7f3 75%,#c9b7ff);background-clip:text;-webkit-background-clip:text;color:transparent}
+.section-panel,.collection-progress-panel,.collection-library-panel{border-color:#d6b46a28;background:linear-gradient(145deg,#ffffff06,#ffffff02)}
+.section-heading h2{letter-spacing:-.025em}
+.collection-hero-score{border-color:#e5c16d70;background:linear-gradient(145deg,#d6b46a14,#e7e9f40a);box-shadow:inset 0 1px #ffffff0b}
+.collection-progress-track{overflow:hidden;background:#ffffff16}
+.collection-progress-track>span{background:linear-gradient(90deg,#d6b46a,#f7e4a8 30%,#e5e8f3 52%,#bca7ff 70%,#f5a8ce);box-shadow:0 0 12px #d6b46a40}
+.collection-card-item{position:relative;overflow:hidden;border-color:#d6b46a28;background:linear-gradient(145deg,#ffffff0a,#ffffff02);box-shadow:inset 0 1px #ffffff0a,0 9px 22px #0002}
+.collection-card-item:before{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;opacity:0;background:linear-gradient(118deg,transparent 20%,#fff5 40%,#a9f5ff55 46%,#ffd5f855 51%,transparent 63%);transform:translateX(-120%);transition:transform .65s ease,opacity .2s ease}
+.collection-card-item:hover:before,.collection-card-item:focus-within:before{opacity:.7;transform:translateX(120%)}
+.card{border:2px solid transparent!important;background:linear-gradient(#0b0b0c,#0b0b0c) padding-box,var(--gc-rainbow) border-box!important;box-shadow:0 7px 20px #0005,0 0 0 1px #ffffff0a,inset 0 0 18px #ffffff05;transition:transform .22s ease,box-shadow .22s ease!important}
+.card:hover,.card:focus-visible{transform:translateY(-5px) scale(1.018)!important;box-shadow:0 16px 32px #0007,0 0 18px #d6b46a35,0 0 26px #b7a2ff1a!important}
+.card:after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;opacity:0;background:repeating-linear-gradient(115deg,#fff0 0 7px,#ffffff13 8px,#9eeaff12 10px,#ffffff00 13px);mix-blend-mode:screen;transition:opacity .2s}
+.card:hover:after,.card:focus-visible:after{opacity:.72}
+.card .band{background:linear-gradient(100deg,#f7dfa0,#d6b46a 35%,#e7e9f3 70%,#c6b5f6);box-shadow:inset 0 1px #fff9;color:#17151a}
+.card .rar{color:#ffe8a7}
+.r-commun{--r:#d5d7e0}.r-peu_commun{--r:#76e4c1}.r-rare{--r:#9ebcff}.r-epique{--r:#f6a5e7}.r-legendaire{--r:#ffe29a}
+.mobile-bottom-nav{background:rgba(14,13,17,.96);border-top:1px solid transparent;background-image:linear-gradient(rgba(14,13,17,.97),rgba(14,13,17,.97)),var(--gc-rainbow);background-origin:border-box;background-clip:padding-box,border-box;box-shadow:0 -10px 30px #0007,0 -1px 18px #d6b46a0c}
+.mobile-nav-item.nav-active{color:#ffe7a2;background:linear-gradient(180deg,#d6b46a20,#b8a5f00c);box-shadow:inset 0 0 0 1px #e5c16d60}
+.mobile-nav-item.nav-active span{filter:drop-shadow(0 0 6px #d6b46a55)}
+.btn:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #f0d58c;outline-offset:3px}
+.admin-tabs-wrap>.tabs .btn.nav-active{background:linear-gradient(110deg,#f4d88e,#d6b46a 45%,#d9dced);color:#151318;border-color:#f5dfaa}
+@media(hover:none){.card:hover,.collection-card-item:hover{transform:none!important}.collection-card-item:hover:before{opacity:0}}
+@media(max-width:650px){.dashboard-welcome,.collection-hero,.admin-hero{box-shadow:0 12px 30px #0004}.card:hover,.card:focus-visible{transform:none!important}.dashboard-welcome:after,.collection-hero:after,.admin-hero:after{opacity:.2}}
+@media(prefers-reduced-motion:reduce){.card,.collection-card-item:before,.dashboard-welcome:after,.collection-hero:after,.admin-hero:after{animation:none!important;transition:none!important}.card:hover,.card:focus-visible{transform:none!important}}
 </style></head><body>
 <header><button class="logo logo-home" type="button" data-v="dashboard" aria-label="Gaycha Club — accueil" title="Retour à l’accueil">GAYCHA<small>CLUB</small></button>
 <nav aria-label="Navigation principale"><button class="btn alt" data-v="collection">Collection</button><button class="btn alt" data-v="booster">Boosters</button><button class="btn alt" data-v="notifications">Messages</button><button class="btn alt" data-v="market">Marché</button><button class="btn alt" data-v="friends">Communauté</button><button class="btn alt" data-v="admin" id="nadm" hidden>Administration</button></nav>
@@ -479,6 +514,65 @@ Object.assign(UI_TRANSLATIONS.es,{
  "La langue choisie s’applique aux textes traduits de l’interface. Certains contenus ajoutés par les membres restent dans leur langue d’origine.":"El idioma elegido se aplica al texto traducido de la interfaz. El contenido creado por miembros permanece en su idioma original."
 });
 function applyLanguage(root=document.body){document.documentElement.lang=currentLanguage;const map=UI_TRANSLATIONS[currentLanguage]||{};const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),a=[];while(w.nextNode()){const n=w.currentNode;if(n.parentElement&&!n.parentElement.closest('script,style'))a.push(n)}const keys=Object.keys(map).sort((x,y)=>y.length-x.length);for(const n of a){if(n.__gaychaSource===undefined)n.__gaychaSource=n.nodeValue;let v=n.__gaychaSource;for(const k of keys)if(v.includes(k))v=v.split(k).join(map[k]);if(n.nodeValue!==v)n.nodeValue=v}root.querySelectorAll?.('input[placeholder],textarea[placeholder],button[aria-label],input[aria-label],select[aria-label]').forEach(el=>{for(const attr of ['placeholder','aria-label'])if(el.hasAttribute(attr)){const prop='__gaycha_'+attr;if(el[prop]===undefined)el[prop]=el.getAttribute(attr);let v=el[prop];for(const k of keys)if(v.includes(k))v=v.split(k).join(map[k]);el.setAttribute(attr,v)}})}
+
+/* Translations for the expressive visual refresh; keep FR as source language. */
+Object.assign(UI_TRANSLATIONS.en,{
+"TON ESPACE GAYCHA":"YOUR GAYCHA SPACE",
+"Ta collection, tes prochaines découvertes et les objectifs du Club réunis au même endroit.":"Your collection, next discoveries and Club goals in one place.",
+"✦ Ouvrir un booster":"✦ Open a booster",
+"Voir mon album":"View my album",
+"ALBUM PERSONNEL":"PERSONAL ALBUM",
+"Chaque carte compte. Suis tes séries, retrouve tes pépites et gère tes doublons.":"Every card counts. Track your series, find your favourites and manage duplicates.",
+"cartes uniques":"unique cards",
+"exemplaires":"copies",
+"doublons":"duplicates",
+"album complété":"album completed",
+"TA BIBLIOTHÈQUE":"YOUR LIBRARY",
+"Toutes mes cartes":"All my cards",
+"Recherche et filtres":"Search and filters",
+"ESPACE STAFF · GAYCHA CLUB":"STAFF AREA · GAYCHA CLUB",
+"Gère le catalogue, les lieux, les séries et la vie du Club depuis un espace unifié.":"Manage the catalogue, venues, series and Club activity from one workspace.",
+"ESPACE DE TRAVAIL":"WORKSPACE",
+"Choisis une rubrique pour continuer.":"Choose a section to continue.",
+"TON PORTE-MONNAIE":"YOUR WALLET",
+"Derniers mouvements":"Recent activity",
+"TES OBJECTIFS":"YOUR GOALS",
+"ACCÈS RAPIDES":"QUICK ACCESS",
+"Reprendre ma partie":"Continue your journey",
+"Tout est à portée de main":"Everything within reach",
+"Toutes les missions →":"All missions →",
+"Voir l’historique →":"View history →",
+"Le catalogue prend vie":"The catalogue comes alive"
+});
+Object.assign(UI_TRANSLATIONS.es,{
+"TON ESPACE GAYCHA":"TU ESPACIO GAYCHA",
+"Ta collection, tes prochaines découvertes et les objectifs du Club réunis au même endroit.":"Tu colección, tus próximos descubrimientos y los objetivos del Club en un solo lugar.",
+"✦ Ouvrir un booster":"✦ Abrir un sobre",
+"Voir mon album":"Ver mi álbum",
+"ALBUM PERSONNEL":"ÁLBUM PERSONAL",
+"Chaque carte compte. Suis tes séries, retrouve tes pépites et gère tes doublons.":"Cada carta cuenta. Sigue tus series, encuentra tus favoritas y gestiona tus duplicados.",
+"cartes uniques":"cartas únicas",
+"exemplaires":"copias",
+"doublons":"duplicados",
+"album complété":"álbum completado",
+"TA BIBLIOTHÈQUE":"TU BIBLIOTECA",
+"Toutes mes cartes":"Todas mis cartas",
+"Recherche et filtres":"Búsqueda y filtros",
+"ESPACE STAFF · GAYCHA CLUB":"ÁREA DE EQUIPO · GAYCHA CLUB",
+"Gère le catalogue, les lieux, les séries et la vie du Club depuis un espace unifié.":"Gestiona el catálogo, los locales, las series y la actividad del Club desde un solo espacio.",
+"ESPACE DE TRAVAIL":"ÁREA DE TRABAJO",
+"Choisis une rubrique pour continuer.":"Elige una sección para continuar.",
+"TON PORTE-MONNAIE":"TU MONEDERO",
+"Derniers mouvements":"Movimientos recientes",
+"TES OBJECTIFS":"TUS OBJETIVOS",
+"ACCÈS RAPIDES":"ACCESOS RÁPIDOS",
+"Reprendre ma partie":"Continuar tu recorrido",
+"Tout est à portée de main":"Todo al alcance",
+"Toutes les missions →":"Todas las misiones →",
+"Voir l’historique →":"Ver historial →",
+"Le catalogue prend vie":"El catálogo cobra vida"
+});
+
 const languageObserver=new MutationObserver(()=>applyLanguage());languageObserver.observe(document.body,{subtree:true,childList:true,characterData:true});
 const msg=(t,e)=>`<div class="note ${e?'err':''}">${esc(t)}</div>`;
 function cardIcon(name){const n=String(name||'').toLowerCase();if(n.includes('inavouable'))return '🤫';if(n.includes('drama'))return '🎭';if(n.includes('red flag'))return '🚩';if(n.includes('cupidon'))return '💘';if(n.includes('verre'))return '🍸';if(n.includes('marieur'))return '💞';if(n.includes('karaoké'))return '🎤';if(n.includes('sphinx'))return '🐈‍⬛';if(n.includes('ghosteur'))return '👻';if(n.includes('afters'))return '🪩';if(n.includes('masc'))return '🕶️';return '✦'}

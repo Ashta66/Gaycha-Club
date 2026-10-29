@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>GAYCHA CLUB — Phase 2</title>
+<title>GAYCHA CLUB — Collection & communauté</title>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Fraunces:wght@400;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <style>
@@ -259,11 +259,42 @@ main{min-height:65vh}
 @media(prefers-reduced-motion:reduce){.collection-progress-track>span{transition:none}}
 
 .friend-profile-summary{min-width:0;flex:1}.friend-profile-summary .muted{overflow-wrap:anywhere}
+
+/* ===== Design pass : navigation cohérente et finition premium ===== */
+header nav .btn{border-radius:999px;min-height:42px;padding:9px 15px;transition:background .18s,border-color .18s,color .18s,transform .18s}
+header nav .btn.nav-active{background:linear-gradient(135deg,#e8cb86,#d6b46a);color:#101010;border-color:#f4dfaa;box-shadow:0 4px 18px #d6b46a22}
+header nav .btn:not(.nav-active):hover{background:#ffffff0d;border-color:#d6b46a}
+main{padding-top:clamp(20px,3vw,34px)}
+.hero,.universe-hero{isolation:isolate}
+.section-panel,.dash-tile,.collection-progress-panel,.trade-side,.mission-card{backdrop-filter:blur(8px)}
+.section-panel{border-radius:18px;box-shadow:0 12px 28px #0002}
+.dash-tile{border-color:#d6b46a2b;box-shadow:inset 0 1px #ffffff08,0 12px 26px #0002}
+.dash-tile strong{letter-spacing:.015em;text-shadow:0 0 24px #d6b46a22}
+.collection-progress-panel{border-radius:18px}
+.mobile-bottom-nav{padding-left:max(8px,env(safe-area-inset-left));padding-right:max(8px,env(safe-area-inset-right))}
+.mobile-nav-item{min-height:52px}
+.mobile-nav-item span{font-size:21px}
+.mobile-nav-item small{font-size:10px;font-weight:600;letter-spacing:.01em}
+.mobile-nav-item.nav-active{background:linear-gradient(180deg,#d6b46a24,#d6b46a08);box-shadow:inset 0 0 0 1px #d6b46a66}
+.mobile-more-menu{padding:16px;gap:10px}
+.mobile-more-menu button{border-radius:12px;transition:background .15s,border-color .15s}
+.mobile-more-menu button:hover{background:#d6b46a12;border-color:#d6b46a66}
+@media(max-width:650px){
+  main{padding-top:18px}
+  main>h1{font-size:clamp(32px,9vw,44px)}
+  h2{font-size:25px}
+  .section-panel{padding:14px}
+  .dashboard-grid{gap:10px}
+  .dash-tile{border-radius:14px;padding:13px}
+  .grid{gap:12px}
+  .cards-grid{gap:10px}
+}
+@media(prefers-reduced-motion:reduce){header nav .btn,.mobile-more-menu button{transition:none}}
 </style></head><body>
 <header><button class="logo logo-home" type="button" data-v="dashboard" aria-label="Gaycha Club — accueil" title="Retour à l’accueil">GAYCHA<small>CLUB</small></button>
-<nav aria-label="Navigation principale"><button class="btn alt" data-v="collection">Collection</button><button class="btn alt" data-v="booster">Boosters</button><button class="btn alt" data-v="events">Activités</button><button class="btn alt" data-v="friends">Communauté</button><button class="btn alt" data-v="admin" id="nadm" hidden>Administration</button></nav>
+<nav aria-label="Navigation principale"><button class="btn alt" data-v="collection">Collection</button><button class="btn alt" data-v="booster">Boosters</button><button class="btn alt" data-v="notifications">Messages</button><button class="btn alt" data-v="market">Marché</button><button class="btn alt" data-v="friends">Communauté</button><button class="btn alt" data-v="admin" id="nadm" hidden>Administration</button></nav>
 <div class="me" id="me"></div></header>
-<nav class="mobile-bottom-nav" aria-label="Navigation principale mobile"><button class="mobile-nav-item" data-v="collection"><span aria-hidden="true">▦</span><small>Collection</small></button><button class="mobile-nav-item" data-v="booster"><span aria-hidden="true">✦</span><small>Boosters</small></button><button class="mobile-nav-item" data-v="events"><span aria-hidden="true">✧</span><small>Activités</small></button><button class="mobile-nav-item" data-v="friends"><span aria-hidden="true">♡</span><small>Communauté</small></button><button class="mobile-nav-item" id="mobile-more-toggle" aria-expanded="false" aria-controls="mobile-more-menu"><span aria-hidden="true">☰</span><small>Plus</small></button></nav>
+<nav class="mobile-bottom-nav" aria-label="Navigation principale mobile"><button class="mobile-nav-item" data-v="collection" aria-label="Collection"><span aria-hidden="true">▦</span><small>Collection</small></button><button class="mobile-nav-item" data-v="booster" aria-label="Boosters"><span aria-hidden="true">✦</span><small>Boosters</small></button><button class="mobile-nav-item" data-v="notifications" aria-label="Messages"><span aria-hidden="true">✉</span><small>Messages</small></button><button class="mobile-nav-item" data-v="market" aria-label="Marché"><span aria-hidden="true">◇</span><small>Marché</small></button><button class="mobile-nav-item" id="mobile-more-toggle" aria-expanded="false" aria-controls="mobile-more-menu" aria-label="Plus de sections"><span aria-hidden="true">☰</span><small>Plus</small></button></nav>
 <div id="mobile-more-menu" class="mobile-more-menu" hidden aria-label="Autres sections"><button data-v="dashboard">⌂ Accueil</button><button data-v="universe">✧ Univers</button><button data-v="stats">▤ Statistiques</button><button data-v="history">◷ Historique</button><button data-v="friends">♡ Amis</button><button data-v="events">✧ Événements</button><button data-v="missions">✓ Missions</button><button data-v="leaderboard">♛ Classement</button><button data-v="playercard">▣ Carte joueur</button><button id="mobile-settings-open">⚙ Paramètres</button><button data-v="admin" id="mobile-admin" hidden>⚒ Admin</button></div>
 <a class="skip-link" href="#app">Aller au contenu</a><main id="app" aria-live="polite" aria-busy="false"></main>
 <script>

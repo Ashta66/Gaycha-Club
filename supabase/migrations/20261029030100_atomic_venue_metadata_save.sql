@@ -60,6 +60,15 @@ BEGIN
   image_source_value := NULLIF(BTRIM(p_venue->>'image_source_url'), '');
   image_license_value := COALESCE(NULLIF(BTRIM(p_venue->>'image_license'), ''), 'à vérifier');
 
+  -- Stored source links are rendered/used as URLs by the client; allow web URLs only.
+  IF (NULLIF(BTRIM(p_venue->>'official_url'), '') IS NOT NULL
+      AND BTRIM(p_venue->>'official_url') !~* '^https?://')
+     OR (NULLIF(BTRIM(p_venue->>'description_source_url'), '') IS NOT NULL
+      AND BTRIM(p_venue->>'description_source_url') !~* '^https?://')
+     OR (image_source_value IS NOT NULL AND image_source_value !~* '^https?://') THEN
+    RAISE EXCEPTION 'venue source URLs must use http or https';
+  END IF;
+
   IF venue_type_value IS NULL OR venue_type_value NOT IN ('bar','discotheque','sauna')
      OR city_value IS NULL OR country_value IS NULL
      OR status_value NOT IN ('à vérifier','vérifié','fermé','en attente de droits') THEN

@@ -765,10 +765,8 @@ if(tab==='venues'){
   if(imagePath&&(!venue.image_source_url||!imageLicense||/à vérifier|autorisation requise|non identifié|non validé|droits gérés/i.test(imageLicense))){status.textContent='Enregistrement bloqué : renseigne la source exacte et une licence ou autorisation réellement validée.';return}
   button.disabled=true;status.textContent='Enregistrement…';
   try{
-   const {error:sourceError}=await sb.from('venue_sources').upsert(venue,{onConflict:'card_id'});
-   if(sourceError)throw sourceError;
-   const {error:cardError}=await sb.rpc('admin_update_venue_card_metadata',{p_card:cardId,p_image_path:value('image_path')||null,p_rights_checked:fd.has('rights_checked')});
-   if(cardError)throw cardError;
+   const {error:saveError}=await sb.rpc('admin_save_venue_metadata',{p_card:cardId,p_venue:venue,p_image_path:value('image_path')||null,p_rights_checked:fd.has('rights_checked')});
+   if(saveError)throw saveError;
    status.textContent='Sources enregistrées.';
    const row=form.closest('details');if(row){const summary=row.querySelector('summary');const city=row.querySelector('[name="city"]').value.trim(),country=row.querySelector('[name="country"]').value.trim(),state=row.querySelector('[name="verification_status"]').value;const spans=summary.querySelectorAll('.note');if(spans[0])spans[0].textContent=city+' · '+country;if(spans[1])spans[1].textContent=state;const visualState=value('image_path')&&rightsChecked?'visuel documenté':value('image_path')?'visuel à contrôler':rightsChecked?'droits cochés sans visuel':'illustration de secours';row.dataset.visualStatus=value('image_path')&&rightsChecked?'documente':value('image_path')?'controle':rightsChecked?'sans-visuel':'secours';const badge=summary.querySelector('.venue-visual-badge');if(badge)badge.textContent=visualState;row.dataset.venueSearchRow=(row.querySelector('strong').textContent+' '+city+' '+country+' '+state+' '+visualState+' '+value('image_license')+' '+value('image_source_url')+' '+(form.querySelector('.note')?.textContent||'')).toLocaleLowerCase('fr');filterVenues()}
   }catch(err){status.textContent='Échec : '+(err.message||'erreur inconnue')}

@@ -17,6 +17,7 @@ DECLARE
   status_value text;
   image_source_value text;
   image_license_value text;
+  field_name text;
 BEGIN
   IF auth.uid() IS NULL
      OR NOT public.is_staff(ARRAY['admin','catalog_manager']::public.app_role[]) THEN
@@ -33,6 +34,24 @@ BEGIN
   ) THEN
     RAISE EXCEPTION 'unknown venue card';
   END IF;
+
+  -- Required fields must be JSON strings; ->> alone would coerce numbers/objects.
+  IF jsonb_typeof(p_venue->'venue_type') IS DISTINCT FROM 'string'
+     OR jsonb_typeof(p_venue->'city') IS DISTINCT FROM 'string'
+     OR jsonb_typeof(p_venue->'country') IS DISTINCT FROM 'string' THEN
+    RAISE EXCEPTION 'venue type, city and country must be strings';
+  END IF;
+
+  -- Optional text fields may be strings, JSON null, or omitted, but not arrays/objects/numbers.
+  FOREACH field_name IN ARRAY ARRAY[
+    'official_url', 'description_source_url', 'image_source_url',
+    'image_license', 'verification_status', 'notes'
+  ] LOOP
+    IF p_venue ? field_name
+       AND jsonb_typeof(p_venue->field_name) NOT IN ('string', 'null') THEN
+      RAISE EXCEPTION 'venue metadata field must be text: %', field_name;
+    END IF;
+  END LOOP;
 
   venue_type_value := NULLIF(BTRIM(p_venue->>'venue_type'), '');
   city_value := NULLIF(BTRIM(p_venue->>'city'), '');

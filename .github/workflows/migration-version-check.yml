@@ -1,0 +1,75 @@
+name: Migration version guard
+
+on:
+  pull_request:
+    paths:
+      - "supabase/migrations/**/*.sql"
+      - "supabase/migrations/*.sql"
+      - ".github/workflows/migration-version-check.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  migration-version-guard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out pull request and base history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate newly added migration versions
+        shell: bash
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+
+          mapfile -t added_files < <(git diff --name-only --diff-filter=A "$BASE_SHA...$HEAD_SHA" -- 'supabase/migrations/*.sql' 'supabase/migrations/**/*.sql')
+
+          if (( ${#added_files[@]} == 0 )); then
+            echo "No newly added migration files; nothing to validate."
+            exit 0
+          fi
+
+          declare -A seen_new=()
+          latest_base=""
+
+          # Find the greatest valid migration version on the PR base.
+          while IFS= read -r path; do
+            name="${path##*/}"
+            if [[ "$name" =~ ^([0-9]{14})_[a-zA-Z0-9_-]+\.sql$ ]]; then
+              version="${BASH_REMATCH[1]}"
+              if [[ -z "$latest_base" || "$version" > "$latest_base" ]]; then
+                latest_base="$version"
+              fi
+            fi
+          done < <(git ls-tree -r --name-only "$BASE_SHA" -- 'supabase/migrations')
+
+          for path in "${added_files[@]}"; do
+            name="${path##*/}"
+            if [[ ! "$name" =~ ^([0-9]{14})_[a-zA-Z0-9_-]+\.sql$ ]]; then
+              echo "::error file=$path::Migration filename must start with a 14-digit timestamp followed by an underscore and a descriptive name."
+              exit 1
+            fi
+            version="${BASH_REMATCH[1]}"
+
+            if [[ -n "${seen_new[$version]+x}" ]]; then
+              echo "::error file=$path::Duplicate migration version $version also used by ${seen_new[$version]}."
+              exit 1
+            fi
+            seen_new[$version]="$path"
+
+            if [[ -n "$latest_base" && ! "$version" > "$latest_base" ]]; then
+              echo "::error file=$path::New migration version $version must be later than the latest migration on the PR base ($latest_base)."
+              exit 1
+            fi
+
+            if git ls-tree -r --name-only "$BASE_SHA" -- 'supabase/migrations' | grep -Eq "/${version}_[^/]+\.sql$"; then
+              echo "::error file=$path::Migration version $version already exists on the PR base."
+              exit 1
+            fi
+            echo "Validated $path ($version)"
+          done

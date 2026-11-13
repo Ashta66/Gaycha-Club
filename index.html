@@ -952,6 +952,36 @@ dialog .btn{max-width:100%}
  a,.collection-card-item,.admin-card-tile,.booster-choice,.achievement{transition:none!important}
 }
 
+
+/* LOT 1 — finitions ciblées sur les composants réellement présents */
+.admin-tabs-wrap{
+ min-width:0;max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;
+ scrollbar-width:thin;-webkit-overflow-scrolling:touch;
+}
+.admin-branding-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.admin-branding-item,.admin-branding-preview,.admin-audit-details{min-width:0;overflow-wrap:anywhere}
+.admin-audit-table-wrap{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.admin-stat-grid{align-items:stretch}
+.collection-series-group-head,.booster-hero-actions,.dashboard-welcome-actions{
+ min-width:0;flex-wrap:wrap;align-items:center;
+}
+.collection-series-heading,.booster-hero-copy,.dashboard-welcome-copy{min-width:0}
+@media(max-width:650px){
+ .admin-tabs-wrap{display:flex;flex-wrap:nowrap;gap:7px;padding-bottom:7px}
+ .admin-tabs-wrap>*{flex:0 0 auto}
+ .admin-branding-grid{grid-template-columns:1fr}
+ .admin-branding-preview{max-width:100%}
+ .admin-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .collection-series-group-head{align-items:flex-start}
+ .booster-hero-actions,.dashboard-welcome-actions{width:100%}
+ .booster-hero-actions .btn,.dashboard-welcome-actions .btn{flex:1 1 auto}
+}
+@media(max-width:380px){
+ .admin-stat-grid{grid-template-columns:1fr}
+ .mobile-nav-item small{font-size:9px}
+ .mobile-bottom-nav{gap:1px;padding-left:4px;padding-right:4px}
+}
+
 </style></head><body>
 <header><button class="logo logo-home" type="button" data-v="dashboard" data-brand-logo aria-label="Gaycha Club — accueil" title="Retour à l’accueil"><span data-brand-text>GAYCHA<small>CLUB</small></span></button>
 <nav aria-label="Navigation principale"><button class="btn alt" data-v="collection">Collection</button><button class="btn alt" data-v="booster">Boosters</button><button class="btn alt" data-v="notifications">Messages</button><button class="btn alt" data-v="market">Marché</button><button class="btn alt" data-v="friends">Communauté</button><button class="btn alt" data-v="admin" id="nadm" hidden>Administration</button></nav>

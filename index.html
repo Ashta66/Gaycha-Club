@@ -778,6 +778,108 @@ dialog::before{opacity:.45}
  .btn:hover,.card:hover{transform:none!important}
 }
 
+
+/* ===== LOT 1 — finition transversale et cohérence des composants ===== */
+:root{
+ --bg:#0b0b10;
+ --panel:#14141b;
+ --panel-2:#1b1a23;
+ --cream:#f4f0e8;
+ --mut:#aaa6b2;
+ --gold:#e4c477;
+ --gc-line:rgba(226,211,177,.14);
+ --gc-panel:rgba(255,255,255,.028);
+}
+::selection{background:rgba(228,196,119,.3);color:#fff}
+a{color:#f0dca7;text-underline-offset:3px}
+a:hover{color:#fff0c7}
+button, input, select, textarea{font:inherit}
+button:disabled,.btn:disabled{cursor:not-allowed;filter:grayscale(.45);opacity:.55;transform:none!important;box-shadow:none!important}
+.btn.alt:active:not(:disabled),.btn:active:not(:disabled){transform:translateY(0) scale(.985)}
+.tabs .btn,.admin-tabs-wrap .btn{border:1px solid rgba(255,255,255,.11);border-radius:999px}
+.tabs .btn.alt,.admin-tabs-wrap .btn.alt{background:rgba(255,255,255,.035)}
+.tabs .btn:not(.alt),.admin-tabs-wrap .btn:not(.alt){border-color:rgba(228,196,119,.55)}
+.box,.section-panel,.collection-progress-panel,.collection-library-panel,.booster-section,.booster-inventory-panel,.admin-content>.box{
+ border-color:var(--gc-line);
+ background:linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.015));
+ box-shadow:0 12px 30px rgba(0,0,0,.16),inset 0 1px rgba(255,255,255,.025);
+}
+.box h2,.section-panel h2,.booster-section h2,.admin-content h2{color:#f4f0e8}
+.note{border:1px solid rgba(185,164,244,.2);border-left:3px solid var(--gc-lilac);border-radius:10px;background:rgba(185,164,244,.055);color:#d4cde0;padding:12px 14px}
+.err{border:1px solid rgba(241,138,185,.38);border-radius:10px;background:rgba(241,138,185,.08);color:#ffd5e5;padding:12px 14px}
+input::placeholder,textarea::placeholder{color:#777481;opacity:1}
+select{color-scheme:dark}
+input[type="checkbox"],input[type="radio"]{accent-color:var(--gc-gold)}
+hr{border:0;border-top:1px solid var(--gc-line);margin:20px 0}
+table{width:100%;color:var(--gc-text)}
+th{background:rgba(228,196,119,.055)}
+tr:hover td{background:rgba(255,255,255,.018)}
+/* Neutralise l’ancien contour arc-en-ciel uniforme : la rareté pilote désormais la carte. */
+.card{
+ border:2px solid var(--r,#aeb3c0)!important;
+ background:#0b0b10!important;
+ box-shadow:0 10px 25px rgba(0,0,0,.42),inset 0 0 18px rgba(255,255,255,.035)!important;
+}
+.card.r-commun{--r:#b9bdc8}
+.card.r-peu_commun{--r:#76d9b5}
+.card.r-rare{--r:#8eb4ff;box-shadow:0 0 0 1px rgba(142,180,255,.18),0 10px 25px rgba(0,0,0,.42)!important}
+.card.r-epique{--r:#dc9be2;box-shadow:0 0 0 1px rgba(220,155,226,.25),0 0 20px rgba(220,155,226,.12)!important}
+.card.r-legendaire{--r:#f0d184;box-shadow:0 0 0 1px rgba(240,209,132,.34),0 0 24px rgba(240,209,132,.17)!important}
+.card.r-secrete{border-color:transparent!important;background:linear-gradient(#0b0b10,#0b0b10) padding-box,conic-gradient(from var(--a),#f18ab9,#e4c477,#83d9c3,#9ebcff,#b9a4f4,#f18ab9) border-box!important;box-shadow:0 0 28px rgba(185,164,244,.2)!important}
+.card .band{background:linear-gradient(100deg,#f8e8b8,#d6b46a 52%,#e8e9f0)!important;color:#17130b!important}
+.card .rar{color:var(--r,#e4c477)!important}
+.card .nm{color:#fffaf0}
+.card .spec,.card .meta{color:#c2bdc7}
+.collection-card-item,.admin-card-tile,.achievement,.booster-choice,.trade-side,.player-card-form{
+ border-color:var(--gc-line);
+ background-color:rgba(255,255,255,.025);
+}
+.collection-card-item{box-shadow:0 10px 24px rgba(0,0,0,.14)}
+.collection-card-item:hover{border-color:rgba(228,196,119,.45)}
+.collection-series-group-head{border-bottom-color:rgba(228,196,119,.35)}
+.collection-series-group-head h3{font-family:"Space Grotesk",sans-serif;font-size:18px;letter-spacing:-.02em}
+.collection-tools input,.collection-tools select,.catalogue-filters input,.catalogue-filters select{min-width:0}
+.admin-tabs-wrap>.tabs{scrollbar-color:rgba(228,196,119,.45) transparent}
+.admin-tabs-wrap>.tabs .btn{min-height:40px}
+.admin-card-tile{border-radius:16px}
+.admin-card-tile:hover{border-color:rgba(228,196,119,.48);background:rgba(228,196,119,.035)}
+.admin-image-preview,.admin-branding-item{border-color:var(--gc-line);background:rgba(255,255,255,.025)}
+.admin-status{border-color:rgba(228,196,119,.4);background:rgba(228,196,119,.06)}
+.dashboard-album-progress{border-color:var(--gc-line);background:linear-gradient(110deg,rgba(228,196,119,.08),rgba(185,164,244,.035))}
+.dashboard-progress-value{color:var(--gc-gold-light)}
+.stat-track{background:rgba(255,255,255,.09)}
+.stat-fill{background:linear-gradient(90deg,var(--gc-gold),var(--gc-lilac),var(--gc-pink))}
+.history-row{border-bottom-color:rgba(255,255,255,.08)}
+.achievement{background:linear-gradient(145deg,rgba(255,255,255,.035),rgba(255,255,255,.012))}
+.achievement.unlocked{border-color:rgba(228,196,119,.42);background:linear-gradient(135deg,rgba(228,196,119,.1),rgba(255,255,255,.015))}
+.booster-choice{border-radius:17px;box-shadow:0 10px 25px rgba(0,0,0,.15)}
+.booster-choice.selected{border-color:#f0dca7;box-shadow:0 0 0 2px rgba(228,196,119,.25),0 18px 35px rgba(0,0,0,.25)}
+.opening-stage{box-shadow:inset 0 1px rgba(255,255,255,.05),0 14px 36px rgba(0,0,0,.2)}
+.mobile-bottom-nav{border-top-color:rgba(228,196,119,.32)}
+.mobile-nav-item{transition:background .18s,color .18s}
+.mobile-nav-item span{font-size:19px}
+.mobile-more-menu:not([hidden]){border-color:rgba(228,196,119,.35)}
+.skip-link{z-index:1000}
+@media(max-width:760px){
+ .cards-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ .catalogue-filters{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .admin-audit-tools{grid-template-columns:1fr}
+ .admin-audit-tools .note{grid-column:auto}
+ .trade-layout{grid-template-columns:1fr}
+}
+@media(max-width:420px){
+ .cards-grid{gap:8px}
+ .card{border-radius:12px!important}
+ .collection-card-item{padding:5px}
+ .admin-branding-grid{grid-template-columns:1fr}
+ .history-row{grid-template-columns:minmax(0,1fr) auto}
+}
+@media(prefers-reduced-motion:reduce){
+ *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+ body::before{animation:none!important}
+ .achievement:hover,.collection-card-item:hover,.booster-choice.selected{transform:none!important}
+}
+
 </style></head><body>
 <header><button class="logo logo-home" type="button" data-v="dashboard" data-brand-logo aria-label="Gaycha Club — accueil" title="Retour à l’accueil"><span data-brand-text>GAYCHA<small>CLUB</small></span></button>
 <nav aria-label="Navigation principale"><button class="btn alt" data-v="collection">Collection</button><button class="btn alt" data-v="booster">Boosters</button><button class="btn alt" data-v="notifications">Messages</button><button class="btn alt" data-v="market">Marché</button><button class="btn alt" data-v="friends">Communauté</button><button class="btn alt" data-v="admin" id="nadm" hidden>Administration</button></nav>

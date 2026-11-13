@@ -331,7 +331,7 @@ main{padding-top:clamp(20px,3vw,34px)}
 .collection-tools{display:grid;grid-template-columns:minmax(180px,2fr) repeat(3,minmax(130px,1fr));gap:10px;margin:0 0 14px}
 .collection-tools input,.collection-tools select{width:100%;min-width:0}
 .collection-card-grid{grid-template-columns:repeat(auto-fill,minmax(min(100%,205px),1fr));align-items:start;gap:14px}
-.collection-card-grid-host{display:block;min-width:0}
+.collection-card-grid-host{display:block;min-width:0}\n.collection-card-grid-host:not(.is-grouped){display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,205px),1fr));align-items:start;gap:14px}
 .collection-series-group{margin:18px 0 26px}
 .collection-series-group-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 2px 12px;padding-bottom:8px;border-bottom:1px solid #d6b46a55}
 .collection-series-group-head h3{margin:0;font:24px Anton,sans-serif;letter-spacing:.02em;color:var(--cream)}
@@ -776,11 +776,12 @@ const drawCollection=()=>{
  $('collection-count').textContent=shown.length+" carte(s) affichée(s)"+(view==='all'||f==='missing'?" · album complet":"");
  const renderCard=c=>{const qty=cnt[c.id]||0;const actions=qty?(qty>1?"<button class='btn alt' style='width:100%;margin-top:6px' data-conv='"+c.id+"' data-n='"+(qty-1)+"'>Convertir "+(qty-1)+" doublon(s)</button>":"")+"<button class='btn alt' style='width:100%;margin-top:6px' data-sell='"+c.id+"'>Vendre</button>":"<span class='collection-missing-label'>À découvrir</span>";return "<article class='collection-card-item "+(qty?'':'is-missing')+"'>"+card(c,qty)+actions+"</article>"};
  if(groupMode==='series'){
+  $('collection-grid').classList.add('is-grouped');
   const groups=seriesProgress.map(group=>({name:group.name,items:shown.filter(c=>c.series_id===group.id)})).filter(group=>group.items.length);
   const ungrouped=shown.filter(c=>!seriesProgress.some(group=>group.id===c.series_id));
   if(ungrouped.length)groups.push({name:'Autres cartes',items:ungrouped});
   $('collection-grid').innerHTML=groups.map(group=>"<section class='collection-series-group'><div class='collection-series-group-head'><h3>"+esc(group.name)+"</h3><span>"+group.items.length+" carte(s)</span></div><div class='collection-series-grid'>"+group.items.map(renderCard).join('')+"</div></section>").join('')||'<div class="trade-empty">Aucune carte pour ces critères.</div>';
- }else $('collection-grid').innerHTML=shown.map(renderCard).join('')||'<div class="trade-empty">Aucune carte pour ces critères.</div>';
+ }else{$('collection-grid').classList.remove('is-grouped');$('collection-grid').innerHTML=shown.map(renderCard).join('')||'<div class="trade-empty">Aucune carte pour ces critères.</div>';}
  wireCollectionActions();
 };
 $('collection-search').addEventListener('input',drawCollection);$('collection-view').addEventListener('change',drawCollection);$('collection-filter').addEventListener('change',drawCollection);$('collection-rarity').addEventListener('change',drawCollection);$('collection-series').addEventListener('change',drawCollection);$('collection-sort').addEventListener('change',drawCollection);$('collection-group').addEventListener('change',drawCollection);

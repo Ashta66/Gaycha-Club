@@ -411,6 +411,107 @@ main{padding-top:clamp(20px,3vw,34px)}
  .admin-stat-tile strong{font-size:22px}
  .dashboard-progress-meta{flex-direction:column;gap:3px}
 }
+
+/* ===== GAYCHA CLUB — full experience refresh ===== */
+.booster-hero{position:relative;display:flex;align-items:center;justify-content:space-between;gap:24px;overflow:hidden;margin:0 0 22px;padding:clamp(22px,4vw,38px);border:1px solid transparent;border-radius:22px;background:linear-gradient(125deg,#17151b,#101012 58%,#211624) padding-box,linear-gradient(115deg,#f5d98d,#d6b46a 25%,#e8eaf2 45%,#b5a4ff 62%,#ff80b8 80%,#8be4ce) border-box;box-shadow:0 18px 46px #0004;isolation:isolate}
+.booster-hero:after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.3;background-image:radial-gradient(circle at 12% 25%,#fff 0 1px,transparent 1.7px),radial-gradient(circle at 75% 30%,#e5c16d 0 1px,transparent 1.8px),radial-gradient(circle at 58% 78%,#a6e7ff 0 1px,transparent 1.8px);background-size:97px 83px,131px 107px,113px 139px}
+.booster-hero-copy{position:relative;z-index:1;max-width:720px}
+.booster-hero h1{margin:8px 0 10px;font-size:clamp(34px,5vw,54px)}
+.booster-hero p{max-width:650px;margin:0;color:var(--mut);line-height:1.65}
+.booster-hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+.booster-hero-mark{position:relative;flex:0 0 132px;width:132px;height:154px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:1px solid #f0d58c88;border-radius:20px;transform:rotate(4deg);background:linear-gradient(145deg,#d6b46a20,#b5a4ff0b);box-shadow:inset 0 0 32px #d6b46a12,0 0 30px #d6b46a14,0 10px 35px #0005}
+.booster-hero-mark span{font:76px/.9 Anton,sans-serif;background:linear-gradient(135deg,#fff4ca,#d6b46a 48%,#f5f5ff 72%,#c7a3ef);background-clip:text;-webkit-background-clip:text;color:transparent}
+.booster-hero-mark small{font-size:10px;letter-spacing:.35em;font-weight:800;color:var(--gold)}
+.booster-hero-mark i{position:absolute;right:10px;top:8px;color:#f7dfa0;font-style:normal;font-size:20px}
+.booster-section,.booster-inventory-panel{margin:18px 0;padding:clamp(15px,2.5vw,22px);border:1px solid #d6b46a2b;border-radius:18px;background:linear-gradient(145deg,#ffffff07,#ffffff02)}
+.booster-section-heading{display:flex;align-items:end;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.booster-section-heading h2{margin:0}
+.booster-section-heading p{margin:5px 0 0;color:var(--mut);font-size:13px}
+.booster-choice.selected{border-color:#ffe7a2;box-shadow:0 0 0 2px #d6b46a55,0 18px 35px #d6b46a24;transform:translateY(-4px)}
+.booster-choice.cooldown{opacity:.76}
+.booster-choice.cooldown .booster-pack{filter:saturate(.55);opacity:.8}
+.booster-choice .booster-pack{transition:transform .25s,filter .25s}
+.booster-choice:hover .booster-pack{transform:rotate(0) scale(1.035)}
+.booster-inventory-panel .booster-choices{margin-bottom:0}
+.booster-opening-results{scroll-margin-top:90px}
+.booster-opening-results:empty{display:none}
+.opening-stage{display:flex;align-items:center;justify-content:center;gap:clamp(18px,5vw,44px);min-height:250px;padding:24px;border:1px solid #d6b46a55;border-radius:20px;background:radial-gradient(ellipse at 50% 0%,#d6b46a20,transparent 60%),linear-gradient(145deg,#201b25,#101012);text-align:center}
+.opening-pack{position:relative;width:104px;height:148px;display:grid;place-content:center;gap:3px;flex:0 0 auto;overflow:hidden;border:2px solid #f1d58f;border-radius:13px;background:linear-gradient(145deg,#f4d88e,#a65d9a 38%,#263f82 75%,#111);box-shadow:0 0 28px #d6b46a44,inset 0 0 0 4px #ffffff22;transform:rotate(-7deg);animation:opening-float 1.8s ease-in-out infinite}
+.opening-pack:before{content:"";position:absolute;inset:-60% -20%;background:linear-gradient(110deg,transparent 40%,#ffffff88 49%,transparent 58%);transform:translateX(-80%);animation:pack-shine 1.2s linear infinite}
+.opening-pack:after{content:"";position:absolute;top:50%;left:-10%;right:-10%;height:2px;background:#fff4c4;box-shadow:0 0 20px #fff,0 0 35px #ff80b8;opacity:0;transform:rotate(-15deg) scaleX(0);transform-origin:center}
+.opening-pack span,.opening-pack strong{position:relative;z-index:1;color:#fff;text-shadow:0 2px 8px #000;font-family:Anton,sans-serif}
+.opening-pack span{font-size:20px;letter-spacing:.08em}.opening-pack strong{font-size:12px;letter-spacing:.4em}
+.opening-pack.is-opening{animation:opening-burst .8s ease-in forwards}
+.opening-pack.is-opening:after{animation:opening-tear .7s ease-out forwards}
+.opening-copy{max-width:360px}
+.opening-copy h2{margin:5px 0;font-size:clamp(22px,3vw,30px)}
+.opening-copy p{margin:0;color:var(--mut);font-size:13px}
+.opening-progress{height:5px;max-width:280px;margin:14px auto 0;overflow:hidden;border-radius:99px;background:#ffffff1b}
+.opening-progress span{display:block;width:35%;height:100%;border-radius:inherit;background:linear-gradient(90deg,#d6b46a,#f5e5b2,#b5a4ff,#ff80b8);animation:opening-progress 1.25s ease-in-out infinite}
+@keyframes opening-float{50%{transform:translateY(-8px) rotate(2deg)}}
+@keyframes opening-burst{0%{transform:scale(1) rotate(-7deg);filter:brightness(1)}55%{transform:scale(1.18) rotate(5deg);filter:brightness(2.3)}100%{transform:scale(.75) rotate(12deg);opacity:0;filter:brightness(2)}}
+@keyframes opening-tear{35%{opacity:1;transform:rotate(-15deg) scaleX(1)}100%{opacity:0;transform:rotate(-15deg) scaleX(1.6)}}
+@keyframes opening-progress{50%{transform:translateX(180%)}}
+.booster-reveal{padding:clamp(14px,2.5vw,22px);border:1px solid #d6b46a55;border-radius:20px;background:radial-gradient(ellipse at 50% 0%,#d6b46a16,transparent 58%),#111114}
+.booster-reveal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.booster-reveal-head h2{margin:0}
+.booster-reveal-head p{margin:4px 0 0;color:var(--mut);font-size:13px}
+.booster-reveal-tools{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:12px 0}
+.booster-reveal-status{color:var(--gold);font-size:13px;font-weight:700}
+.booster-reveal-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,155px),1fr));align-items:start;gap:clamp(10px,2vw,18px)}
+.booster-reveal-grid .fl{min-width:0;width:100%;max-width:235px;justify-self:center;scroll-margin-top:100px}
+.booster-reveal-grid .fl .card{height:100%}
+.booster-reveal-grid .back{position:absolute}
+.booster-reveal-grid .ff{display:flex;align-items:stretch;justify-content:center}
+.reveal-tag{position:absolute;z-index:5;left:5px;right:5px;bottom:6px;padding:5px 4px;border:1px solid #ffffff55;border-radius:7px;background:#101014eF;color:#ffe7a2;text-align:center;font:700 10px/1.2 Arial,sans-serif;letter-spacing:.03em;pointer-events:none}
+.reveal-tag.duplicate{color:#d7d9e5}
+.booster-summary{margin-top:20px;padding:18px;border:1px solid #d6b46a66;border-radius:16px;background:linear-gradient(130deg,#d6b46a12,#b5a4ff0a,#ff80b808)}
+.booster-summary[hidden]{display:none}
+.booster-summary h3{margin:0 0 12px;font-family:Anton,sans-serif;font-weight:400;font-size:24px}
+.booster-summary-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.booster-summary-stats>div{padding:12px;border:1px solid #ffffff16;border-radius:12px;background:#ffffff05}
+.booster-summary-stats strong{display:block;color:#ffe7a2;font-size:25px;font-variant-numeric:tabular-nums}
+.booster-summary-stats span{display:block;color:var(--mut);font-size:11px}
+.booster-rarity-list{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+.booster-rarity-list span{padding:5px 9px;border:1px solid #ffffff1c;border-radius:999px;background:#ffffff08;font-size:11px}
+.booster-summary-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:16px}
+.collection-card-item.is-missing{border-style:dashed;border-color:#aeb1c344;background:linear-gradient(145deg,#ffffff04,#ffffff01)}
+.collection-card-item.is-missing .card{filter:grayscale(.92) saturate(.5);opacity:.62}
+.collection-missing-label{display:block;margin:7px auto 0;padding:5px 9px;border:1px dashed #aeb1c366;border-radius:999px;color:#c8c5cf;text-align:center;font-size:11px}
+.dashboard-discoveries{overflow:hidden}
+.dashboard-discovery-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(112px,150px));gap:12px;align-items:start}
+.dashboard-discovery-card{min-width:0}
+.dashboard-discovery-card .card{width:100%}
+.collection-tools{grid-template-columns:minmax(150px,2fr) repeat(5,minmax(105px,1fr))}
+@media(max-width:760px){
+ .booster-hero{padding:20px;gap:12px;border-radius:18px}
+ .booster-hero-mark{flex-basis:90px;width:90px;height:112px;border-radius:16px}
+ .booster-hero-mark span{font-size:54px}
+ .collection-tools{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .collection-tools input{grid-column:1/-1}
+ .booster-reveal-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .booster-reveal-grid .fl{max-width:190px}
+}
+@media(max-width:520px){
+ .booster-hero-mark{display:none}
+ .booster-hero-actions .btn{flex:1}
+ .opening-stage{flex-direction:column;min-height:0;padding:20px}
+ .opening-pack{width:86px;height:122px}
+ .booster-reveal-grid{gap:9px}
+ .booster-summary-stats{grid-template-columns:1fr 1fr 1fr;gap:6px}
+ .booster-summary-stats>div{padding:9px 7px}
+ .booster-summary-stats strong{font-size:21px}
+ .dashboard-discovery-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+}
+@media(max-width:420px){.collection-tools{grid-template-columns:1fr}.collection-tools input{grid-column:auto}}
+@media(prefers-reduced-motion:reduce){
+ .booster-hero:after,.opening-pack,.opening-pack:before,.opening-progress span{animation:none!important}
+ .opening-pack.is-opening{animation:none!important;opacity:0}
+ .opening-pack.is-opening:after{animation:none!important}
+ .booster-choice,.booster-pack{transition:none!important}
+ .booster-choice:hover{transform:none!important}
+ .collection-card-item.is-missing .card{filter:grayscale(.85)}
+}
 </style></head><body>
 <header><button class="logo logo-home" type="button" data-v="dashboard" aria-label="Gaycha Club — accueil" title="Retour à l’accueil">GAYCHA<small>CLUB</small></button>
 <nav aria-label="Navigation principale"><button class="btn alt" data-v="collection">Collection</button><button class="btn alt" data-v="booster">Boosters</button><button class="btn alt" data-v="notifications">Messages</button><button class="btn alt" data-v="market">Marché</button><button class="btn alt" data-v="friends">Communauté</button><button class="btn alt" data-v="admin" id="nadm" hidden>Administration</button></nav>
@@ -654,31 +755,122 @@ const cnt={};data.forEach(d=>cnt[d.card_id]=(cnt[d.card_id]||0)+1);
 const own=cards.filter(c=>cnt[c.id]),duplicates=own.filter(c=>cnt[c.id]>1);
 const completion=cards.length?Math.round(own.length/cards.length*100):0;
 const seriesProgress=[...new Map(cards.map(c=>[c.series_id,c.series?.name||'Série'])).entries()].map(([id,name])=>{const total=cards.filter(c=>c.series_id===id).length,found=cards.filter(c=>c.series_id===id&&cnt[c.id]).length;return{id,name,total,found,pct:total?Math.round(found/total*100):0}}).sort((a,b)=>a.name.localeCompare(b.name,'fr'));
-app.innerHTML=`<section class="collection-hero"><div><span class="eyebrow">ALBUM PERSONNEL</span><h1>Ma collection</h1><p>Chaque carte compte. Suis tes séries, retrouve tes pépites et gère tes doublons.</p><div class="collection-hero-stats"><span><b>${own.length}</b> cartes uniques</span><span><b>${data.length}</b> exemplaires</span><span><b>${duplicates.reduce((n,c)=>n+cnt[c.id]-1,0)}</b> doublons</span></div></div><div class="collection-hero-score"><strong>${completion}%</strong><span>album complété</span><div class="collection-progress-track"><span style="width:${completion}%"></span></div></div></section><section class="collection-progress-panel" aria-labelledby="collection-progress-title"><div class="collection-progress-head"><div><h2 id="collection-progress-title" style="margin:0">Progression de l’album</h2><p class="muted">Complète chaque série, carte après carte.</p></div><div class="collection-progress-total"><strong>${completion}%</strong><span>de l’album</span></div></div><div class="collection-progress-track" role="progressbar" aria-label="Progression totale de la collection" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${completion}"><span style="width:${completion}%"></span></div><div class="collection-series-progress">${seriesProgress.map(x=>`<div class="collection-series-item"><div class="collection-series-heading"><b>${esc(x.name)}</b><span>${x.found}/${x.total}</span></div><div class="collection-progress-track small" role="progressbar" aria-label="Progression ${esc(x.name)}" aria-valuemin="0" aria-valuemax="${x.total}" aria-valuenow="${x.found}"><span style="width:${x.pct}%"></span></div><small>${x.pct}% complété</small></div>`).join('')}</div></section><section class="collection-library-panel"><div class="section-heading"><div><span class="eyebrow">TA BIBLIOTHÈQUE</span><h2 style="margin-top:4px">Toutes mes cartes</h2></div><span class="section-heading-note">Recherche et filtres</span></div><div class="collection-tools"><input id="collection-search" type="search" placeholder="Rechercher une carte…" aria-label="Rechercher une carte"><select id="collection-filter" aria-label="Filtrer la collection"><option value="all">Toute ma collection</option><option value="duplicates">Avec doublons</option><option value="unique">Un seul exemplaire</option></select><select id="collection-rarity" aria-label="Filtrer par rareté"><option value="all">Toutes les raretés</option><option value="commun">Commun</option><option value="peu_commun">Peu commun</option><option value="rare">Rare</option><option value="epique">Épique</option><option value="legendaire">Légendaire</option><option value="secrete">Secrète</option></select><select id="collection-series" aria-label="Filtrer par série"><option value="all">Toutes les séries</option>${seriesProgress.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('')}</select><select id="collection-sort" aria-label="Trier la collection"><option value="number">Trier : numéro</option><option value="name">Trier : nom</option><option value="rarity">Trier : rareté</option></select></div><div class="trade-count" id="collection-count"></div>${own.length?'':msg('Votre album est vide. Ouvrez un booster.')}<div class="grid collection-card-grid" id="collection-grid"></div><div id="cm"></div></section>`;
-const drawCollection=()=>{const q=$('collection-search').value.trim().toLocaleLowerCase('fr'),f=$('collection-filter').value,rarity=$('collection-rarity').value,seriesId=$('collection-series').value,sort=$('collection-sort').value;const shown=own.filter(c=>(!q||c.name.toLocaleLowerCase('fr').includes(q))&&(f==='all'||(f==='duplicates'?cnt[c.id]>1:cnt[c.id]===1))&&(rarity==='all'||c.rarity===rarity)&&(seriesId==='all'||c.series_id===seriesId));shown.sort((a,b)=>sort==='name'?a.name.localeCompare(b.name,'fr'):sort==='rarity'?Object.keys(RN).indexOf(b.rarity)-Object.keys(RN).indexOf(a.rarity):a.number-b.number);$('collection-count').textContent=`${shown.length} carte(s) affichée(s)`;$('collection-grid').innerHTML=shown.map(c=>`<article class="collection-card-item">${card(c,cnt[c.id])}${cnt[c.id]>1?`<button class="btn alt" style="width:100%;margin-top:6px" data-conv="${c.id}" data-n="${cnt[c.id]-1}">Convertir ${cnt[c.id]-1} doublon(s)</button>`:''}<button class="btn alt" style="width:100%;margin-top:6px" data-sell="${c.id}">Vendre</button></article>`).join('')||'<div class="trade-empty">Aucune carte pour ces critères.</div>';wireCollectionActions()};
-$('collection-search').addEventListener('input',drawCollection);$('collection-filter').addEventListener('change',drawCollection);$('collection-rarity').addEventListener('change',drawCollection);$('collection-series').addEventListener('change',drawCollection);$('collection-sort').addEventListener('change',drawCollection);
+app.innerHTML=`<section class="collection-hero"><div><span class="eyebrow">ALBUM PERSONNEL</span><h1>Ma collection</h1><p>Chaque carte compte. Suis tes séries, retrouve tes pépites et gère tes doublons.</p><div class="collection-hero-stats"><span><b>${own.length}</b> cartes uniques</span><span><b>${data.length}</b> exemplaires</span><span><b>${duplicates.reduce((n,c)=>n+cnt[c.id]-1,0)}</b> doublons</span></div></div><div class="collection-hero-score"><strong>${completion}%</strong><span>album complété</span><div class="collection-progress-track"><span style="width:${completion}%"></span></div></div></section><section class="collection-progress-panel" aria-labelledby="collection-progress-title"><div class="collection-progress-head"><div><h2 id="collection-progress-title" style="margin:0">Progression de l’album</h2><p class="muted">Complète chaque série, carte après carte.</p></div><div class="collection-progress-total"><strong>${completion}%</strong><span>de l’album</span></div></div><div class="collection-progress-track" role="progressbar" aria-label="Progression totale de la collection" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${completion}"><span style="width:${completion}%"></span></div><div class="collection-series-progress">${seriesProgress.map(x=>`<div class="collection-series-item"><div class="collection-series-heading"><b>${esc(x.name)}</b><span>${x.found}/${x.total}</span></div><div class="collection-progress-track small" role="progressbar" aria-label="Progression ${esc(x.name)}" aria-valuemin="0" aria-valuemax="${x.total}" aria-valuenow="${x.found}"><span style="width:${x.pct}%"></span></div><small>${x.pct}% complété</small></div>`).join('')}</div></section><section class="collection-library-panel"><div class="section-heading"><div><span class="eyebrow">TA BIBLIOTHÈQUE</span><h2 style="margin-top:4px">Toutes mes cartes</h2></div><span class="section-heading-note">Recherche et filtres</span></div><div class="collection-tools"><input id="collection-search" type="search" placeholder="Rechercher une carte…" aria-label="Rechercher une carte"><select id="collection-view" aria-label="Affichage de l’album"><option value="owned">Cartes obtenues</option><option value="all">Album complet</option></select><select id="collection-filter" aria-label="Filtrer la collection"><option value="all">Toutes les cartes</option><option value="duplicates">Avec doublons</option><option value="unique">Un seul exemplaire</option><option value="missing">Cartes à découvrir</option></select><select id="collection-rarity" aria-label="Filtrer par rareté"><option value="all">Toutes les raretés</option><option value="commun">Commun</option><option value="peu_commun">Peu commun</option><option value="rare">Rare</option><option value="epique">Épique</option><option value="legendaire">Légendaire</option><option value="secrete">Secrète</option></select><select id="collection-series" aria-label="Filtrer par série"><option value="all">Toutes les séries</option>${seriesProgress.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('')}</select><select id="collection-sort" aria-label="Trier la collection"><option value="number">Trier : numéro</option><option value="name">Trier : nom</option><option value="rarity">Trier : rareté</option></select></div><div class="trade-count" id="collection-count"></div>${own.length?'':msg('Votre album est vide. Ouvrez un booster.')}<div class="grid collection-card-grid" id="collection-grid"></div><div id="cm"></div></section>`;
+const drawCollection=()=>{
+ const q=$('collection-search').value.trim().toLocaleLowerCase('fr'),f=$('collection-filter').value,view=$('collection-view').value,rarity=$('collection-rarity').value,seriesId=$('collection-series').value,sort=$('collection-sort').value;
+ const source=view==='all'||f==='missing'?cards:own;
+ const shown=source.filter(c=>{
+  const qty=cnt[c.id]||0;
+  const hay=[c.name,c.spec,c.anecdote,c.bio,c.series?.name,c.number].filter(Boolean).join(' ').toLocaleLowerCase('fr');
+  const statusMatch=f==='missing'?qty===0:f==='duplicates'?qty>1:f==='unique'?qty===1:true;
+  return(!q||hay.includes(q))&&statusMatch&&(!rarity||rarity==='all'||c.rarity===rarity)&&(!seriesId||seriesId==='all'||c.series_id===seriesId);
+ });
+ shown.sort((a,b)=>sort==='name'?a.name.localeCompare(b.name,'fr'):sort==='rarity'?Object.keys(RN).indexOf(b.rarity)-Object.keys(RN).indexOf(a.rarity):a.number-b.number);
+ $('collection-count').textContent=shown.length+" carte(s) affichée(s)"+(view==='all'||f==='missing'?" · album complet":"");
+ $('collection-grid').innerHTML=shown.map(c=>{
+  const qty=cnt[c.id]||0;
+  const actions=qty?(qty>1?"<button class='btn alt' style='width:100%;margin-top:6px' data-conv='"+c.id+"' data-n='"+(qty-1)+"'>Convertir "+(qty-1)+" doublon(s)</button>":"")+"<button class='btn alt' style='width:100%;margin-top:6px' data-sell='"+c.id+"'>Vendre</button>":"<span class='collection-missing-label'>À découvrir</span>";
+  return "<article class='collection-card-item "+(qty?'':'is-missing')+"'>"+card(c,qty)+actions+"</article>";
+ }).join('')||'<div class="trade-empty">Aucune carte pour ces critères.</div>';
+ wireCollectionActions();
+};
+$('collection-search').addEventListener('input',drawCollection);$('collection-view').addEventListener('change',drawCollection);$('collection-filter').addEventListener('change',drawCollection);$('collection-rarity').addEventListener('change',drawCollection);$('collection-series').addEventListener('change',drawCollection);$('collection-sort').addEventListener('change',drawCollection);
 const wireCollectionActions=()=>{$('collection-grid').querySelectorAll('[data-conv]').forEach(b=>b.onclick=async()=>{if(!confirm(`Convertir ${b.dataset.n} doublon(s) en monnaie ? Cette action est définitive.`))return;b.disabled=true;const {data:g,error:e}=await sb.rpc('convert_duplicates',{p_card:b.dataset.conv,p_qty:+b.dataset.n,p_key:crypto.randomUUID()});if(e){$('cm').innerHTML=msg(e.message,1);b.disabled=false;return}await refresh();collection();$('cm').innerHTML=msg('+'+g+' 💰 ajoutés à votre solde.')});$('collection-grid').querySelectorAll('[data-sell]').forEach(b=>b.onclick=async()=>{const pr=prompt('Prix de vente en 💰 (1 à 1 000 000) ?');if(!pr)return;const {data:ins}=await sb.from('card_instances').select('id').eq('card_id',b.dataset.sell).eq('locked',false).order('acquired_at',{ascending:false}).limit(1);if(!ins?.length){$('cm').innerHTML=msg('Aucun exemplaire disponible (déjà en vente ?).',1);return}const {error:e}=await sb.rpc('list_card',{p_instance:ins[0].id,p_price:parseInt(pr,10)});$('cm').innerHTML=e?msg(e.message,1):msg('Carte mise en vente. Retrouvez-la dans le Marché.')})};
 drawCollection();
-app.querySelectorAll('[data-conv]').forEach(b=>b.onclick=async()=>{b.disabled=true;const {data:g,error:e}=await sb.rpc('convert_duplicates',{p_card:b.dataset.conv,p_qty:+b.dataset.n,p_key:crypto.randomUUID()});if(e){$('cm').innerHTML=msg(e.message,1);b.disabled=false;return}await refresh();collection();$('cm').innerHTML=msg('+'+g+' 💰 ajoutés à votre solde.')});
-app.querySelectorAll('[data-sell]').forEach(b=>b.onclick=async()=>{const pr=prompt('Prix de vente en 💰 (1 à 1 000 000) ?');if(!pr)return;const {data:ins}=await sb.from('card_instances').select('id').eq('card_id',b.dataset.sell).eq('locked',false).order('acquired_at',{ascending:false}).limit(1);if(!ins?.length){$('cm').innerHTML=msg('Aucun exemplaire disponible (déjà en vente ?).',1);return}const {error:e}=await sb.rpc('list_card',{p_instance:ins[0].id,p_price:parseInt(pr,10)});$('cm').innerHTML=e?msg(e.message,1):msg('Carte mise en vente. Retrouvez-la dans le Marché.')})}
+
 function booster(){if(profile&&!profile.age_confirmed_at)return ageGate();
-app.innerHTML=`<h1>Boosters</h1><p>Choisis un booster pour consulter ses probabilités, l’acheter fermé ou ouvrir un exemplaire déjà en réserve.</p><div class="rainbow-line"></div><div id="booster-notice"></div><div id="booster-list" class="booster-choices"><div class="note">Chargement des boosters…</div></div><div id="booster-detail"></div><h2>Mes boosters en réserve</h2><p>Les boosters achetés et offerts restent fermés jusqu’à leur ouverture.</p><div id="gifted" class="booster-choices"><div class="note">Chargement de l’inventaire…</div></div><div id="pk" class="grid"></div>`;
+app.innerHTML="<section class='booster-hero'><div class='booster-hero-copy'><span class='eyebrow'>LE MOMENT DE LA DÉCOUVERTE</span><h1>Ouvre ton prochain booster</h1><p>Choisis ton paquet, découvre ses probabilités et révèle tes cartes une à une. Les raretés les plus élevées méritent leur moment de gloire.</p><div class='booster-hero-actions'><button class='btn' type='button' data-booster-scroll='booster-list-section'>Découvrir les boosters</button><button class='btn alt' type='button' data-booster-scroll='booster-inventory'>Mes boosters en réserve</button></div></div><div class='booster-hero-mark' aria-hidden='true'><span>G</span><small>CLUB</small><i>✦</i></div></section><div id='booster-notice'></div><section class='booster-section' id='booster-list-section'><div class='booster-section-heading'><div><h2>Choisir un booster</h2><p>Compare les paquets et sélectionne celui qui te tente.</p></div></div><div id='booster-list' class='booster-choices'><div class='note'>Chargement des boosters…</div></div></section><div id='booster-detail'></div><section class='booster-inventory-panel' id='booster-inventory'><div class='booster-section-heading'><div><h2>Mes boosters en réserve</h2><p>Les boosters achetés et offerts restent fermés jusqu’à leur ouverture.</p></div></div><div id='gifted' class='booster-choices'><div class='note'>Chargement de l’inventaire…</div></div></section><div id='pk' class='booster-opening-results' aria-live='polite'></div>";
+app.querySelectorAll("[data-booster-scroll]").forEach(b=>b.onclick=()=>document.getElementById(b.dataset.boosterScroll)?.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth",block:"start"}));
 loadBoosterTypes()}
-async function loadBoosterTypes(){const host=$('booster-list');if(!host)return;const {data,error}=await sb.from('booster_types').select('slug,name,price,cards_per_pack,odds,pity_threshold,cooldown_hours,active').eq('active',true).order('price');if(error){host.innerHTML=msg(error.message,1);return}boosterTypes=data||[];await loadBoosterCooldowns();host.innerHTML=boosterTypes.map(t=>{const left=boosterCooldownRemaining(t.slug,t.cooldown_hours);return `<button class="booster-choice ${left>0?'cooldown':''}" data-b="${esc(t.slug)}" ><span class="booster-pack"><strong>${t.slug==='red-flag'?'♥':'G'}</strong></span><b>${esc(t.name)}</b><span>${left>0?'Disponible dans '+formatCooldown(left):t.price===0?'Gratuit':Number(t.price).toLocaleString('fr-FR')+' 💰'}</span><span>${t.cards_per_pack} cartes · ${left>0?'En recharge':'Voir les probabilités'}</span></button>`}).join('');host.querySelectorAll('[data-b]').forEach(b=>b.onclick=()=>showBoosterDetails(b.dataset.b));await loadBoosterInventory();if(boosterTypes.length)showBoosterDetails(boosterTypes[0].slug)}
+async function loadBoosterTypes(){const host=$('booster-list');if(!host)return;const {data,error}=await sb.from('booster_types').select('slug,name,price,cards_per_pack,odds,pity_threshold,cooldown_hours,active').eq('active',true).order('price');if(error){host.innerHTML=msg(error.message,1);return}boosterTypes=data||[];await loadBoosterCooldowns();host.innerHTML=boosterTypes.map(t=>{const left=boosterCooldownRemaining(t.slug,t.cooldown_hours);return `<button class="booster-choice ${left>0?'cooldown':''}" data-b="${esc(t.slug)}" aria-pressed="false"><span class="booster-pack"><strong>${t.slug==='red-flag'?'♥':'G'}</strong></span><b>${esc(t.name)}</b><span>${left>0?'Disponible dans '+formatCooldown(left):t.price===0?'Gratuit':Number(t.price).toLocaleString('fr-FR')+' 💰'}</span><span>${t.cards_per_pack} cartes · ${left>0?'En recharge':'Voir les probabilités'}</span></button>`}).join('');host.querySelectorAll('[data-b]').forEach(b=>b.onclick=()=>showBoosterDetails(b.dataset.b));await loadBoosterInventory();if(boosterTypes.length)showBoosterDetails(boosterTypes[0].slug)}
 let boosterCooldowns={};
 async function loadBoosterCooldowns(){boosterCooldowns={};if(!user)return;const ts=boosterTypes.filter(t=>t.cooldown_hours>0);if(!ts.length)return;const reasons=ts.flatMap(t=>['booster_purchase:'+t.slug,'booster:'+t.slug]);const {data,error}=await sb.from('ledger').select('reason,created_at').eq('user_id',user.id).in('reason',reasons).order('created_at',{ascending:false});if(error){console.warn('Cooldown des boosters indisponible',error.message);return}(data||[]).forEach(row=>{if(!boosterCooldowns[row.reason]||new Date(row.created_at)>new Date(boosterCooldowns[row.reason]))boosterCooldowns[row.reason]=row.created_at})}
 function boosterCooldownRemaining(slug,hours){if(!hours)return 0;const dates=[boosterCooldowns['booster_purchase:'+slug],boosterCooldowns['booster:'+slug]].filter(Boolean).map(v=>new Date(v).getTime());if(!dates.length)return 0;return Math.max(0,Math.max(...dates)+Number(hours)*3600000-Date.now())}
 function formatCooldown(ms){const total=Math.ceil(ms/60000),h=Math.floor(total/60),m=total%60;return h>0?`${h} h ${m} min`:`${m} min`}
 async function loadBoosterInventory(){const host=$('gifted');if(!host||!user)return;const {data,error}=await sb.from('booster_inventory').select('quantity,paid_quantity,booster_types(slug,name)').eq('user_id',user.id);if(error){host.innerHTML=msg('Inventaire indisponible : '+error.message,1);return}boosterInventory=(data||[]).filter(x=>x.booster_types);renderBoosterInventory()}
 function renderBoosterInventory(){const host=$('gifted');if(!host)return;const items=boosterInventory.filter(x=>(x.quantity||0)>0||(x.paid_quantity||0)>0).sort((a,b)=>a.booster_types.name.localeCompare(b.booster_types.name,'fr'));host.innerHTML=items.length?items.map(x=>`<div class="booster-choice"><span class="booster-pack"><strong>${x.booster_types.slug==='red-flag'?'♥':'G'}</strong></span><b>${esc(x.booster_types.name)}</b>${x.quantity>0?`<span>Offerts : ${x.quantity}</span><button class="btn alt" data-open-gift="${esc(x.booster_types.slug)}">Ouvrir un cadeau</button>`:''}${x.paid_quantity>0?`<span>Achetés : ${x.paid_quantity}</span><button class="btn" data-open-paid="${esc(x.booster_types.slug)}">Ouvrir un booster</button>`:''}</div>`).join(''):msg('Aucun booster en réserve. Sélectionne un booster ci-dessus pour en acheter un.');host.querySelectorAll('[data-open-gift]').forEach(b=>b.onclick=()=>open5(b.dataset.openGift,'gift'));host.querySelectorAll('[data-open-paid]').forEach(b=>b.onclick=()=>open5(b.dataset.openPaid,'paid'))}
-function showBoosterDetails(slug){const t=boosterTypes.find(x=>x.slug===slug),host=$('booster-detail');if(!t||!host)return;const inv=boosterInventory.find(x=>x.booster_types?.slug===slug)||{quantity:0,paid_quantity:0};const cooldownLeft=boosterCooldownRemaining(slug,t.cooldown_hours);const order=['commun','peu_commun','rare','epique','legendaire','secrete'];host.innerHTML=`<section class="booster-detail"><div><div class="booster-pack"><strong style="font-size:42px">${t.slug==='red-flag'?'♥':'G'}</strong></div><p style="text-align:center;color:var(--mut)">${esc(t.name)}</p></div><div><h2 style="margin-top:0">${esc(t.name)}</h2><p>${t.cards_per_pack} cartes par booster · ${t.price===0?'Gratuit':Number(t.price).toLocaleString('fr-FR')+' 💰'}</p><p>Probabilités par carte</p><div class="odds-list">${order.filter(k=>t.odds[k]!==undefined).map(k=>`<div class="odds-item"><span>${RN[k][1]} ${RN[k][0]}</span><b>${Number(t.odds[k]).toLocaleString('fr-FR')} %</b></div>`).join('')}</div><p class="note">Garantie : une carte Rare ou supérieure après ${t.pity_threshold} cartes sans. ${t.cooldown_hours>0?'Délai entre achats : '+t.cooldown_hours+' h.':'Aucun délai entre achats.'}</p><div class="booster-actions"><button class="btn" id="buy-selected" ${cooldownLeft>0?'disabled title="Booster en recharge"':''}>${cooldownLeft>0?'Disponible dans '+formatCooldown(cooldownLeft):t.price===0?'Récupérer gratuitement':'Acheter · '+Number(t.price).toLocaleString('fr-FR')+' 💰'}</button>${inv.quantity>0?`<button class="btn alt" id="open-gift-selected">Ouvrir un cadeau (${inv.quantity})</button>`:''}${inv.paid_quantity>0?`<button class="btn alt" id="open-paid-selected">Ouvrir un acheté (${inv.paid_quantity})</button>`:''}</div><div id="booster-detail-msg"></div></div></section>`;host.querySelector('#buy-selected').onclick=()=>buySelectedBooster(slug);if($('open-gift-selected'))$('open-gift-selected').onclick=()=>open5(slug,'gift');if($('open-paid-selected'))$('open-paid-selected').onclick=()=>open5(slug,'paid')}
+function showBoosterDetails(slug){const t=boosterTypes.find(x=>x.slug===slug),host=$('booster-detail');if(!t||!host)return;host.querySelectorAll('[data-b]').forEach(b=>{const selected=b.dataset.b===slug;b.classList.toggle('selected',selected);b.setAttribute('aria-pressed',String(selected))});const inv=boosterInventory.find(x=>x.booster_types?.slug===slug)||{quantity:0,paid_quantity:0};const cooldownLeft=boosterCooldownRemaining(slug,t.cooldown_hours);const order=['commun','peu_commun','rare','epique','legendaire','secrete'];host.innerHTML=`<section class="booster-detail"><div><div class="booster-pack"><strong style="font-size:42px">${t.slug==='red-flag'?'♥':'G'}</strong></div><p style="text-align:center;color:var(--mut)">${esc(t.name)}</p></div><div><h2 style="margin-top:0">${esc(t.name)}</h2><p>${t.cards_per_pack} cartes par booster · ${t.price===0?'Gratuit':Number(t.price).toLocaleString('fr-FR')+' 💰'}</p><p>Probabilités par carte</p><div class="odds-list">${order.filter(k=>t.odds[k]!==undefined).map(k=>`<div class="odds-item"><span>${RN[k][1]} ${RN[k][0]}</span><b>${Number(t.odds[k]).toLocaleString('fr-FR')} %</b></div>`).join('')}</div><p class="note">Garantie : une carte Rare ou supérieure après ${t.pity_threshold} cartes sans. ${t.cooldown_hours>0?'Délai entre achats : '+t.cooldown_hours+' h.':'Aucun délai entre achats.'}</p><div class="booster-actions"><button class="btn" id="buy-selected" ${cooldownLeft>0?'disabled title="Booster en recharge"':''}>${cooldownLeft>0?'Disponible dans '+formatCooldown(cooldownLeft):t.price===0?'Récupérer gratuitement':'Acheter · '+Number(t.price).toLocaleString('fr-FR')+' 💰'}</button>${inv.quantity>0?`<button class="btn alt" id="open-gift-selected">Ouvrir un cadeau (${inv.quantity})</button>`:''}${inv.paid_quantity>0?`<button class="btn alt" id="open-paid-selected">Ouvrir un acheté (${inv.paid_quantity})</button>`:''}</div><div id="booster-detail-msg"></div></div></section>`;host.querySelector('#buy-selected').onclick=()=>buySelectedBooster(slug);if($('open-gift-selected'))$('open-gift-selected').onclick=()=>open5(slug,'gift');if($('open-paid-selected'))$('open-paid-selected').onclick=()=>open5(slug,'paid')}
 async function buySelectedBooster(slug){const btn=$('buy-selected'),notice=$('booster-detail-msg');if(!btn||busy)return;btn.disabled=true;const {error}=await sb.rpc('buy_booster',{p_slug:slug,p_key:crypto.randomUUID()});btn.disabled=false;if(error){notice.innerHTML=msg(error.message==='cooldown active'?'Tu as déjà récupéré ce booster récemment. Réessaie plus tard.':error.message,1);return}await refresh();await loadBoosterInventory();showBoosterDetails(slug);const n=$('booster-notice');if(n)n.innerHTML=msg('Booster ajouté à ta réserve. Tu peux l’ouvrir quand tu veux.')}
-async function open5(slug,source='paid'){if(busy)return;busy=true;const buttons=[...document.querySelectorAll('[data-b],[data-open-gift],[data-open-paid],#buy-selected')];buttons.forEach(b=>b.disabled=true);const pk=$('pk');pk.innerHTML='<div class="sealed" style="grid-column:1/-1;justify-self:center"><div class="logo">GAYCHA<small>CLUB</small></div></div>';
-const {data,error}=await sb.rpc('open_booster',{p_booster:slug,p_key:crypto.randomUUID(),p_use_inventory:source==='gift',p_use_paid:source==='paid'});
-busy=false;buttons.forEach(b=>b.disabled=false);if(error){pk.innerHTML=msg('Ouverture impossible : '+error.message,1);return}
-const rm=matchMedia('(prefers-reduced-motion:reduce)').matches;
-pk.innerHTML=data.map(d=>{const c=cards.find(x=>x.id===d.card_id);return `<div class="fl ${['epique','legendaire','secrete'].includes(c?.rarity)?'hi':''}"><div class="fi"><div class="card back fb"><div class="logo">G</div></div><div class="ff">${c?card(c):msg('Carte inconnue')}</div></div></div>`}).join('');
-[...pk.children].forEach((e,i)=>setTimeout(()=>e.classList.add('on'),rm?0:500+i*750));await refresh();await loadBoosterInventory();showBoosterDetails(slug)}
+async function open5(slug,source='paid'){
+ if(busy)return;
+ busy=true;
+ const pk=$('pk');
+ const buttons=[...document.querySelectorAll('[data-b],[data-open-gift],[data-open-paid],#buy-selected')];
+ buttons.forEach(b=>b.disabled=true);
+ const reducedMotion=matchMedia('(prefers-reduced-motion:reduce)').matches;
+ if(pk)pk.innerHTML="<section class='opening-stage' role='status'><div class='opening-pack'><span>GAYCHA</span><strong>CLUB</strong></div><div class='opening-copy'><span class='eyebrow'>OUVERTURE EN COURS</span><h2>Le paquet s’ouvre…</h2><p>Prépare-toi à découvrir tes nouvelles cartes.</p><div class='opening-progress'><span></span></div></div></section>";
+ try{
+  const before=await sb.from('card_instances').select('card_id');
+  const ownedBefore=before.error?null:new Set((before.data||[]).map(x=>x.card_id));
+  const {data,error}=await sb.rpc('open_booster',{p_booster:slug,p_key:crypto.randomUUID(),p_use_inventory:source==='gift',p_use_paid:source==='paid'});
+  if(error)throw error;
+  const result=Array.isArray(data)?data:[];
+  if(!result.length){if(pk?.isConnected)pk.innerHTML=msg('Le booster a été traité, mais aucune carte n’a été retournée.',1);return}
+  const seenInPack=new Set();
+  const entries=result.map(d=>{
+   const c=cards.find(x=>x.id===d.card_id)||null;
+   let isNew=null;
+   if(c&&ownedBefore){isNew=!ownedBefore.has(c.id)&&!seenInPack.has(c.id)}
+   if(c)seenInPack.add(c.id);
+   return{card:c,isNew};
+  });
+  const newCount=ownedBefore?entries.filter(x=>x.isNew===true).length:null;
+  const duplicateCount=ownedBefore?entries.filter(x=>x.isNew===false).length:null;
+  const rarityCounts=Object.fromEntries(Object.keys(RN).map(k=>[k,entries.filter(x=>x.card?.rarity===k).length]));
+  const rarityHtml=Object.entries(rarityCounts).filter(([,n])=>n>0).map(([k,n])=>"<span>"+RN[k][1]+" "+RN[k][0]+" · "+n+"</span>").join('');
+  const cardHtml=entries.map((entry,i)=>{
+   const c=entry.card;
+   const tag=entry.isNew===true?"Nouvelle découverte":entry.isNew===false?"Déjà possédée":"Statut inconnu";
+   const tagClass=entry.isNew===false?" duplicate":"";
+   return "<div class='fl "+(['epique','legendaire','secrete'].includes(c?.rarity)?'hi':'')+"' data-reveal-index='"+i+"'><div class='fi'><div class='card back fb'><div class='logo'>GAYCHA<small>CLUB</small></div></div><div class='ff'>"+(c?card(c):msg('Carte inconnue'))+"<span class='reveal-tag"+tagClass+"'>"+tag+"</span></div></div></div>";
+  }).join('');
+  if(!pk?.isConnected)return;
+  pk.innerHTML="<section class='booster-reveal'><div class='booster-reveal-head'><div><span class='eyebrow'>RÉSULTAT DU BOOSTER</span><h2>Voici tes découvertes</h2><p>"+entries.length+" carte"+(entries.length>1?'s':'')+" à ajouter à ton album.</p></div></div><div class='booster-reveal-tools'><span class='booster-reveal-status' id='reveal-status' role='status' aria-live='polite'>Préparation des cartes…</span><button class='btn alt' type='button' id='reveal-all'>Révéler toutes les cartes</button></div><div class='booster-reveal-grid' id='booster-reveal-grid'>"+cardHtml+"</div><section class='booster-summary' id='booster-summary' hidden><h3>Récapitulatif de ton ouverture</h3><div class='booster-summary-stats'><div><strong>"+entries.length+"</strong><span>Cartes révélées</span></div><div><strong>"+(newCount===null?'—':newCount)+"</strong><span>Nouvelles découvertes</span></div><div><strong>"+(duplicateCount===null?'—':duplicateCount)+"</strong><span>Doublons</span></div></div><div class='booster-rarity-list'>"+rarityHtml+"</div><div class='booster-summary-actions'><button class='btn' type='button' id='booster-open-again'>Ouvrir un autre booster</button><button class='btn alt' type='button' id='booster-to-collection'>Voir ma collection</button></div></section></section>";
+  const grid=$('booster-reveal-grid'),status=$('reveal-status'),summary=$('booster-summary'),revealButton=$('reveal-all');
+  let finished=false,timers=[];
+  let resolveReveal;
+  const revealPromise=new Promise(resolve=>{resolveReveal=resolve});
+  const finish=()=>{
+   if(finished)return;
+   finished=true;
+   if(status)status.textContent=entries.length+" / "+entries.length+" cartes révélées";
+   if(summary)summary.hidden=false;
+   if(revealButton)revealButton.disabled=true;
+   resolveReveal();
+  };
+  const revealAll=()=>{
+   timers.forEach(clearTimeout);
+   grid?.querySelectorAll('.fl').forEach(el=>el.classList.add('on'));
+   finish();
+  };
+  revealButton.onclick=revealAll;
+  if(reducedMotion)revealAll();
+  else entries.forEach((entry,i)=>timers.push(setTimeout(()=>{
+   const el=grid?.children[i];
+   if(el)el.classList.add('on');
+   if(status)status.textContent=(i+1)+" / "+entries.length+" cartes révélées";
+   if(i===entries.length-1)finish();
+  },450+i*650)));
+  pk.scrollIntoView({behavior:reducedMotion?'auto':'smooth',block:'start'});
+  await revealPromise;
+  await refresh();
+  await loadBoosterInventory();
+  showBoosterDetails(slug);
+  const remaining=boosterInventory.find(x=>x.booster_types?.slug===slug)||{quantity:0,paid_quantity:0};
+  const openAgain=$('booster-open-again');
+  if(openAgain){
+   if(remaining.quantity>0)openAgain.onclick=()=>open5(slug,'gift');
+   else if(remaining.paid_quantity>0)openAgain.onclick=()=>open5(slug,'paid');
+   else{openAgain.textContent='Choisir un autre booster';openAgain.onclick=()=>document.getElementById('booster-list-section')?.scrollIntoView({behavior:'smooth',block:'start'})}
+  }
+  $('booster-to-collection')?.addEventListener('click',()=>go('collection'));
+ }catch(e){
+  if(pk?.isConnected)pk.innerHTML=msg('Ouverture impossible : '+(e.message||'erreur inconnue'),1);
+ }finally{
+  busy=false;
+  buttons.forEach(b=>b.disabled=false);
+ }
+}
 
 async function missions(){if(profile&&!profile.age_confirmed_at)return ageGate();
 const {data,error}=await sb.rpc('my_missions');if(error)return app.innerHTML=msg(error.message,1);
@@ -819,16 +1011,19 @@ async function universe(){
 async function dashboard(){
  if(!user)return auth();
  app.innerHTML='<h1>Mon tableau de bord</h1><p>Chargement de ton espace…</p>';
- const [ir,lr,mr,sr,ar]=await Promise.all([
+ const [ir,lr,mr,sr,ar,br]=await Promise.all([
   sb.from('card_instances').select('card_id,acquired_at').order('acquired_at',{ascending:false}),
   sb.from('ledger').select('delta,reason,created_at,balance_after').order('created_at',{ascending:false}).limit(5),
   sb.from('missions').select('id,title,kind,goal,reward,xp_reward').eq('active',true).limit(4),
   sb.from('series').select('id,name'),
-  sb.rpc('sync_user_achievements')
+  sb.rpc('sync_user_achievements'),
+  sb.from('booster_inventory').select('quantity,paid_quantity').eq('user_id',user.id)
  ]);
  if(ir.error)return app.innerHTML=msg('Chargement de la collection impossible : '+ir.error.message,1);
  const items=ir.data||[],counts={};items.forEach(x=>counts[x.card_id]=(counts[x.card_id]||0)+1);
  const owned=Object.keys(counts).length,dupes=items.length-owned,series=sr.data||[],completion=cards.length?Math.round(owned/cards.length*100):0;
+ const boosterCount=(br.data||[]).reduce((sum,x)=>sum+Number(x.quantity||0)+Number(x.paid_quantity||0),0);
+ const recentCards=[...new Set(items.map(x=>x.card_id))].slice(0,3).map(id=>cards.find(c=>c.id===id)).filter(Boolean);
  const month=items.filter(x=>x.acquired_at&&new Date(x.acquired_at)>new Date(Date.now()-30*86400000)).length;
  const recent=(lr.data||[]).map(x=>({date:x.created_at,label:x.reason||'Mouvement de monnaie',value:Number(x.delta||0)}));
  const achievedKeys=new Set((ar.data||[]).map(x=>x.achievement_key));
@@ -844,8 +1039,9 @@ async function dashboard(){
  <div class="dash-tile"><span>Cartes découvertes</span><strong>${owned}</strong><small>sur ${cards.length} cartes au catalogue</small></div>
  <div class="dash-tile"><span>Exemplaires</span><strong>${items.length}</strong><small>${dupes} doublon(s) au total</small></div>
  <div class="dash-tile"><span>Solde</span><strong>${Number(profile?.balance||0).toLocaleString('fr-FR')} 💰</strong><small>Monnaie virtuelle</small></div>
- <div class="dash-tile"><span>Activité récente</span><strong>${month}</strong><small>carte(s) obtenue(s) sur 30 jours</small></div></div>
+ <div class="dash-tile"><span>Activité récente</span><strong>${month}</strong><small>carte(s) obtenue(s) sur 30 jours</small></div><div class="dash-tile"><span>Boosters en réserve</span><strong>${boosterCount}</strong><small>${boosterCount?'Prêts à être ouverts':'À toi la prochaine découverte'}</small></div></div>
  <section class="section-panel dashboard-album-progress" aria-labelledby="dashboard-album-title"><div class="section-heading"><div><span class="eyebrow">TA COLLECTION</span><h2 id="dashboard-album-title" style="margin-top:4px">Progression de l’album</h2></div><strong class="dashboard-progress-value">${completion}%</strong></div><div class="collection-progress-track" role="progressbar" aria-label="Progression de la collection" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${completion}"><span style="width:${completion}%"></span></div><div class="dashboard-progress-meta"><span>${owned} cartes découvertes</span><span>${Math.max(0,cards.length-owned)} restantes sur ${cards.length}</span></div></section>
+ <section class="section-panel dashboard-discoveries"><div class="section-heading"><div><span class="eyebrow">TES DERNIÈRES CARTES</span><h2 style="margin-top:4px">Découvertes récentes</h2></div><button class="btn alt" data-go="collection">Voir ma collection →</button></div><div class="dashboard-discovery-grid">${recentCards.length?recentCards.map(c=>'<div class="dashboard-discovery-card">'+card(c)+'</div>').join(''):msg('Tes premières découvertes apparaîtront ici.')}</div></section>
  <div class="section-panel dashboard-shortcuts"><div class="section-heading"><div><span class="eyebrow">ACCÈS RAPIDES</span><h2 style="margin-top:4px">Reprendre ma partie</h2></div><span class="section-heading-note">Tout est à portée de main</span></div><div class="tabs"><button class="btn alt" data-go="stats">▤ Mes statistiques</button><button class="btn alt" data-go="history">◷ Mon historique</button><button class="btn alt" data-go="missions">✧ Mes missions</button><button class="btn alt" data-go="friends">♡ Communauté</button></div></div>
  <div class="section-panel"><div class="section-heading"><div><span class="eyebrow">TES OBJECTIFS</span><h2 style="margin-top:4px">Succès de collection</h2></div><span class="section-heading-note">${milestones.filter(a=>a.unlocked).length} / ${milestones.length} débloqués</span></div><div class="achievement-grid">${milestones.map(a=>`<div class="achievement ${a.unlocked?'unlocked':''}"><div class="medal">${a[1]}</div><b>${esc(a[2])}</b><p class="muted">${esc(a[4])}</p><span>${a.unlocked?'Débloqué ✓':'À débloquer'}</span></div>`).join('')}</div></div>
  <div class="section-panel"><div class="section-heading"><div><span class="eyebrow">À FAIRE AUJOURD’HUI</span><h2 style="margin-top:4px">Missions du moment</h2></div><button class="btn alt" data-go="missions">Toutes les missions →</button></div>${mr.error?msg('Les missions ne sont pas disponibles pour le moment.'):((mr.data||[]).length?(mr.data||[]).map(m=>`<div class="history-row"><span>🎯 Mission</span><b>${esc(m.title)}</b><span class="history-value">+${Number(m.reward||0)} 💰</span></div>`).join(''):msg('Aucune mission active pour le moment.'))}</div>

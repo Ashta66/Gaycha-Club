@@ -515,7 +515,7 @@ main{padding-top:clamp(20px,3vw,34px)}
 .dashboard-mission-card{padding:14px 16px;margin:10px 0;max-width:none}
 .dashboard-mission-card .progress-track{margin:9px 0 5px}
 .dashboard-mission-kind{font-size:12px;margin-top:3px}
-.dashboard-mission-meta{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--mut)}
+.dashboard-mission-meta{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--mut)}.dashboard-mission-claim{margin-top:10px;padding:8px 12px;font-size:12px}
 </style></head><body>
 <header><button class="logo logo-home" type="button" data-v="dashboard" aria-label="Gaycha Club — accueil" title="Retour à l’accueil">GAYCHA<small>CLUB</small></button>
 <nav aria-label="Navigation principale"><button class="btn alt" data-v="collection">Collection</button><button class="btn alt" data-v="booster">Boosters</button><button class="btn alt" data-v="notifications">Messages</button><button class="btn alt" data-v="market">Marché</button><button class="btn alt" data-v="friends">Communauté</button><button class="btn alt" data-v="admin" id="nadm" hidden>Administration</button></nav>
@@ -1044,6 +1044,7 @@ async function dashboard(){
    <div class="mission-top"><div><b>${esc(m.title)}</b><div class="muted dashboard-mission-kind">Mission ${kind}</div></div><span class="mission-status">${state}</span></div>
    <div class="progress-track" role="progressbar" aria-label="Progression de la mission ${esc(m.title)}" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><div class="progress-fill" style="--progress:${pct}%"></div></div>
    <div class="dashboard-mission-meta"><span>${progress} / ${goal} · ${pct}%</span><span>+${Number(m.reward||0).toLocaleString('fr-FR')} 💰 · +${Number(m.xp_reward||0).toLocaleString('fr-FR')} XP</span></div>
+   ${ready?`<button class="btn dashboard-mission-claim" type="button" data-dashboard-mission="${esc(m.slug)}">Réclamer la récompense</button>`:''}
   </article>`;
  }).join('');
  const milestones=[
@@ -1063,9 +1064,17 @@ async function dashboard(){
  <section class="section-panel dashboard-discoveries"><div class="section-heading"><div><span class="eyebrow">TES DERNIÈRES CARTES</span><h2 style="margin-top:4px">Découvertes récentes</h2></div><button class="btn alt" data-go="collection">Voir ma collection →</button></div><div class="dashboard-discovery-grid">${recentCards.length?recentCards.map(c=>'<div class="dashboard-discovery-card">'+card(c)+'</div>').join(''):msg('Tes premières découvertes apparaîtront ici.')}</div></section>
  <div class="section-panel dashboard-shortcuts"><div class="section-heading"><div><span class="eyebrow">ACCÈS RAPIDES</span><h2 style="margin-top:4px">Reprendre ma partie</h2></div><span class="section-heading-note">Tout est à portée de main</span></div><div class="tabs"><button class="btn alt" data-go="stats">▤ Mes statistiques</button><button class="btn alt" data-go="history">◷ Mon historique</button><button class="btn alt" data-go="missions">✧ Mes missions</button><button class="btn alt" data-go="friends">♡ Communauté</button></div></div>
  <div class="section-panel"><div class="section-heading"><div><span class="eyebrow">TES OBJECTIFS</span><h2 style="margin-top:4px">Succès de collection</h2></div><span class="section-heading-note">${milestones.filter(a=>a.unlocked).length} / ${milestones.length} débloqués</span></div><div class="achievement-grid">${milestones.map(a=>`<div class="achievement ${a.unlocked?'unlocked':''}"><div class="medal">${a[1]}</div><b>${esc(a[2])}</b><p class="muted">${esc(a[4])}</p><span>${a.unlocked?'Débloqué ✓':'À débloquer'}</span></div>`).join('')}</div></div>
- <div class="section-panel dashboard-missions"><div class="section-heading"><div><span class="eyebrow">À FAIRE AUJOURD’HUI</span><h2 style="margin-top:4px">Missions du moment</h2></div><button class="btn alt" data-go="missions">Toutes les missions →</button></div>${mr.error?msg('Les missions ne sont pas disponibles pour le moment.'):missionCards||msg('Aucune mission active pour le moment.')}</div>
+ <div class="section-panel dashboard-missions"><div class="section-heading"><div><span class="eyebrow">À FAIRE AUJOURD’HUI</span><h2 style="margin-top:4px">Missions du moment</h2></div><button class="btn alt" data-go="missions">Toutes les missions →</button></div><div id="dashboard-mission-msg" aria-live="polite"></div>${mr.error?msg('Les missions ne sont pas disponibles pour le moment.'):missionCards||msg('Aucune mission active pour le moment.')}</div>
  <div class="section-panel"><div class="section-heading"><div><span class="eyebrow">TON PORTE-MONNAIE</span><h2 style="margin-top:4px">Derniers mouvements</h2></div><button class="btn alt" data-go="history">Voir l’historique →</button></div>${lr.error?msg('Historique de monnaie indisponible.'):recent.length?recent.map(x=>`<div class="history-row"><time>${x.date?new Date(x.date).toLocaleDateString('fr-FR'):''}</time><span>${esc(x.label)}</span><span class="history-value ${x.value>=0?'positive':'negative'}">${x.value>0?'+':''}${x.value.toLocaleString('fr-FR')} 💰</span></div>`).join(''):'Aucun mouvement enregistré pour le moment.'}</div>`;
  app.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
+ app.querySelectorAll('[data-dashboard-mission]').forEach(b=>b.onclick=async()=>{
+  if(busy)return;
+  busy=true;b.disabled=true;
+  const {error}=await sb.rpc('claim_mission',{p_slug:b.dataset.dashboardMission});
+  busy=false;
+  if(error){const target=$('dashboard-mission-msg');if(target)target.innerHTML=msg(error.message,1);b.disabled=false;return}
+  await refresh();dashboard();
+ });
 }
 /* ===== Statistiques approfondies ===== */
 async function stats(){

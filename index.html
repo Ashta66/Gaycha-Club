@@ -393,6 +393,19 @@ main{padding-top:clamp(20px,3vw,34px)}
 .dashboard-progress-value{color:var(--gc-gold-soft);font-size:24px;font-variant-numeric:tabular-nums}
 .dashboard-progress-meta{display:flex;justify-content:space-between;gap:12px;margin-top:9px;color:var(--muted,#aaa69e);font-size:12px}
 .admin-stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.admin-audit-tools{display:grid;grid-template-columns:minmax(220px,2fr) minmax(180px,1fr);gap:10px;align-items:end;margin:12px 0}
+.admin-audit-tools label{display:block;color:var(--mut);font-size:12px}
+.admin-audit-tools input,.admin-audit-tools select{margin:4px 0;width:100%}
+.admin-audit-tools .note{grid-column:1/-1;margin:0}
+.admin-audit-table-wrap{overflow-x:auto;border:1px solid #d6b46a35;border-radius:14px}
+.admin-audit-table{min-width:560px;margin:0}
+.admin-audit-table th{color:var(--gc-gold-soft);font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+.admin-audit-table td{vertical-align:top;padding:12px}
+.admin-audit-details summary{cursor:pointer;color:var(--gc-gold-soft);font-size:12px}
+.admin-audit-details pre{max-width:min(60vw,620px);max-height:260px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;background:#09090b;border:1px solid #ffffff18;border-radius:8px;padding:10px;font:12px/1.5 ui-monospace,monospace}
+.admin-audit-empty{text-align:center;color:var(--mut);padding:24px}
+@media(max-width:560px){.admin-audit-tools{grid-template-columns:1fr}.admin-audit-tools .note{grid-column:auto}}
+
 .admin-stat-tile{position:relative;min-width:0;display:grid;grid-template-columns:auto 1fr;align-items:center;gap:4px 12px;padding:17px;border:1px solid #d6b46a3d;border-radius:16px;background:linear-gradient(145deg,#ffffff08,#ffffff02);box-shadow:0 9px 24px #0002}
 .admin-stat-icon{grid-row:span 2;width:42px;height:42px;display:grid;place-items:center;border-radius:13px;background:#d6b46a14;font-size:21px}
 .admin-stat-label{color:var(--muted,#aaa69e);font-size:12px;text-transform:capitalize;overflow-wrap:anywhere}
@@ -1287,7 +1300,16 @@ if(tab==='venues'){
  const visualCounts=(data||[]).reduce((a,c)=>{const k=c.image_path&&c.rights_checked?'documente':c.image_path?'controle':c.rights_checked?'sans-visuel':'secours';a[k]=(a[k]||0)+1;return a},{});
  body=(error?fail(error):'')+`<div class="box" style="max-width:none;margin:8px 0;padding:12px"><label for="venue-admin-search">Rechercher un lieu</label><input id="venue-admin-search" type="search" placeholder="Nom, ville, pays, série, source ou état…" autocomplete="off"><label for="venue-admin-visual-filter">Filtrer par état du visuel</label><select id="venue-admin-visual-filter"><option value="">Tous les visuels (${(data||[]).length})</option><option value="secours">Illustration de secours (${visualCounts.secours||0})</option><option value="controle">Photo présente — droits à contrôler (${visualCounts.controle||0})</option><option value="documente">Photo présente — droits cochés (${visualCounts.documente||0})</option><option value="sans-visuel">Droits cochés mais aucun visuel (${visualCounts['sans-visuel']||0})</option></select><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px"><span id="venue-admin-count" class="note">${(data||[]).length} lieu(x)</span><button class="btn alt" type="button" id="venue-admin-collapse">Tout replier</button><button class="btn alt" type="button" id="venue-admin-expand">Tout déplier</button><button class="btn alt" type="button" id="venue-admin-export">Exporter le suivi CSV</button></div></div><p class="note">Les états « droits cochés » reflètent uniquement les données saisies, pas une validation juridique automatique. Une fiche « illustration de secours » n’utilise pas de photo du lieu. Les fiches restent en brouillon jusqu'à validation ; les modifications des sources ne publient aucune carte.</p><div id="venue-admin-list">${rows||msg('Aucune fiche de lieu trouvée.')}</div>`;
 }
-if(tab==='audit'){const {data,error}=await sb.from('audit_log').select('*').order('id',{ascending:false}).limit(100);body=error?fail(error):`<table><tr><th>Date</th><th>Action</th><th>Détails</th></tr>${(data||[]).map(a=>`<tr><td>${new Date(a.created_at).toLocaleString('fr-FR')}</td><td>${esc(a.action)}</td><td><small>${esc(JSON.stringify(a.details))}</small></td></tr>`).join('')}</table>`}
+if(tab==='audit'){
+ const {data,error}=await sb.from('audit_log').select('*').order('id',{ascending:false}).limit(100);
+ if(error)body=fail(error);
+ else{
+  const auditRows=data||[],actions=[...new Set(auditRows.map(a=>String(a.action||'Autre')))].sort((a,b)=>a.localeCompare(b,'fr'));
+  body=`<section class="admin-audit-tools"><div><label for="audit-search">Rechercher dans le journal</label><input id="audit-search" type="search" placeholder="Action, identifiant ou détail…" autocomplete="off"></div><div><label for="audit-action">Type d’action</label><select id="audit-action"><option value="">Toutes les actions</option>${actions.map(a=>`<option value="${esc(a)}">${esc(a)}</option>`).join('')}</select></div><p id="audit-count" class="note">${auditRows.length} entrée(s) chargée(s) · 100 dernières au maximum</p></section><div class="admin-audit-table-wrap"><table class="admin-audit-table"><thead><tr><th>Date</th><th>Action</th><th>Détails</th></tr></thead><tbody id="audit-results"></tbody></table></div><p class="muted">Le journal affiche les 100 entrées les plus récentes accessibles à l’administration. Les filtres s’appliquent à ces entrées uniquement.</p>`;
+  const drawAudit=()=>{const q=$('audit-search').value.trim().toLocaleLowerCase('fr'),action=$('audit-action').value;const shown=auditRows.filter(a=>{const details=JSON.stringify(a.details??'');const haystack=[a.action,a.id,details].join(' ').toLocaleLowerCase('fr');return(!action||String(a.action||'Autre')===action)&&(!q||haystack.includes(q))});$('audit-count').textContent=shown.length+' / '+auditRows.length+' entrée(s) affichée(s)';$('audit-results').innerHTML=shown.length?shown.map(a=>{const date=a.created_at?new Date(a.created_at):null;const dateLabel=date&&!Number.isNaN(date.getTime())?date.toLocaleString('fr-FR'):'Date inconnue';const details=JSON.stringify(a.details??{},null,2);return `<tr><td><time>${esc(dateLabel)}</time></td><td><strong>${esc(a.action||'Action')}</strong></td><td><details class="admin-audit-details"><summary>Voir les détails</summary><pre>${esc(details)}</pre></details></td></tr>`}).join(''):'<tr><td colspan="3" class="admin-audit-empty">Aucune entrée ne correspond à ces filtres.</td></tr>'};
+  $('audit-search').addEventListener('input',drawAudit);$('audit-action').addEventListener('change',drawAudit);drawAudit();
+ }
+}
 app.innerHTML=`<section class="admin-hero"><div><span class="eyebrow">ESPACE STAFF · GAYCHA CLUB</span><h1>Administration</h1><p>Gère le catalogue, les lieux, les séries et la vie du Club depuis un espace unifié.</p></div><div class="admin-hero-mark" aria-hidden="true">⚙</div></section><div class="admin-section-caption"><span class="eyebrow">ESPACE DE TRAVAIL</span><strong>${esc(T[tab]||'Administration')}</strong><span>Choisis une rubrique pour continuer.</span></div><div class="admin-tabs-wrap">${bar}</div><section class="admin-content">${body}</section>`;
 if(tab==='boosters'&&R!=='admin')app.querySelector('#gbgrant')?.closest('.box')?.remove();
 if(tab==='boosters'){

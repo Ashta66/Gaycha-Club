@@ -541,6 +541,10 @@ main{padding-top:clamp(20px,3vw,34px)}
  .booster-choice:hover{transform:none!important}
  .collection-card-item.is-missing .card{filter:grayscale(.85)}
 }
+.dashboard-mission-card{padding:14px 16px;margin:10px 0;max-width:none}
+.dashboard-mission-card .progress-track{margin:9px 0 5px}
+.dashboard-mission-kind{font-size:12px;margin-top:3px}
+.dashboard-mission-meta{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--mut)}.dashboard-mission-claim{margin-top:10px;padding:8px 12px;font-size:12px}
 </style></head><body>
 <header><button class="logo logo-home" type="button" data-v="dashboard" aria-label="Gaycha Club — accueil" title="Retour à l’accueil">GAYCHA<small>CLUB</small></button>
 <nav aria-label="Navigation principale"><button class="btn alt" data-v="collection">Collection</button><button class="btn alt" data-v="booster">Boosters</button><button class="btn alt" data-v="notifications">Messages</button><button class="btn alt" data-v="market">Marché</button><button class="btn alt" data-v="friends">Communauté</button><button class="btn alt" data-v="admin" id="nadm" hidden>Administration</button></nav>
@@ -1052,7 +1056,7 @@ async function dashboard(){
  const [ir,lr,mr,sr,ar,br,fr,cr]=await Promise.all([
   sb.from('card_instances').select('card_id,acquired_at').order('acquired_at',{ascending:false}),
   sb.from('ledger').select('delta,reason,created_at,balance_after').order('created_at',{ascending:false}).limit(5),
-  sb.from('missions').select('id,title,kind,goal,reward,xp_reward').eq('active',true).limit(4),
+  sb.rpc('my_missions'),
   sb.from('series').select('id,name'),
   sb.rpc('sync_user_achievements'),
   sb.from('booster_inventory').select('quantity,paid_quantity').eq('user_id',user.id),
@@ -1069,6 +1073,21 @@ async function dashboard(){
  const month=items.filter(x=>x.acquired_at&&new Date(x.acquired_at)>new Date(Date.now()-30*86400000)).length;
  const recent=(lr.data||[]).map(x=>({date:x.created_at,label:x.reason||'Mouvement de monnaie',value:Number(x.delta||0)}));
  const achievedKeys=new Set((ar.data||[]).map(x=>x.achievement_key));
+ const missionCards=(mr.data||[]).slice(0,4).map(m=>{
+  const goal=Math.max(1,Number(m.goal||1));
+  const progress=Math.max(0,Math.min(goal,Number(m.progress||0)));
+  const pct=Math.round(progress/goal*100);
+  const claimed=Boolean(m.claimed),ready=!claimed&&progress>=goal;
+  const state=claimed?'Déjà réclamée':ready?'À réclamer':'En cours';
+  const stateClass=claimed?'done':ready?'ready':'';
+  const kind=m.kind==='daily'?'Quotidienne':'Hebdomadaire';
+  return `<article class="box mission-card dashboard-mission-card ${stateClass}">
+   <div class="mission-top"><div><b>${esc(m.title)}</b><div class="muted dashboard-mission-kind">Mission ${kind}</div></div><span class="mission-status">${state}</span></div>
+   <div class="progress-track" role="progressbar" aria-label="Progression de la mission ${esc(m.title)}" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><div class="progress-fill" style="--progress:${pct}%"></div></div>
+   <div class="dashboard-mission-meta"><span>${progress} / ${goal} · ${pct}%</span><span>+${Number(m.reward||0).toLocaleString('fr-FR')} 💰 · +${Number(m.xp_reward||0).toLocaleString('fr-FR')} XP</span></div>
+   ${ready?`<button class="btn dashboard-mission-claim" type="button" data-dashboard-mission="${esc(m.slug)}">Réclamer la récompense</button>`:''}
+  </article>`;
+ }).join('');
  const milestones=[
   ['first_card','🌱','Première carte',owned>=1,'Obtenir une première carte'],
   ['collector_10','💎','Collectionneur·euse',owned>=10,'Découvrir 10 cartes différentes'],
@@ -1087,9 +1106,19 @@ async function dashboard(){
  <section class="section-panel dashboard-discoveries"><div class="section-heading"><div><span class="eyebrow">TES DERNIÈRES CARTES</span><h2 style="margin-top:4px">Découvertes récentes</h2></div><button class="btn alt" data-go="collection">Voir ma collection →</button></div><div class="dashboard-discovery-grid">${recentCards.length?recentCards.map(c=>'<div class="dashboard-discovery-card">'+card(c)+'</div>').join(''):msg('Tes premières découvertes apparaîtront ici.')}</div></section>
  <div class="section-panel dashboard-shortcuts"><div class="section-heading"><div><span class="eyebrow">ACCÈS RAPIDES</span><h2 style="margin-top:4px">Reprendre ma partie</h2></div><span class="section-heading-note">Tout est à portée de main</span></div><div class="tabs"><button class="btn alt" data-go="stats">▤ Mes statistiques</button><button class="btn alt" data-go="history">◷ Mon historique</button><button class="btn alt" data-go="missions">✧ Mes missions</button><button class="btn alt" data-go="friends">♡ Communauté</button></div></div>
  <div class="section-panel"><div class="section-heading"><div><span class="eyebrow">TES OBJECTIFS</span><h2 style="margin-top:4px">Succès de collection</h2></div><span class="section-heading-note">${milestones.filter(a=>a.unlocked).length} / ${milestones.length} débloqués</span></div><div class="achievement-grid">${milestones.map(a=>`<div class="achievement ${a.unlocked?'unlocked':''}"><div class="medal">${a[1]}</div><b>${esc(a[2])}</b><p class="muted">${esc(a[4])}</p><span>${a.unlocked?'Débloqué ✓':'À débloquer'}</span></div>`).join('')}</div></div>
- <div class="section-panel"><div class="section-heading"><div><span class="eyebrow">À FAIRE AUJOURD’HUI</span><h2 style="margin-top:4px">Missions du moment</h2></div><button class="btn alt" data-go="missions">Toutes les missions →</button></div>${mr.error?msg('Les missions ne sont pas disponibles pour le moment.'):((mr.data||[]).length?(mr.data||[]).map(m=>`<div class="history-row"><span>🎯 Mission</span><b>${esc(m.title)}</b><span class="history-value">+${Number(m.reward||0)} 💰</span></div>`).join(''):msg('Aucune mission active pour le moment.'))}</div>
+ <div class="section-panel dashboard-missions"><div class="section-heading"><div><span class="eyebrow">À FAIRE AUJOURD’HUI</span><h2 style="margin-top:4px">Missions du moment</h2></div><button class="btn alt" data-go="missions">Toutes les missions →</button></div><div id="dashboard-mission-msg" aria-live="polite"></div>${mr.error?msg('Les missions ne sont pas disponibles pour le moment.'):missionCards||msg('Aucune mission active pour le moment.')}</div>
  <div class="section-panel"><div class="section-heading"><div><span class="eyebrow">TON PORTE-MONNAIE</span><h2 style="margin-top:4px">Derniers mouvements</h2></div><button class="btn alt" data-go="history">Voir l’historique →</button></div>${lr.error?msg('Historique de monnaie indisponible.'):recent.length?recent.map(x=>`<div class="history-row"><time>${x.date?new Date(x.date).toLocaleDateString('fr-FR'):''}</time><span>${esc(x.label)}</span><span class="history-value ${x.value>=0?'positive':'negative'}">${x.value>0?'+':''}${x.value.toLocaleString('fr-FR')} 💰</span></div>`).join(''):'Aucun mouvement enregistré pour le moment.'}</div>`;
  app.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
+ app.querySelectorAll('[data-dashboard-mission]').forEach(b=>b.onclick=async()=>{
+  if(busy)return;
+  busy=true;b.disabled=true;
+  let error=null;
+  try{const result=await sb.rpc('claim_mission',{p_slug:b.dataset.dashboardMission});error=result.error}
+  catch(e){error=e}
+  finally{busy=false}
+  if(error){const target=$('dashboard-mission-msg');if(target)target.innerHTML=msg(error.message||'Impossible de réclamer la récompense.',1);b.disabled=false;return}
+  await refresh();dashboard();
+ });
 }
 /* ===== Statistiques approfondies ===== */
 async function stats(){

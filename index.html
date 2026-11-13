@@ -1381,8 +1381,8 @@ if(tab==='branding'){
    const {error}=await sb.from('site_branding').upsert(payload,{onConflict:'id'});
    if(error)throw error;
    await loadSiteBranding();
-   status.textContent='Logos enregistrés. Le nouvel habillage est maintenant visible sur le site.';
    await admin('branding');
+   const freshStatus=$('branding-message');if(freshStatus)freshStatus.textContent='Logos enregistrés. Le nouvel habillage est maintenant visible sur le site.';
   }catch(e){status.textContent='Échec : '+(e.message||'erreur inconnue')}
   finally{button.disabled=false}
  };

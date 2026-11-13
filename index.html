@@ -880,6 +880,78 @@ tr:hover td{background:rgba(255,255,255,.018)}
  .achievement:hover,.collection-card-item:hover,.booster-choice.selected{transform:none!important}
 }
 
+
+/* ===== LOT 1 — finition responsive, navigation et états d'interface ===== */
+:root{
+ --gc-focus:rgba(248,232,184,.9);
+ --gc-surface-hover:rgba(228,196,119,.065);
+}
+header nav{min-width:0}
+header nav .btn{white-space:nowrap}
+header .me{min-width:0}
+main,main>*{min-width:0}
+.box,.section-panel,.collection-progress-panel,.collection-library-panel,
+.booster-section,.booster-inventory-panel,.admin-card-tile,.trade-side{min-width:0}
+button,a,input,select,textarea{ -webkit-tap-highlight-color:transparent }
+button:focus-visible,a:focus-visible,[tabindex]:focus-visible{
+ outline:2px solid var(--gc-focus);
+ outline-offset:3px;
+}
+a{transition:color .16s ease}
+.btn:focus-visible{box-shadow:0 0 0 4px rgba(228,196,119,.16)}
+input:disabled,select:disabled,textarea:disabled{opacity:.58;cursor:not-allowed}
+label{color:#d8d2df}
+small,.muted,.section-heading-note{line-height:1.5}
+dialog{max-height:min(88dvh,900px);overflow:auto;overscroll-behavior:contain}
+dialog .btn{max-width:100%}
+.admin-content,.collection-content,.booster-content{min-width:0}
+.admin-card-grid,.cards-grid,.trade-picker,.trade-preview{align-items:start}
+.collection-tools,.catalogue-filters,.trade-tools,.settings-grid{min-width:0}
+.collection-tools>* ,.catalogue-filters>* ,.trade-tools>* ,.settings-grid>*{min-width:0}
+.collection-card-item,.admin-card-tile,.booster-choice,.achievement{
+ transition:border-color .18s ease,background-color .18s ease,box-shadow .18s ease;
+}
+.collection-card-item:focus-within,.admin-card-tile:focus-visible,
+.booster-choice:focus-visible,.achievement:focus-visible{
+ outline:2px solid var(--gc-gold);
+ outline-offset:3px;
+}
+@media(min-width:761px) and (max-width:1050px){
+ header{align-items:flex-start}
+ header nav{flex:1 1 100%;order:3}
+ header .me{margin-left:auto}
+}
+@media(max-width:760px){
+ main{width:100%;overflow-x:clip}
+ header{gap:8px}
+ header nav{max-width:100%;overflow-x:auto;overflow-y:hidden;flex-wrap:nowrap;scrollbar-width:thin;scroll-snap-type:x proximity;padding:2px 1px 7px}
+ header nav .btn{flex:0 0 auto;scroll-snap-align:start}
+ header .me{margin-left:auto}
+ .box{max-width:100%}
+ .zw{gap:18px}
+ dialog{padding:20px 15px;width:min(96vw,680px)}
+ .trade-tools{grid-template-columns:1fr 1fr}
+ .trade-tools input:first-child{grid-column:1/-1}
+ table{display:block;max-width:100%;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch}
+}
+@media(max-width:480px){
+ h1{font-size:clamp(1.8rem,9vw,2.5rem)}
+ h2{font-size:1.3rem}
+ header .me{font-size:12px}
+ .catalogue-filters,.trade-tools{grid-template-columns:1fr}
+ .trade-tools input:first-child{grid-column:auto}
+ .trade-pagination{flex-wrap:wrap}
+ .admin-view-controls{align-items:stretch}
+ .admin-view-controls>*{max-width:100%}
+ .admin-edit-layout{gap:12px}
+ .admin-edit-layout .box{padding:15px}
+ .dashboard-free-booster{gap:12px}
+ .dashboard-free-booster .btn{width:100%}
+}
+@media(prefers-reduced-motion:reduce){
+ a,.collection-card-item,.admin-card-tile,.booster-choice,.achievement{transition:none!important}
+}
+
 </style></head><body>
 <header><button class="logo logo-home" type="button" data-v="dashboard" data-brand-logo aria-label="Gaycha Club — accueil" title="Retour à l’accueil"><span data-brand-text>GAYCHA<small>CLUB</small></span></button>
 <nav aria-label="Navigation principale"><button class="btn alt" data-v="collection">Collection</button><button class="btn alt" data-v="booster">Boosters</button><button class="btn alt" data-v="notifications">Messages</button><button class="btn alt" data-v="market">Marché</button><button class="btn alt" data-v="friends">Communauté</button><button class="btn alt" data-v="admin" id="nadm" hidden>Administration</button></nav>

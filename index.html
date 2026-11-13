@@ -2,7 +2,7 @@
 <html lang="fr"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>GAYCHA CLUB — Collection & communauté</title>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Fraunces:wght@400;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;600;700;800&family=Fraunces:wght@400;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <style>
 :root{color-scheme:dark;--bg:#101010;--ch:#1D1D20;--gold:#D6B46A;--cream:#F4EBDD;--mut:#a9a39a;--rb:linear-gradient(90deg,#FF477E,#FF8A00,#FFDA45,#8CCF35,#00A9A5,#3867FF,#C9A7FF)}
@@ -602,6 +602,182 @@ body{background-image:radial-gradient(ellipse at 12% 0%,#8d5c9b14,transparent 32
 .admin-branding-item small{display:block;color:var(--mut);font-size:12px;margin-top:8px}
 .admin-branding-item label{display:block;margin-top:10px}
 @media(max-width:650px){.admin-branding-grid{grid-template-columns:1fr}}
+
+/* ===== LOT 1 — GAYCHA CLUB / système visuel global ===== */
+:root{
+ --gc-ink:#0b0b10;
+ --gc-surface:#14141b;
+ --gc-surface-raised:#1b1a23;
+ --gc-border:rgba(226,211,177,.14);
+ --gc-border-strong:rgba(226,193,109,.42);
+ --gc-gold:#e4c477;
+ --gc-gold-light:#f8e8b8;
+ --gc-lilac:#b9a4f4;
+ --gc-pink:#f18ab9;
+ --gc-mint:#83d9c3;
+ --gc-text:#f4f0e8;
+ --gc-muted:#aaa6b2;
+ --gc-shadow:0 18px 48px rgba(0,0,0,.34);
+ --gc-radius:18px;
+}
+html{scroll-behavior:smooth;scroll-padding-top:100px}
+body{
+ background-color:var(--gc-ink);
+ background-image:
+  radial-gradient(ellipse at 8% -8%,rgba(178,115,176,.13),transparent 34%),
+  radial-gradient(ellipse at 96% 8%,rgba(218,181,103,.11),transparent 28%),
+  radial-gradient(ellipse at 55% 110%,rgba(91,119,188,.09),transparent 38%);
+ color:var(--gc-text);
+ font-family:"DM Sans",Arial,sans-serif;
+ letter-spacing:.005em;
+}
+h1,h2,h3,h4,.logo{font-family:"Space Grotesk",Arial,sans-serif;letter-spacing:-.035em}
+h1{font-size:clamp(2rem,4.5vw,3.35rem);font-weight:700;line-height:1.04}
+h2{font-size:clamp(1.35rem,2.4vw,1.9rem);font-weight:650;line-height:1.15}
+h3{font-family:"Space Grotesk",Arial,sans-serif;font-weight:650;letter-spacing:-.02em}
+p{line-height:1.65}
+main{max-width:1240px;padding:clamp(18px,3vw,34px) clamp(14px,2.5vw,28px) 72px}
+main>h1::after,.rbar{height:3px;width:76px;margin-top:14px;border-radius:99px;background:linear-gradient(90deg,var(--gc-gold),var(--gc-lilac),var(--gc-pink))}
+header{
+ min-height:72px;padding:12px clamp(14px,2.5vw,30px);
+ gap:clamp(12px,1.8vw,24px);
+ background:rgba(13,12,18,.88);
+ border-bottom:1px solid rgba(255,255,255,.055);
+ backdrop-filter:blur(20px) saturate(145%);
+}
+header::after{height:1px;opacity:.7;background:linear-gradient(90deg,transparent,var(--gc-gold),var(--gc-lilac),var(--gc-pink),transparent)}
+.logo{font-size:25px;font-weight:700;color:var(--gc-gold-light);text-shadow:0 0 24px rgba(228,196,119,.2)}
+.logo small{font-family:"DM Sans",sans-serif;font-size:9px;letter-spacing:.48em;color:#d7d0c3}
+header nav{gap:5px;align-items:center}
+header nav .btn{min-height:38px;padding:8px 12px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:.015em}
+header .me{font-size:13px;color:var(--gc-muted)}
+.btn{
+ min-height:44px;padding:11px 18px;border-radius:11px;
+ background:linear-gradient(135deg,#f2d997,#d6b46a 65%,#c69c4d);
+ color:#17130b;font-family:"DM Sans",sans-serif;font-size:13px;font-weight:800;
+ box-shadow:0 5px 18px rgba(214,180,106,.12);
+ transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease,filter .18s ease;
+}
+.btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 10px 26px rgba(214,180,106,.2);filter:brightness(1.04)}
+.btn.alt{
+ color:#e9e3d9;background:rgba(255,255,255,.045);
+ border:1px solid rgba(255,255,255,.13);box-shadow:none
+}
+.btn.alt:hover:not(:disabled){border-color:rgba(228,196,119,.62);background:rgba(228,196,119,.08);box-shadow:0 7px 20px rgba(0,0,0,.16)}
+input,select,textarea{
+ background:#111118;color:var(--gc-text);border:1px solid rgba(255,255,255,.14);
+ border-radius:10px;padding:11px 13px;min-height:44px;font-family:"DM Sans",sans-serif;
+ transition:border-color .18s,box-shadow .18s;
+}
+input:hover,select:hover,textarea:hover{border-color:rgba(228,196,119,.38)}
+input:focus,select:focus,textarea:focus{border-color:var(--gc-gold);box-shadow:0 0 0 3px rgba(228,196,119,.12);outline:0}
+.box,.section-panel,.collection-progress-panel,.collection-library-panel,.booster-section,.booster-inventory-panel{
+ border:1px solid var(--gc-border);border-radius:var(--gc-radius);
+ background:linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.015));
+ box-shadow:0 10px 30px rgba(0,0,0,.14);
+}
+.box{padding:clamp(16px,2.3vw,24px)}
+.box::before{height:2px;opacity:.55}
+.note{border-left-color:var(--gc-lilac);background:rgba(185,164,244,.075);color:#c7c0d1}
+.err{border-color:#d86e83;color:#ffc0cb}
+.tabs,.section-shortcuts{gap:8px}
+.section-shortcuts{padding-bottom:16px;border-bottom-color:rgba(255,255,255,.09)}
+.section-shortcuts .btn{border-radius:999px}
+.section-shortcuts .btn:not(.alt){background:linear-gradient(120deg,#f2d997,#d6b46a);color:#17130b}
+.dashboard-welcome,.collection-hero,.admin-hero,.booster-hero{
+ border:1px solid transparent!important;border-radius:24px!important;
+ background:
+  radial-gradient(ellipse at 85% 12%,rgba(185,164,244,.16),transparent 34%),
+  radial-gradient(ellipse at 8% 100%,rgba(241,138,185,.09),transparent 36%),
+  linear-gradient(125deg,#1b1922 0%,#111117 58%,#1a1720 100%) padding-box,
+  linear-gradient(115deg,rgba(248,232,184,.8),rgba(214,180,106,.38) 28%,rgba(185,164,244,.56) 63%,rgba(241,138,185,.44)) border-box!important;
+ box-shadow:var(--gc-shadow),inset 0 1px rgba(255,255,255,.07)!important;
+}
+.dashboard-welcome,.collection-hero,.admin-hero{padding:clamp(22px,4vw,42px)}
+.dashboard-welcome h1,.collection-hero h1,.admin-hero h1{font-size:clamp(2rem,4vw,3rem);letter-spacing:-.055em}
+.dashboard-welcome p,.collection-hero p,.admin-hero p{color:#bdb7c3}
+.dashboard-welcome-mark{border-radius:28px;transform:rotate(3deg);background:linear-gradient(145deg,rgba(228,196,119,.16),rgba(185,164,244,.08));border-color:rgba(248,232,184,.48)}
+.dashboard-welcome-mark span{font-family:"Anton",sans-serif}
+.eyebrow{font-family:"DM Sans",sans-serif;font-size:10px;font-weight:800;letter-spacing:.18em}
+.dashboard-free-booster{
+ display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;
+ margin:16px 0 20px;padding:clamp(18px,2.6vw,26px);
+ border:1px solid rgba(228,196,119,.28);border-radius:18px;
+ background:linear-gradient(110deg,rgba(228,196,119,.11),rgba(185,164,244,.07) 58%,rgba(255,255,255,.025));
+}
+.dashboard-free-booster h2{margin:4px 0;font-size:clamp(1.25rem,2vw,1.65rem)}
+.dashboard-free-booster p{margin:0;color:var(--gc-muted);font-size:13px}
+.dashboard-grid{gap:12px}
+.dash-tile{border:1px solid var(--gc-border);border-radius:16px;background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.018));box-shadow:inset 0 1px rgba(255,255,255,.045),0 10px 26px rgba(0,0,0,.16)}
+.dash-tile:after{left:16px;right:16px;height:2px;background:linear-gradient(90deg,var(--gc-gold),var(--gc-lilac),transparent)}
+.dash-tile>span{font-size:11px;letter-spacing:.04em;text-transform:uppercase}
+.dash-tile strong{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:clamp(25px,3vw,34px)}
+.section-heading{gap:12px}
+.section-heading h2{font-family:"Space Grotesk",sans-serif}
+.section-heading-note,.muted{color:var(--gc-muted)}
+.collection-progress-track{height:9px;border-radius:99px;background:rgba(255,255,255,.09)}
+.collection-progress-track>span{border-radius:99px;background:linear-gradient(90deg,var(--gc-gold),var(--gc-lilac),var(--gc-pink));box-shadow:0 0 16px rgba(185,164,244,.2)}
+.collection-hero-score{border-radius:20px}
+.collection-card-item{border:1px solid rgba(255,255,255,.12);border-radius:16px;background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.015));box-shadow:0 12px 26px rgba(0,0,0,.18)}
+/* La bordure et les reflets des cartes suivent leur rareté, pas un arc-en-ciel uniforme. */
+.card{
+ border:2px solid var(--r,#9296a3)!important;
+ border-radius:15px!important;
+ background:#0b0b10!important;
+ box-shadow:0 9px 24px rgba(0,0,0,.42),inset 0 0 18px rgba(255,255,255,.035)!important;
+}
+.card .band{font-family:"Anton",sans-serif;letter-spacing:.1em}
+.card .rar{color:var(--r,#d8dce8)!important}
+.card.r-commun{--r:#aeb3c0}
+.card.r-peu_commun{--r:#73d7b6}
+.card.r-rare{--r:#8eb4ff;box-shadow:0 0 0 1px rgba(142,180,255,.2),0 10px 25px rgba(0,0,0,.4)!important}
+.card.r-epique{--r:#e69ae0;box-shadow:0 0 0 1px rgba(230,154,224,.28),0 0 20px rgba(230,154,224,.12)!important}
+.card.r-legendaire{--r:#f2d58b;box-shadow:0 0 0 1px rgba(242,213,139,.4),0 0 25px rgba(242,213,139,.2)!important}
+.card.r-secrete{border-color:transparent!important;background:linear-gradient(#0b0b10,#0b0b10) padding-box,conic-gradient(from var(--a),#f18ab9,#e4c477,#83d9c3,#9ebcff,#b9a4f4,#f18ab9) border-box!important;box-shadow:0 0 26px rgba(185,164,244,.22)!important}
+.card:hover,.card:focus-visible{transform:translateY(-4px) scale(1.012)!important}
+.booster-hero{padding:clamp(24px,4vw,44px)!important}
+.booster-hero h1{font-size:clamp(2.1rem,4.8vw,3.4rem);letter-spacing:-.055em}
+.booster-hero p{color:#c1bac7}
+.booster-choice,.booster-inventory-panel,.booster-reveal,.booster-summary{border-radius:18px}
+.booster-choice{border-color:rgba(255,255,255,.13)}
+.booster-choice:hover{border-color:rgba(228,196,119,.6)}
+.opening-stage{border-color:rgba(228,196,119,.3);border-radius:22px;background:radial-gradient(ellipse at 50% 0%,rgba(228,196,119,.15),transparent 60%),linear-gradient(145deg,#201b29,#111117)}
+table{border-collapse:separate;border-spacing:0}
+td,th{border-bottom:1px solid rgba(255,255,255,.09);padding:11px 10px}
+th{color:#e9d8ad;font-size:11px;text-transform:uppercase;letter-spacing:.08em}
+dialog{background:#171620;border:1px solid rgba(228,196,119,.28);border-radius:20px;box-shadow:0 25px 80px #000b}
+dialog::before{opacity:.45}
+:focus-visible{outline:2px solid var(--gc-gold-light);outline-offset:3px}
+@media(max-width:900px){
+ header{gap:10px}
+ header nav .btn{padding:7px 10px;font-size:11px}
+ .dashboard-welcome-mark{flex-basis:108px;width:108px;height:108px}
+}
+@media(max-width:650px){
+ main{padding:16px 12px 28px}
+ header{min-height:58px;padding:8px 12px}
+ header .logo{font-size:21px}
+ .dashboard-welcome,.collection-hero,.admin-hero,.booster-hero{border-radius:18px!important;padding:21px!important}
+ .dashboard-welcome-mark{display:none}
+ .dashboard-free-booster{align-items:stretch}
+ .dashboard-free-booster .btn{width:100%}
+ .dash-tile{padding:14px}
+ .section-panel{border-radius:15px}
+ .mobile-bottom-nav{border-top:1px solid rgba(228,196,119,.28);background:rgba(12,11,16,.97);box-shadow:0 -12px 35px rgba(0,0,0,.48)}
+ .mobile-nav-item{border-radius:11px}
+ .mobile-nav-item.nav-active{background:linear-gradient(180deg,rgba(228,196,119,.16),rgba(185,164,244,.07));box-shadow:inset 0 0 0 1px rgba(228,196,119,.36)}
+}
+@media(max-width:420px){
+ .btn{padding:10px 13px;font-size:12px}
+ .dashboard-welcome-actions{display:grid;grid-template-columns:1fr}
+ .dashboard-welcome-actions .btn{width:100%}
+}
+@media(prefers-reduced-motion:reduce){
+ html{scroll-behavior:auto}
+ .btn,.card,.booster-choice,.collection-card-item:before{transition:none!important}
+ .btn:hover,.card:hover{transform:none!important}
+}
+
 </style></head><body>
 <header><button class="logo logo-home" type="button" data-v="dashboard" data-brand-logo aria-label="Gaycha Club — accueil" title="Retour à l’accueil"><span data-brand-text>GAYCHA<small>CLUB</small></span></button>
 <nav aria-label="Navigation principale"><button class="btn alt" data-v="collection">Collection</button><button class="btn alt" data-v="booster">Boosters</button><button class="btn alt" data-v="notifications">Messages</button><button class="btn alt" data-v="market">Marché</button><button class="btn alt" data-v="friends">Communauté</button><button class="btn alt" data-v="admin" id="nadm" hidden>Administration</button></nav>

@@ -16,7 +16,7 @@ button{font:inherit;cursor:pointer}:focus-visible{outline:3px solid var(--gold);
 header{position:sticky;top:0;z-index:10;display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:12px 20px 15px;background:#1D1D20ee;backdrop-filter:blur(8px)}
 header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--rb);background-size:200% 100%;animation:flow 8s linear infinite}
 @keyframes flow{to{background-position:200% 0}}
-.logo{font-size:28px;color:var(--gold);line-height:1;text-shadow:0 0 18px #D6B46A44}.logo small{font:600 10px Fraunces;letter-spacing:.5em;display:block;color:var(--cream)}.logo-home{border:0;background:transparent;padding:0;cursor:pointer;text-align:left;flex:0 0 auto}.logo-home:hover{filter:brightness(1.18)}
+.logo{font-size:28px;color:var(--gold);line-height:1;text-shadow:0 0 18px #D6B46A44}.logo small{font:600 10px Fraunces;letter-spacing:.5em;display:block;color:var(--cream)}.logo-home{border:0;background:transparent;padding:0;cursor:pointer;text-align:left;flex:0 0 auto}.logo-home:hover{filter:brightness(1.18)}.site-brand-logo{display:block;width:auto;max-width:min(190px,28vw);height:auto;max-height:48px;object-fit:contain}.logo-home:has(.site-brand-logo){display:flex;align-items:center;min-height:44px}
 header nav{display:flex;gap:6px;flex-wrap:wrap}header nav .btn{padding:8px 14px;min-height:40px;font-size:14px}
 header .me{margin-left:auto;color:var(--mut);font-size:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
 main{max-width:1100px;margin:0 auto;padding:30px 20px 60px}
@@ -593,7 +593,7 @@ body{background-image:radial-gradient(ellipse at 12% 0%,#8d5c9b14,transparent 32
 @media(max-width:650px){.dashboard-welcome,.collection-hero,.admin-hero{box-shadow:0 12px 30px #0004}.card:hover,.card:focus-visible{transform:none!important}.dashboard-welcome:after,.collection-hero:after,.admin-hero:after{opacity:.2}}
 @media(prefers-reduced-motion:reduce){.card,.collection-card-item:before,.dashboard-welcome:after,.collection-hero:after,.admin-hero:after{animation:none!important;transition:none!important}.card:hover,.card:focus-visible{transform:none!important}}
 </style></head><body>
-<header><button class="logo logo-home" type="button" data-v="dashboard" aria-label="Gaycha Club — accueil" title="Retour à l’accueil">GAYCHA<small>CLUB</small></button>
+<header><button class="logo logo-home" type="button" data-v="dashboard" data-brand-logo aria-label="Gaycha Club — accueil" title="Retour à l’accueil"><span data-brand-text>GAYCHA<small>CLUB</small></span></button>
 <nav aria-label="Navigation principale"><button class="btn alt" data-v="collection">Collection</button><button class="btn alt" data-v="booster">Boosters</button><button class="btn alt" data-v="notifications">Messages</button><button class="btn alt" data-v="market">Marché</button><button class="btn alt" data-v="friends">Communauté</button><button class="btn alt" data-v="admin" id="nadm" hidden>Administration</button></nav>
 <div class="me" id="me"></div></header>
 <nav class="mobile-bottom-nav" aria-label="Navigation principale mobile"><button class="mobile-nav-item" data-v="collection" aria-label="Collection"><span aria-hidden="true">▦</span><small>Collection</small></button><button class="mobile-nav-item" data-v="booster" aria-label="Boosters"><span aria-hidden="true">✦</span><small>Boosters</small></button><button class="mobile-nav-item" data-v="notifications" aria-label="Messages"><span aria-hidden="true">✉</span><small>Messages</small></button><button class="mobile-nav-item" data-v="market" aria-label="Marché"><span aria-hidden="true">◇</span><small>Marché</small></button><button class="mobile-nav-item" id="mobile-more-toggle" aria-expanded="false" aria-controls="mobile-more-menu" aria-label="Plus de sections"><span aria-hidden="true">☰</span><small>Plus</small></button></nav>
@@ -605,6 +605,25 @@ const SUPABASE_URL='https://tgnembausaanuazoelxw.supabase.co';
 const SUPABASE_KEY='sb_publishable_xPvkIsb6dO0DVHXrf6Gs-g_wGrdewIx';
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 const $=id=>document.getElementById(id),app=$('app');
+let siteBranding={};
+function applySiteBranding(data){
+ siteBranding=data||{};
+ const button=document.querySelector('[data-brand-logo]');
+ if(button){
+  button.innerHTML=siteBranding.logo_url?'<img class="site-brand-logo" src="'+esc(siteBranding.logo_url)+'" alt="'+esc(siteBranding.logo_alt||'Gaycha Club')+'">':'<span data-brand-text>GAYCHA<small>CLUB</small></span>';
+  button.setAttribute('aria-label',siteBranding.logo_alt||'Gaycha Club — accueil');
+ }
+ let icon=document.querySelector('link[data-brand-favicon]');
+ if(siteBranding.favicon_url){
+  if(!icon){icon=document.createElement('link');icon.rel='icon';icon.dataset.brandFavicon='1';document.head.appendChild(icon)}
+  icon.href=siteBranding.favicon_url;
+ }else if(icon)icon.remove();
+}
+async function loadSiteBranding(){
+ const {data,error}=await sb.from('site_branding').select('logo_url,favicon_url,logo_alt').eq('id',1).maybeSingle();
+ if(!error)applySiteBranding(data||{});
+}
+
 const RN={commun:['Commun','●'],peu_commun:['Peu commun','⬢'],rare:['Rare','◆'],epique:['Épique','★'],legendaire:['Légendaire','♛'],secrete:['Secrète','◈']};
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let user=null,profile=null,cards=[],busy=false,boosterTypes=[],boosterInventory=[];
@@ -1266,8 +1285,8 @@ async function events(){
 
 /* ===== Administration (les droits sont vérifiés par le serveur) ===== */
 async function admin(tab){const R=profile?.role;if(!['admin','moderator','catalog_manager'].includes(R))return app.innerHTML=msg('Accès réservé au staff.',1);
-tab=tab||'stats';const T={stats:'Stats',reports:'Signalements',users:'Comptes',cards:'Catalogue',series:'Séries',venues:'Lieux LGBTQ+',assistant:'Assistant IA',boosters:'Boosters',audit:'Audit'};
-const ok={stats:1,reports:R!=='catalog_manager',users:R!=='catalog_manager',cards:R!=='moderator',series:R!=='moderator',venues:R!=='moderator',assistant:R!=='moderator',boosters:R!=='moderator',audit:R==='admin'};
+tab=tab||'stats';const T={stats:'Stats',reports:'Signalements',users:'Comptes',cards:'Catalogue',series:'Séries',venues:'Lieux LGBTQ+',assistant:'Assistant IA',boosters:'Boosters',branding:'Logos du site',audit:'Audit'};
+const ok={stats:1,reports:R!=='catalog_manager',users:R!=='catalog_manager',cards:R!=='moderator',series:R!=='moderator',venues:R!=='moderator',assistant:R!=='moderator',boosters:R!=='moderator',branding:R==='admin',audit:R==='admin'};
 const bar=`<div class="tabs">${Object.keys(T).filter(k=>ok[k]).map(k=>`<button class="btn${k===tab?'':' alt'}" data-t="${k}">${T[k]}</button>`).join('')}</div><div id="am"></div>`;
 const fail=e=>msg(e.message,1);let body='';
 if(tab==='stats'){
@@ -1300,6 +1319,26 @@ if(tab==='venues'){
  const visualCounts=(data||[]).reduce((a,c)=>{const k=c.image_path&&c.rights_checked?'documente':c.image_path?'controle':c.rights_checked?'sans-visuel':'secours';a[k]=(a[k]||0)+1;return a},{});
  body=(error?fail(error):'')+`<div class="box" style="max-width:none;margin:8px 0;padding:12px"><label for="venue-admin-search">Rechercher un lieu</label><input id="venue-admin-search" type="search" placeholder="Nom, ville, pays, série, source ou état…" autocomplete="off"><label for="venue-admin-visual-filter">Filtrer par état du visuel</label><select id="venue-admin-visual-filter"><option value="">Tous les visuels (${(data||[]).length})</option><option value="secours">Illustration de secours (${visualCounts.secours||0})</option><option value="controle">Photo présente — droits à contrôler (${visualCounts.controle||0})</option><option value="documente">Photo présente — droits cochés (${visualCounts.documente||0})</option><option value="sans-visuel">Droits cochés mais aucun visuel (${visualCounts['sans-visuel']||0})</option></select><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px"><span id="venue-admin-count" class="note">${(data||[]).length} lieu(x)</span><button class="btn alt" type="button" id="venue-admin-collapse">Tout replier</button><button class="btn alt" type="button" id="venue-admin-expand">Tout déplier</button><button class="btn alt" type="button" id="venue-admin-export">Exporter le suivi CSV</button></div></div><p class="note">Les états « droits cochés » reflètent uniquement les données saisies, pas une validation juridique automatique. Une fiche « illustration de secours » n’utilise pas de photo du lieu. Les fiches restent en brouillon jusqu'à validation ; les modifications des sources ne publient aucune carte.</p><div id="venue-admin-list">${rows||msg('Aucune fiche de lieu trouvée.')}</div>`;
 }
+
+if(tab==='branding'){
+ const {data,error}=await sb.from('site_branding').select('logo_url,favicon_url,logo_alt').eq('id',1).maybeSingle();
+ const current=data||{};
+ body=error?fail(error):'<section class="box" style="max-width:none;margin:0">'+
+ '<h2 style="margin-top:0">Identité visuelle du site</h2>'+
+ '<p>Remplace le logo affiché dans l’en-tête et l’icône de l’onglet du navigateur. Les changements sont visibles par tous les membres après enregistrement.</p>'+
+ '<div class="admin-branding-grid">'+
+ '<div class="admin-branding-item"><h3>Logo principal</h3>'+
+ (current.logo_url?'<img class="admin-branding-preview" src="'+esc(current.logo_url)+'" alt="Logo actuel">':'<div class="admin-branding-empty">Logo texte actuel : GAYCHA CLUB</div>')+
+ '<label for="branding-logo-file">Importer un nouveau logo</label><input id="branding-logo-file" type="file" accept="image/png,image/jpeg,image/webp">'+
+ '<label><input id="branding-logo-clear" type="checkbox" style="width:auto"> Revenir au logo texte GAYCHA CLUB</label>'+
+ '<small>PNG, JPEG ou WebP · 5 Mo maximum · fond transparent conseillé</small></div>'+
+ '<div class="admin-branding-item"><h3>Icône du site (favicon)</h3>'+
+ (current.favicon_url?'<img class="admin-branding-preview admin-favicon-preview" src="'+esc(current.favicon_url)+'" alt="Icône actuelle">':'<div class="admin-branding-empty admin-favicon-preview">GC</div>')+
+ '<label for="branding-favicon-file">Importer une icône</label><input id="branding-favicon-file" type="file" accept="image/png,image/jpeg,image/webp">'+
+ '<small>PNG, JPEG ou WebP · 1 Mo conseillé · format carré conseillé</small></div></div>'+
+ '<label for="branding-logo-alt">Texte alternatif du logo</label><input id="branding-logo-alt" maxlength="100" value="'+esc(current.logo_alt||'Gaycha Club')+'" placeholder="Gaycha Club">'+
+ '<button class="btn" id="branding-save" type="button">Enregistrer les logos</button><p id="branding-message" role="status" aria-live="polite"></p></section>';
+}
 if(tab==='audit'){
  const {data,error}=await sb.from('audit_log').select('*').order('id',{ascending:false}).limit(100);
  if(error)body=fail(error);
@@ -1311,6 +1350,34 @@ if(tab==='audit'){
  }
 }
 app.innerHTML=`<section class="admin-hero"><div><span class="eyebrow">ESPACE STAFF · GAYCHA CLUB</span><h1>Administration</h1><p>Gère le catalogue, les lieux, les séries et la vie du Club depuis un espace unifié.</p></div><div class="admin-hero-mark" aria-hidden="true">⚙</div></section><div class="admin-section-caption"><span class="eyebrow">ESPACE DE TRAVAIL</span><strong>${esc(T[tab]||'Administration')}</strong><span>Choisis une rubrique pour continuer.</span></div><div class="admin-tabs-wrap">${bar}</div><section class="admin-content">${body}</section>`;
+if(tab==='branding'){
+ const uploadBrandAsset=async(file,kind)=>{
+  if(!file)return null;
+  const allowed={'image/png':'png','image/jpeg':'jpg','image/webp':'webp'};
+  if(!allowed[file.type]||file.size>(kind==='logo'?5:1)*1024*1024)throw new Error(kind==='logo'?'Logo refusé : PNG/JPEG/WebP, 5 Mo maximum.':'Icône refusée : PNG/JPEG/WebP, 1 Mo maximum.');
+  const path='brand-assets/'+user.id+'/'+kind+'-'+Date.now()+'-'+Math.random().toString(36).slice(2,8)+'.'+allowed[file.type];
+  const {error}=await sb.storage.from('card-art').upload(path,file,{contentType:file.type,upsert:false});
+  if(error)throw error;
+  return sb.storage.from('card-art').getPublicUrl(path).data.publicUrl;
+ };
+ $('branding-save').onclick=async()=>{
+  const button=$('branding-save'),status=$('branding-message'),logoFile=$('branding-logo-file').files?.[0],faviconFile=$('branding-favicon-file').files?.[0];
+  button.disabled=true;status.textContent='Enregistrement…';
+  try{
+   let logoUrl=siteBranding.logo_url||null, faviconUrl=siteBranding.favicon_url||null;
+   if($('branding-logo-clear').checked)logoUrl=null;else if(logoFile)logoUrl=await uploadBrandAsset(logoFile,'logo');
+   if(faviconFile)faviconUrl=await uploadBrandAsset(faviconFile,'favicon');
+   const payload={id:1,logo_url:logoUrl,favicon_url:faviconUrl,logo_alt:$('branding-logo-alt').value.trim()||'Gaycha Club',updated_by:user.id,updated_at:new Date().toISOString()};
+   const {error}=await sb.from('site_branding').upsert(payload,{onConflict:'id'});
+   if(error)throw error;
+   await loadSiteBranding();
+   status.textContent='Logos enregistrés. Le nouvel habillage est maintenant visible sur le site.';
+   await admin('branding');
+  }catch(e){status.textContent='Échec : '+(e.message||'erreur inconnue')}
+  finally{button.disabled=false}
+ };
+}
+
 if(tab==='boosters'&&R!=='admin')app.querySelector('#gbgrant')?.closest('.box')?.remove();
 if(tab==='boosters'){
  const create=document.createElement('div');create.className='box';create.style.maxWidth='none';create.innerHTML='<h2 style="margin-top:0">Créer un booster</h2><div class="settings-grid"><div><label>Slug unique</label><input id="new-b-slug" maxlength="80" placeholder="booster-evenement"></div><div><label>Nom</label><input id="new-b-name" maxlength="100" placeholder="Booster événement"></div><div><label>Cartes par paquet</label><input id="new-b-count" type="number" min="1" max="50" value="5"></div><div><label>Prix 💰</label><input id="new-b-price" type="number" min="0" value="100"></div><div><label>Garantie Rare+ après N cartes</label><input id="new-b-pity" type="number" min="1" value="10"></div><div><label>Délai (heures)</label><input id="new-b-cooldown" type="number" min="0" value="0"></div></div><div class="settings-grid"><div><label>Commun %</label><input id="new-o-common" type="number" min="0" step="0.1" value="55"></div><div><label>Peu commun %</label><input id="new-o-uncommon" type="number" min="0" step="0.1" value="25"></div><div><label>Rare %</label><input id="new-o-rare" type="number" min="0" step="0.1" value="12"></div><div><label>Épique %</label><input id="new-o-epic" type="number" min="0" step="0.1" value="5"></div><div><label>Légendaire %</label><input id="new-o-legendary" type="number" min="0" step="0.1" value="2"></div><div><label>Secrète %</label><input id="new-o-secret" type="number" min="0" step="0.1" value="1"></div></div><label><input id="new-b-active" type="checkbox" checked style="width:auto"> Actif</label><br><button class="btn" id="new-b-save" type="button">Créer le booster</button><p id="new-b-message" aria-live="polite"></p>';
@@ -1371,5 +1438,5 @@ if(tab==='cards'){
 app.querySelectorAll('[data-sb]').forEach(b=>b.onclick=async()=>{const s=b.dataset.sb,o={};document.querySelectorAll('.o-'+s).forEach(i=>o[i.dataset.k]=+i.value);
 const {error}=await sb.rpc('admin_upsert_booster',{p_slug:s,p_name:$('n-'+s).value.trim(),p_cards_per_pack:+$('c-'+s).value,p_odds:o,p_price:+$('p-'+s).value,p_pity:+$('g-'+s).value,p_cooldown:+$('d-'+s).value,p_active:$('a-'+s).checked});say(error,'Booster mis à jour.')});
 if($('gbgrant'))$('gbgrant').onclick=async()=>{const b=$('gbgrant'),username=$('gbuser').value.trim(),slug=$('gbslug').value,qty=+$('gbqty').value,reason=$('gbreason').value.trim();if(!username||!reason||qty<1||qty>20){$('gbmsg').innerHTML=msg('Indique un pseudo, un motif et une quantité de 1 à 20.',1);return}b.disabled=true;const {error}=await sb.rpc('admin_grant_booster',{p_username:username,p_slug:slug,p_quantity:qty,p_reason:reason});b.disabled=false;$('gbmsg').innerHTML=error?msg(error.message==='unknown user'?'Pseudo introuvable. Vérifie le pseudo exact.':error.message,1):msg('Booster(s) distribué(s).');};}
-go('dashboard');
+go('dashboard');loadSiteBranding();
 </script></body></html>

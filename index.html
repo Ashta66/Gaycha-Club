@@ -397,6 +397,19 @@ main{padding-top:clamp(20px,3vw,34px)}
 .admin-stat-icon{grid-row:span 2;width:42px;height:42px;display:grid;place-items:center;border-radius:13px;background:#d6b46a14;font-size:21px}
 .admin-stat-label{color:var(--muted,#aaa69e);font-size:12px;text-transform:capitalize;overflow-wrap:anywhere}
 .admin-stat-tile strong{font-size:clamp(23px,2.4vw,31px);line-height:1.15;color:var(--gc-gold-soft);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.admin-stat-chart{margin-top:18px;padding:18px;border:1px solid #d6b46a3d;border-radius:16px;background:linear-gradient(145deg,#ffffff07,#ffffff02)}
+.admin-stat-chart h3{margin:0 0 14px;font:22px Anton,sans-serif}
+.admin-stat-bars{display:grid;gap:12px}
+.admin-stat-bar{display:grid;grid-template-columns:minmax(110px,1fr) minmax(90px,2fr) auto;align-items:center;gap:12px}
+.admin-stat-bar-label{font-size:12px;color:var(--muted,#aaa69e);overflow-wrap:anywhere}
+.admin-stat-bar-track{height:10px;overflow:hidden;border-radius:99px;background:#ffffff13}
+.admin-stat-bar-fill{height:100%;border-radius:inherit;background:linear-gradient(90deg,#d6b46a,#e9d6a2 55%,#b5a4ff);box-shadow:0 0 14px #d6b46a44}
+.admin-stat-bar-value{min-width:50px;text-align:right;font-size:12px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--gc-gold-soft)}
+.dashboard-free-booster{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin:16px 0;padding:18px 20px;border:1px solid #d6b46a66;border-radius:18px;background:radial-gradient(ellipse at 10% 0%,#d6b46a22,transparent 55%),linear-gradient(120deg,#201b24,#111114);box-shadow:0 12px 30px #0003}
+.dashboard-free-booster h2{margin:3px 0;font-size:24px}
+.dashboard-free-booster p{margin:3px 0 0;color:var(--mut);font-size:13px}
+.dashboard-free-booster .eyebrow{color:#f2d48f}
+@media(max-width:560px){.admin-stat-bar{grid-template-columns:1fr auto;gap:5px 10px}.admin-stat-bar-track{grid-column:1/-1;grid-row:2}.dashboard-free-booster{align-items:flex-start}.dashboard-free-booster .btn{width:100%}}
 .admin-catalog-toolbar{display:grid;gap:12px;width:100%}
 .admin-catalog-toolbar-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .admin-catalog-toolbar-head>div{display:grid;gap:4px}
@@ -1034,18 +1047,22 @@ async function universe(){
 async function dashboard(){
  if(!user)return auth();
  app.innerHTML='<h1>Mon tableau de bord</h1><p>Chargement de ton espace…</p>';
- const [ir,lr,mr,sr,ar,br]=await Promise.all([
+ const [ir,lr,mr,sr,ar,br,fr,cr]=await Promise.all([
   sb.from('card_instances').select('card_id,acquired_at').order('acquired_at',{ascending:false}),
   sb.from('ledger').select('delta,reason,created_at,balance_after').order('created_at',{ascending:false}).limit(5),
   sb.from('missions').select('id,title,kind,goal,reward,xp_reward').eq('active',true).limit(4),
   sb.from('series').select('id,name'),
   sb.rpc('sync_user_achievements'),
-  sb.from('booster_inventory').select('quantity,paid_quantity').eq('user_id',user.id)
+  sb.from('booster_inventory').select('quantity,paid_quantity').eq('user_id',user.id),
+  sb.from('booster_types').select('slug,name,cooldown_hours,price').eq('active',true).eq('price',0).order('name').limit(1),
+  sb.from('ledger').select('reason,created_at').eq('user_id',user.id).order('created_at',{ascending:false}).limit(100)
  ]);
  if(ir.error)return app.innerHTML=msg('Chargement de la collection impossible : '+ir.error.message,1);
  const items=ir.data||[],counts={};items.forEach(x=>counts[x.card_id]=(counts[x.card_id]||0)+1);
  const owned=Object.keys(counts).length,dupes=items.length-owned,series=sr.data||[],completion=cards.length?Math.round(owned/cards.length*100):0;
  const boosterCount=(br.data||[]).reduce((sum,x)=>sum+Number(x.quantity||0)+Number(x.paid_quantity||0),0);
+ const freeBooster=(fr.data||[])[0]||null,freeLast=freeBooster?(cr.data||[]).filter(x=>x.reason==='booster:'+freeBooster.slug||x.reason==='booster_purchase:'+freeBooster.slug).sort((a,b)=>new Date(b.created_at)-new Date(a.created_at))[0]:null;
+ const freeRemaining=freeBooster&&freeLast?Math.max(0,new Date(freeLast.created_at).getTime()+Number(freeBooster.cooldown_hours||0)*3600000-Date.now()):0;
  const recentCards=[...new Set(items.map(x=>x.card_id))].slice(0,3).map(id=>cards.find(c=>c.id===id)).filter(Boolean);
  const month=items.filter(x=>x.acquired_at&&new Date(x.acquired_at)>new Date(Date.now()-30*86400000)).length;
  const recent=(lr.data||[]).map(x=>({date:x.created_at,label:x.reason||'Mouvement de monnaie',value:Number(x.delta||0)}));
@@ -1058,6 +1075,7 @@ async function dashboard(){
   ['completion','✨','Complétion',cards.length>0&&owned>=cards.length,'Découvrir tout le catalogue']
  ].map(a=>({...a,unlocked:ar.error?a[3]:achievedKeys.has(a[0])}));
  app.innerHTML=`<section class="dashboard-welcome"><div class="dashboard-welcome-copy"><span class="eyebrow">TON ESPACE GAYCHA</span><h1>Salut, ${esc(profile?.username||user.user_metadata?.name||'collectionneur·euse')} !</h1><p>Ta collection, tes prochaines découvertes et les objectifs du Club réunis au même endroit.</p><div class="dashboard-welcome-actions"><button class="btn" data-go="booster">✦ Ouvrir un booster</button><button class="btn alt" data-go="collection">Voir ma collection</button></div></div><div class="dashboard-welcome-mark" aria-hidden="true"><span>G</span><small>CLUB</small></div></section>
+ <section class="dashboard-free-booster"><div><span class="eyebrow">CADEAU DU CLUB</span><h2>${freeBooster?esc(freeBooster.name):'Ton prochain booster'}</h2><p>${!freeBooster?'Découvre les boosters disponibles dans le Club.':freeRemaining>0?'Prochaine disponibilité dans '+formatCooldown(freeRemaining)+'.':'Ton booster gratuit est prêt à être récupéré.'}</p></div><button class="btn" type="button" data-go="booster">${freeRemaining>0?'Voir le compte à rebours':'Découvrir le booster gratuit'}</button></section>
  <div class="dashboard-grid">
  <div class="dash-tile"><span>Cartes découvertes</span><strong>${owned}</strong><small>sur ${cards.length} cartes au catalogue</small></div>
  <div class="dash-tile"><span>Exemplaires</span><strong>${items.length}</strong><small>${dupes} doublon(s) au total</small></div>
@@ -1172,7 +1190,15 @@ tab=tab||'stats';const T={stats:'Stats',reports:'Signalements',users:'Comptes',c
 const ok={stats:1,reports:R!=='catalog_manager',users:R!=='catalog_manager',cards:R!=='moderator',series:R!=='moderator',venues:R!=='moderator',assistant:R!=='moderator',boosters:R!=='moderator',audit:R==='admin'};
 const bar=`<div class="tabs">${Object.keys(T).filter(k=>ok[k]).map(k=>`<button class="btn${k===tab?'':' alt'}" data-t="${k}">${T[k]}</button>`).join('')}</div><div id="am"></div>`;
 const fail=e=>msg(e.message,1);let body='';
-if(tab==='stats'){const {data,error}=await sb.rpc('admin_stats');body=error?fail(error):`<div class="admin-stat-grid">${Object.entries(data||{}).map(([k,v])=>{const key=k.toLowerCase(),icon=/user|player|profil/.test(key)?'👥':/card|carte|collection/.test(key)?'🃏':/booster|pack/.test(key)?'🎁':/trade|exchange|echange/.test(key)?'🤝':/message|chat/.test(key)?'✉':/report|signal/.test(key)?'⚑':/event|mission/.test(key)?'✦':'◈';const value=typeof v==='number'?v.toLocaleString('fr-FR'):String(v??'—');return `<article class="admin-stat-tile"><span class="admin-stat-icon" aria-hidden="true">${icon}</span><span class="admin-stat-label">${esc(k.replace(/_/g,' '))}</span><strong>${esc(value)}</strong></article>`}).join('')||msg('Aucune statistique disponible.')}</div>`}
+if(tab==='stats'){
+ const {data,error}=await sb.rpc('admin_stats');
+ if(error)body=fail(error);
+ else{
+  const entries=Object.entries(data||{}),numeric=entries.filter(([,v])=>typeof v==='number'&&Number.isFinite(v)),max=Math.max(1,...numeric.map(([,v])=>Math.abs(v)));
+  body='<div class="admin-stat-grid">'+(entries.map(([k,v])=>{const key=k.toLowerCase(),icon=/user|player|profil/.test(key)?'👥':/card|carte|collection/.test(key)?'🃏':/booster|pack/.test(key)?'🎁':/trade|exchange|echange/.test(key)?'🤝':/message|chat/.test(key)?'✉':/report|signal/.test(key)?'⚑':/event|mission/.test(key)?'✦':'◈',value=typeof v==='number'?v.toLocaleString('fr-FR'):String(v??'—');return '<article class="admin-stat-tile"><span class="admin-stat-icon" aria-hidden="true">'+icon+'</span><span class="admin-stat-label">'+esc(k.replace(/_/g,' '))+'</span><strong>'+esc(value)+'</strong></article>'}).join('')||msg('Aucune statistique disponible.'))+'</div>';
+  if(numeric.length)body+='<section class="admin-stat-chart"><h3>Vue comparative</h3><div class="admin-stat-bars">'+numeric.map(([k,v])=>{const width=Math.max(0,Math.round(Math.abs(v)/max*100));return '<div class="admin-stat-bar"><span class="admin-stat-bar-label">'+esc(k.replace(/_/g,' '))+'</span><div class="admin-stat-bar-track" role="progressbar" aria-label="'+esc(k.replace(/_/g,' '))+'" aria-valuemin="0" aria-valuemax="'+max+'" aria-valuenow="'+Math.abs(v)+'"><div class="admin-stat-bar-fill" style="width:'+width+'%"></div></div><strong class="admin-stat-bar-value">'+esc(Number(v).toLocaleString('fr-FR'))+'</strong></div>'}).join('')+'</div></section>';
+ }
+}
 if(tab==='reports'){const {data,error}=await sb.rpc('admin_reports');body=error?fail(error):(data.length?'':msg('Aucun signalement.'))+data.map(r=>`<div class="box" style="max-width:none;margin:10px 0"><b>${esc(r.reported)}</b> signalé par ${esc(r.reporter)} · ${esc(r.status)}<br><i>« ${esc(r.body)} »</i><br>Motif : ${esc(r.reason)}<br>${r.status==='open'?`<button class="btn" data-rs="reviewed" data-r="${r.id}">Traité</button> <button class="btn alt" data-rs="dismissed" data-r="${r.id}">Rejeter</button> <button class="btn alt" data-su="${esc(r.reported)}">Suspendre l’auteur</button>`:''}</div>`).join('')}
 if(tab==='users'){body=`<div class="box" style="max-width:none"><b>Suspendre / rétablir un compte</b><input id="au" placeholder="Pseudo"><input id="ar" placeholder="Motif (obligatoire)"><button class="btn" id="asu">Suspendre</button> <button class="btn alt" id="arl">Rétablir</button></div>${R==='admin'?`<div class="box" style="max-width:none"><b>Récompense administrative (1 à 1000 💰)</b><input id="gu" placeholder="Pseudo"><input id="ga" type="number" min="1" max="1000" placeholder="Montant"><input id="gr" value="Récompense administrative" minlength="5" placeholder="Motif (5 caractères min.)"><button class="btn" id="gb">Créditer</button></div>`:''}`}
 let list=[];

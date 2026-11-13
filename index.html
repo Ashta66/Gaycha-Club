@@ -592,6 +592,16 @@ body{background-image:radial-gradient(ellipse at 12% 0%,#8d5c9b14,transparent 32
 @media(hover:none){.card:hover,.collection-card-item:hover{transform:none!important}.collection-card-item:hover:before{opacity:0}}
 @media(max-width:650px){.dashboard-welcome,.collection-hero,.admin-hero{box-shadow:0 12px 30px #0004}.card:hover,.card:focus-visible{transform:none!important}.dashboard-welcome:after,.collection-hero:after,.admin-hero:after{opacity:.2}}
 @media(prefers-reduced-motion:reduce){.card,.collection-card-item:before,.dashboard-welcome:after,.collection-hero:after,.admin-hero:after{animation:none!important;transition:none!important}.card:hover,.card:focus-visible{transform:none!important}}
+
+.admin-branding-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:18px 0}
+.admin-branding-item{min-width:0;padding:18px;border:1px solid #d6b46a44;border-radius:12px;background:#ffffff04}
+.admin-branding-item h3{margin:0 0 12px}
+.admin-branding-preview{display:block;max-width:100%;width:auto;height:auto;max-height:150px;object-fit:contain;margin:8px 0 16px;padding:10px;border:1px solid #ffffff22;border-radius:10px;background:#101014}
+.admin-favicon-preview{width:112px;height:112px;object-fit:contain}
+.admin-branding-empty{display:grid;place-items:center;min-height:112px;margin:8px 0 16px;border:1px dashed #ffffff35;border-radius:10px;color:var(--gold);font-family:Anton,sans-serif;font-size:24px;letter-spacing:.08em}
+.admin-branding-item small{display:block;color:var(--mut);font-size:12px;margin-top:8px}
+.admin-branding-item label{display:block;margin-top:10px}
+@media(max-width:650px){.admin-branding-grid{grid-template-columns:1fr}}
 </style></head><body>
 <header><button class="logo logo-home" type="button" data-v="dashboard" data-brand-logo aria-label="Gaycha Club — accueil" title="Retour à l’accueil"><span data-brand-text>GAYCHA<small>CLUB</small></span></button>
 <nav aria-label="Navigation principale"><button class="btn alt" data-v="collection">Collection</button><button class="btn alt" data-v="booster">Boosters</button><button class="btn alt" data-v="notifications">Messages</button><button class="btn alt" data-v="market">Marché</button><button class="btn alt" data-v="friends">Communauté</button><button class="btn alt" data-v="admin" id="nadm" hidden>Administration</button></nav>

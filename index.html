@@ -1484,7 +1484,7 @@ if(!matchMedia('(prefers-reduced-motion:reduce)').matches){t.onpointermove=e=>{c
 $('zc').onclick=()=>zoom.close()}
 zoom.addEventListener('click',e=>{if(e.target===zoom)zoom.close()});
 document.addEventListener('click',e=>{const c=e.target.closest('.card[data-cid]');if(c&&!c.closest('dialog'))openZoom(c.dataset.cid,c.dataset.ownedCount===''?null:Number(c.dataset.ownedCount))});
-document.addEventListener('keydown',e=>{if(e.key==='Enter'){const c=document.activeElement;if(c&&c.matches&&c.matches('.card[data-cid]')&&!c.closest('dialog'))openZoom(c.dataset.cid)}});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'){const c=document.activeElement;if(c&&c.matches&&c.matches('.card[data-cid]')&&!c.closest('dialog'))openZoom(c.dataset.cid,c.dataset.ownedCount===''?null:Number(c.dataset.ownedCount))}});
 
 
 /* ===== Tableau de bord personnel ===== */

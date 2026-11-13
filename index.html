@@ -1070,9 +1070,11 @@ async function dashboard(){
  app.querySelectorAll('[data-dashboard-mission]').forEach(b=>b.onclick=async()=>{
   if(busy)return;
   busy=true;b.disabled=true;
-  const {error}=await sb.rpc('claim_mission',{p_slug:b.dataset.dashboardMission});
-  busy=false;
-  if(error){const target=$('dashboard-mission-msg');if(target)target.innerHTML=msg(error.message,1);b.disabled=false;return}
+  let error=null;
+  try{const result=await sb.rpc('claim_mission',{p_slug:b.dataset.dashboardMission});error=result.error}
+  catch(e){error=e}
+  finally{busy=false}
+  if(error){const target=$('dashboard-mission-msg');if(target)target.innerHTML=msg(error.message||'Impossible de réclamer la récompense.',1);b.disabled=false;return}
   await refresh();dashboard();
  });
 }

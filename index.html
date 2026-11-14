@@ -1766,6 +1766,8 @@ if(tab==='audit'){
   $('audit-search').addEventListener('input',drawAudit);$('audit-action').addEventListener('change',drawAudit);drawAudit();
  }
 }
+
+app.innerHTML=`<section class="admin-hero"><div><span class="eyebrow">ESPACE STAFF · GAYCHA CLUB</span><h1>Administration</h1><p>Gère le catalogue, les lieux, les séries et la vie du Club depuis un espace unifié.</p></div><div class="admin-hero-mark" aria-hidden="true">⚙</div></section><div class="admin-section-caption"><span class="eyebrow">ESPACE DE TRAVAIL</span><strong>${esc(T[tab]||'Administration')}</strong><span>Choisis une rubrique pour continuer.</span></div><div class="admin-tabs-wrap">${bar}</div><section class="admin-content">${body}</section>`;
 if(tab==='users'){
  const searchButton=$('admin-account-search-button'),searchInput=$('admin-account-search');
  if(searchButton&&searchInput)searchButton.onclick=()=>admin('users',1,searchInput.value.trim());
@@ -1780,7 +1782,7 @@ if(tab==='users'){
   const {error}=await sb.rpc('admin_grant_coins',{p_username:account.username,p_amount:amount,p_reason:reason});
   button.disabled=false;
   if(error){if(status)status.textContent='Échec : '+error.message;return}
-  await admin('users',currentPage,searchTerm);
+  await admin('users',Math.max(1,Number(page)||1),searchTerm);
  });
  app.querySelectorAll('[data-account-booster]').forEach(button=>button.onclick=async()=>{
   const id=button.dataset.accountBooster,account=accountsForAction.find(a=>a.id===id);
@@ -1791,7 +1793,7 @@ if(tab==='users'){
   const {error}=await sb.rpc('admin_grant_booster',{p_username:account.username,p_slug:slug,p_quantity:quantity,p_reason:reason});
   button.disabled=false;
   if(error){if(status)status.textContent='Échec : '+error.message;return}
-  await admin('users',currentPage,searchTerm);
+  await admin('users',Math.max(1,Number(page)||1),searchTerm);
  });
  app.querySelectorAll('[data-account-suspension]').forEach(button=>button.onclick=async()=>{
   const id=button.dataset.accountSuspension,account=accountsForAction.find(a=>a.id===id),suspend=button.dataset.suspend==='true',reason=$('acc-suspension-reason-'+id)?.value.trim()||'',status=$('account-action-'+id);
@@ -1801,11 +1803,10 @@ if(tab==='users'){
   const {error}=await sb.rpc('admin_set_suspension',{p_username:account.username,p_suspend:suspend,p_reason:reason});
   button.disabled=false;
   if(error){if(status)status.textContent='Échec : '+error.message;return}
-  await admin('users',currentPage,searchTerm);
+  await admin('users',Math.max(1,Number(page)||1),searchTerm);
  });
 }
 
-app.innerHTML=`<section class="admin-hero"><div><span class="eyebrow">ESPACE STAFF · GAYCHA CLUB</span><h1>Administration</h1><p>Gère le catalogue, les lieux, les séries et la vie du Club depuis un espace unifié.</p></div><div class="admin-hero-mark" aria-hidden="true">⚙</div></section><div class="admin-section-caption"><span class="eyebrow">ESPACE DE TRAVAIL</span><strong>${esc(T[tab]||'Administration')}</strong><span>Choisis une rubrique pour continuer.</span></div><div class="admin-tabs-wrap">${bar}</div><section class="admin-content">${body}</section>`;
 if(tab==='branding'){
  const uploadBrandAsset=async(file,kind)=>{
   if(!file)return null;

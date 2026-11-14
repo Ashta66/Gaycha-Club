@@ -1674,7 +1674,7 @@ async function events(){
 }
 
 /* ===== Administration (les droits sont vérifiés par le serveur) ===== */
-async function admin(tab){const R=profile?.role;if(!['admin','moderator','catalog_manager'].includes(R))return app.innerHTML=msg('Accès réservé au staff.',1);
+async function admin(tab,page=1,searchTerm=''){const R=profile?.role;if(!['admin','moderator','catalog_manager'].includes(R))return app.innerHTML=msg('Accès réservé au staff.',1);
 tab=tab||'stats';const T={stats:'Stats',reports:'Signalements',users:'Comptes',cards:'Catalogue',series:'Séries',venues:'Lieux LGBTQ+',assistant:'Assistant IA',boosters:'Boosters',missions:'Missions',branding:'Logos du site',audit:'Audit'};
 const ok={stats:1,reports:R!=='catalog_manager',users:R!=='catalog_manager',cards:R!=='moderator',series:R!=='moderator',venues:R!=='moderator',assistant:R!=='moderator',boosters:R!=='moderator',missions:R==='admin',branding:R==='admin',audit:R==='admin'};
 const bar=`<div class="tabs">${Object.keys(T).filter(k=>ok[k]).map(k=>`<button class="btn${k===tab?'':' alt'}" data-t="${k}">${T[k]}</button>`).join('')}</div><div id="am"></div>`;
@@ -1689,7 +1689,33 @@ if(tab==='stats'){
  }
 }
 if(tab==='reports'){const {data,error}=await sb.rpc('admin_reports');body=error?fail(error):(data.length?'':msg('Aucun signalement.'))+data.map(r=>`<div class="box" style="max-width:none;margin:10px 0"><b>${esc(r.reported)}</b> signalé par ${esc(r.reporter)} · ${esc(r.status)}<br><i>« ${esc(r.body)} »</i><br>Motif : ${esc(r.reason)}<br>${r.status==='open'?`<button class="btn" data-rs="reviewed" data-r="${r.id}">Traité</button> <button class="btn alt" data-rs="dismissed" data-r="${r.id}">Rejeter</button> <button class="btn alt" data-su="${esc(r.reported)}">Suspendre l’auteur</button>`:''}</div>`).join('')}
-if(tab==='users'){body=`<div class="box" style="max-width:none"><b>Suspendre / rétablir un compte</b><input id="au" placeholder="Pseudo"><input id="ar" placeholder="Motif (obligatoire)"><button class="btn" id="asu">Suspendre</button> <button class="btn alt" id="arl">Rétablir</button></div>${R==='admin'?`<div class="box" style="max-width:none"><b>Récompense administrative (1 à 1000 💰)</b><input id="gu" placeholder="Pseudo"><input id="ga" type="number" min="1" max="1000" placeholder="Montant"><input id="gr" value="Récompense administrative" minlength="5" placeholder="Motif (5 caractères min.)"><button class="btn" id="gb">Créditer</button></div>`:''}`}
+let accountsForAction=[];
+if(tab==='users'){
+ const pageSize=25, currentPage=Math.max(1,Number(page)||1), offset=(currentPage-1)*pageSize;
+ const [accountResult,boosterResult]=await Promise.all([
+  sb.rpc('admin_list_accounts',{p_limit:pageSize,p_offset:offset,p_search:searchTerm||null}),
+  sb.from('booster_types').select('slug,name').order('price').order('name')
+ ]);
+ if(accountResult.error)body=fail(accountResult.error);
+ else{
+  const payload=accountResult.data||{},accounts=Array.isArray(payload.accounts)?payload.accounts:[],total=Number(payload.total||0),pages=Math.max(1,Math.ceil(total/pageSize)),boosterTypes=boosterResult.data||[];
+  accountsForAction=accounts;
+  const boosterOptions=boosterTypes.map(b=>'<option value="'+esc(b.slug)+'">'+esc(b.name)+'</option>').join('');
+  const roleLabels={admin:'Administrateur',moderator:'Modérateur',catalog_manager:'Gestionnaire du catalogue',user:'Membre'};
+  const rows=accounts.map(a=>{
+   const date=a.created_at?new Date(a.created_at):null,created=date&&!Number.isNaN(date.getTime())?date.toLocaleDateString('fr-FR'):'Date inconnue';
+   const inventory=Array.isArray(a.booster_inventory)?a.booster_inventory:[];
+   const inventoryLabel=inventory.length?inventory.map(x=>esc(x.name)+' × '+Number(x.quantity||0)).join(' · '):'Aucun booster en stock';
+   const canModerate=a.role!=='admin'&&(R==='admin'||a.role==='user');
+   const economy=R==='admin'?'<div class="box" style="max-width:none;margin:8px 0"><b>Ajouter des crédits</b><div class="settings-grid"><div><label>Montant (1 à 1 000)</label><input id="acc-credit-amount-'+a.id+'" type="number" min="1" max="1000" step="1" value="50"></div><div><label>Motif (5 caractères minimum)</label><input id="acc-credit-reason-'+a.id+'" maxlength="500" value="Récompense administrative"></div></div><button class="btn" type="button" data-account-credit="'+a.id+'">Créditer ce compte</button></div>'+
+    '<div class="box" style="max-width:none;margin:8px 0"><b>Offrir des boosters</b>'+(boosterResult.error?'<p class="note">Types de boosters indisponibles : '+esc(boosterResult.error.message)+'</p>':boosterTypes.length?'<div class="settings-grid"><div><label>Booster</label><select id="acc-booster-slug-'+a.id+'">'+boosterOptions+'</select></div><div><label>Quantité (1 à 20)</label><input id="acc-booster-qty-'+a.id+'" type="number" min="1" max="20" step="1" value="1"></div><div><label>Motif (5 caractères minimum)</label><input id="acc-booster-reason-'+a.id+'" maxlength="500" value="Récompense administrative"></div></div><button class="btn" type="button" data-account-booster="'+a.id+'">Offrir le booster</button>':'<p class="note">Aucun type de booster disponible.</p>')+'</div>':'';
+   const moderation=canModerate?'<div class="box" style="max-width:none;margin:8px 0"><b>Modération du compte</b><label>Motif obligatoire</label><input id="acc-suspension-reason-'+a.id+'" maxlength="500" value="Modération"><button class="btn '+(a.is_suspended?'alt':'')+'" type="button" data-account-suspension="'+a.id+'" data-suspend="'+(!a.is_suspended)+'">'+(a.is_suspended?'Rétablir le compte':'Suspendre le compte')+'</button></div>':'';
+   return '<article class="box admin-account-card" data-account-row="'+a.id+'" data-account-search="'+esc((a.username+' '+(roleLabels[a.role]||a.role)).toLocaleLowerCase('fr'))+'" style="max-width:none;margin:10px 0;padding:16px"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap"><div><strong style="font-size:1.08rem">'+esc(a.username)+'</strong><div class="note">'+esc(roleLabels[a.role]||a.role)+' · Membre depuis le '+esc(created)+'</div></div><div style="display:flex;gap:14px;flex-wrap:wrap">'+(R==='admin'?'<span><strong>'+Number(a.balance||0).toLocaleString('fr-FR')+' 💰</strong><small class="note" style="display:block">Solde</small></span><span><strong>'+Number(a.xp||0).toLocaleString('fr-FR')+' XP</strong><small class="note" style="display:block">Expérience</small></span>':'')+'<span><strong>'+(a.is_suspended?'Suspendu':'Actif')+'</strong><small class="note" style="display:block">'+(a.age_confirmed?'Âge confirmé':'Âge non confirmé')+'</small></span></div></div>'+(R==='admin'?'<p class="note" style="margin:8px 0">Boosters en stock : '+inventoryLabel+'</p>':'')+'<details style="margin-top:10px"><summary style="cursor:pointer;font-weight:600">Gérer ce compte</summary><div style="padding-top:8px">'+economy+moderation+'<p id="account-action-'+a.id+'" class="note" role="status" aria-live="polite"></p></div></details></article>';
+  }).join('');
+  const pager='<div style="display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:12px 0"><span class="note">'+total+' compte(s) · page '+currentPage+' / '+pages+'</span><div>'+ (currentPage>1?'<button class="btn alt" type="button" data-account-page="'+(currentPage-1)+'">Précédent</button> ':'')+(currentPage<pages?'<button class="btn" type="button" data-account-page="'+(currentPage+1)+'">Suivant</button>':'')+'</div></div>';
+  body='<section class="box" style="max-width:none"><h2 style="margin-top:0">Comptes du Club</h2><p>Liste de tous les comptes, avec recherche et pagination. Les opérations de crédits et de boosters sont réservées aux administrateurs.</p><div style="display:flex;gap:8px;align-items:end;flex-wrap:wrap"><div style="flex:1;min-width:220px"><label for="admin-account-search">Rechercher un pseudo</label><input id="admin-account-search" type="search" value="'+esc(searchTerm)+'" placeholder="Pseudo du membre…"></div><button class="btn" id="admin-account-search-button" type="button">Rechercher</button></div></section>'+pager+(rows||'<div class="box" style="max-width:none">Aucun compte ne correspond à cette recherche.</div>')+pager;
+ }
+}
 if(tab==='missions'){const {data,error}=await sb.from('missions').select('*').order('kind').order('title');missionRows=data||[];body=(error?fail(error):'')+`<div class="box" style="max-width:none"><h2 id="mission-form-title" style="margin-top:0">Nouvelle mission</h2><input type="hidden" id="mission-id"><div class="settings-grid"><div><label>Slug unique</label><input id="mission-slug" maxlength="80" placeholder="mission-du-jour"></div><div><label>Titre</label><input id="mission-title" maxlength="120" placeholder="Titre de la mission"></div><div><label>Fréquence</label><select id="mission-kind"><option value="daily">Quotidienne</option><option value="weekly">Hebdomadaire</option></select></div><div><label>Objectif suivi</label><select id="mission-metric"><option value="login">Connexion au Club</option><option value="boosters_opened">Boosters ouverts</option></select></div><div><label>Objectif chiffré</label><input id="mission-goal" type="number" min="1" step="1" value="1"></div><div><label>Récompense 💰</label><input id="mission-reward" type="number" min="0" step="1" value="10"></div><div><label>Récompense XP</label><input id="mission-xp" type="number" min="0" step="1" value="5"></div></div><label><input id="mission-active" type="checkbox" checked style="width:auto"> Mission active</label><p class="note">Désactiver une mission ne supprime pas son historique. Les récompenses déjà réclamées restent conservées.</p><button class="btn" id="mission-save" type="button">Enregistrer la mission</button> <button class="btn alt" id="mission-new" type="button">Nouvelle mission</button><p id="mission-message" aria-live="polite"></p></div><div class="box" style="max-width:none"><h3>Missions configurées</h3><table><tr><th>Mission</th><th>Type</th><th>Objectif</th><th>Récompense</th><th>État</th><th></th></tr>${missionRows.map(m=>`<tr><td>${esc(m.title)}<br><small>${esc(m.slug)}</small></td><td>${m.kind==='daily'?'Quotidienne':'Hebdomadaire'}</td><td>${m.metric==='login'?'Connexion':m.goal+' booster(s)'}</td><td>${m.reward} 💰 · ${m.xp_reward} XP</td><td>${m.active?'Active':'Inactive'}</td><td><button class="btn alt" type="button" data-mission-edit="${m.id}">Modifier</button></td></tr>`).join('')}</table></div>`}
 let list=[];
 if(tab==='cards'||tab==='assistant'){const [s,c]=await Promise.all([sb.from('series').select('id,name').order('name'),sb.from('cards').select('id,series_id,number,name,rarity,spec,anecdote,bio,image_path,status,is_fictional,rights_checked,series(name,color_a,color_b),venue_sources(venue_type,city,country,official_url,description_source_url,image_source_url,image_license,verification_status,notes)').order('name')]);list=c.data||[];
@@ -1740,6 +1766,45 @@ if(tab==='audit'){
   $('audit-search').addEventListener('input',drawAudit);$('audit-action').addEventListener('change',drawAudit);drawAudit();
  }
 }
+if(tab==='users'){
+ const searchButton=$('admin-account-search-button'),searchInput=$('admin-account-search');
+ if(searchButton&&searchInput)searchButton.onclick=()=>admin('users',1,searchInput.value.trim());
+ if(searchInput)searchInput.onkeydown=e=>{if(e.key==='Enter')admin('users',1,searchInput.value.trim())};
+ app.querySelectorAll('[data-account-page]').forEach(button=>button.onclick=()=>admin('users',Number(button.dataset.accountPage),searchTerm));
+ app.querySelectorAll('[data-account-credit]').forEach(button=>button.onclick=async()=>{
+  const id=button.dataset.accountCredit,account=accountsForAction.find(a=>a.id===id);
+  const amount=Number($('acc-credit-amount-'+id)?.value),reason=$('acc-credit-reason-'+id)?.value.trim()||'',status=$('account-action-'+id);
+  if(!account||!Number.isInteger(amount)||amount<1||amount>1000||reason.length<5||reason.length>500){if(status)status.textContent='Vérifie le montant (1 à 1 000) et le motif (5 à 500 caractères).';return}
+  if(!confirm('Ajouter '+amount+' crédits au compte '+account.username+' ?'))return;
+  button.disabled=true;if(status)status.textContent='Créditation en cours…';
+  const {error}=await sb.rpc('admin_grant_coins',{p_username:account.username,p_amount:amount,p_reason:reason});
+  button.disabled=false;
+  if(error){if(status)status.textContent='Échec : '+error.message;return}
+  await admin('users',currentPage,searchTerm);
+ });
+ app.querySelectorAll('[data-account-booster]').forEach(button=>button.onclick=async()=>{
+  const id=button.dataset.accountBooster,account=accountsForAction.find(a=>a.id===id);
+  const slug=$('acc-booster-slug-'+id)?.value,quantity=Number($('acc-booster-qty-'+id)?.value),reason=$('acc-booster-reason-'+id)?.value.trim()||'',status=$('account-action-'+id);
+  if(!account||!slug||!Number.isInteger(quantity)||quantity<1||quantity>20||reason.length<5||reason.length>500){if(status)status.textContent='Vérifie le booster, la quantité (1 à 20) et le motif (5 à 500 caractères).';return}
+  if(!confirm('Offrir '+quantity+' booster(s) à '+account.username+' ?'))return;
+  button.disabled=true;if(status)status.textContent='Distribution en cours…';
+  const {error}=await sb.rpc('admin_grant_booster',{p_username:account.username,p_slug:slug,p_quantity:quantity,p_reason:reason});
+  button.disabled=false;
+  if(error){if(status)status.textContent='Échec : '+error.message;return}
+  await admin('users',currentPage,searchTerm);
+ });
+ app.querySelectorAll('[data-account-suspension]').forEach(button=>button.onclick=async()=>{
+  const id=button.dataset.accountSuspension,account=accountsForAction.find(a=>a.id===id),suspend=button.dataset.suspend==='true',reason=$('acc-suspension-reason-'+id)?.value.trim()||'',status=$('account-action-'+id);
+  if(!account||reason.length<3||reason.length>500){if(status)status.textContent='Indique un motif de 3 à 500 caractères.';return}
+  if(!confirm((suspend?'Suspendre':'Rétablir')+' le compte '+account.username+' ?'))return;
+  button.disabled=true;if(status)status.textContent='Mise à jour en cours…';
+  const {error}=await sb.rpc('admin_set_suspension',{p_username:account.username,p_suspend:suspend,p_reason:reason});
+  button.disabled=false;
+  if(error){if(status)status.textContent='Échec : '+error.message;return}
+  await admin('users',currentPage,searchTerm);
+ });
+}
+
 app.innerHTML=`<section class="admin-hero"><div><span class="eyebrow">ESPACE STAFF · GAYCHA CLUB</span><h1>Administration</h1><p>Gère le catalogue, les lieux, les séries et la vie du Club depuis un espace unifié.</p></div><div class="admin-hero-mark" aria-hidden="true">⚙</div></section><div class="admin-section-caption"><span class="eyebrow">ESPACE DE TRAVAIL</span><strong>${esc(T[tab]||'Administration')}</strong><span>Choisis une rubrique pour continuer.</span></div><div class="admin-tabs-wrap">${bar}</div><section class="admin-content">${body}</section>`;
 if(tab==='branding'){
  const uploadBrandAsset=async(file,kind)=>{

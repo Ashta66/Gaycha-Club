@@ -1509,9 +1509,8 @@ async function universe(){
 async function dashboard(){
  if(!user)return auth();
  app.innerHTML='<h1>Mon tableau de bord</h1><p>Chargement de ton espace…</p>';
- const [ir,lr,mr,sr,ar,br,fr,cr]=await Promise.all([
+ const [ir,mr,sr,ar,br,fr,cr]=await Promise.all([
   sb.from('card_instances').select('card_id,acquired_at').order('acquired_at',{ascending:false}),
-  sb.from('ledger').select('delta,reason,created_at,balance_after').order('created_at',{ascending:false}).limit(5),
   sb.rpc('my_missions'),
   sb.from('series').select('id,name'),
   sb.rpc('sync_user_achievements'),
@@ -1527,7 +1526,6 @@ async function dashboard(){
  const freeRemaining=freeBooster&&freeLast?Math.max(0,new Date(freeLast.created_at).getTime()+Number(freeBooster.cooldown_hours||0)*3600000-Date.now()):0;
  const recentCards=[...new Set(items.map(x=>x.card_id))].slice(0,3).map(id=>cards.find(c=>c.id===id)).filter(Boolean);
  const month=items.filter(x=>x.acquired_at&&new Date(x.acquired_at)>new Date(Date.now()-30*86400000)).length;
- const recent=(lr.data||[]).map(x=>({date:x.created_at,label:x.reason||'Mouvement de monnaie',value:Number(x.delta||0)}));
  const achievedKeys=new Set((ar.data||[]).map(x=>x.achievement_key));
  const missionCards=(mr.data||[]).slice(0,4).map(m=>{
   const goal=Math.max(1,Number(m.goal||1));
@@ -1563,7 +1561,7 @@ async function dashboard(){
  <div class="section-panel dashboard-shortcuts"><div class="section-heading"><div><span class="eyebrow">ACCÈS RAPIDES</span><h2 style="margin-top:4px">Reprendre ma partie</h2></div><span class="section-heading-note">Tout est à portée de main</span></div><div class="tabs"><button class="btn alt" data-go="stats">▤ Mes statistiques</button><button class="btn alt" data-go="history">◷ Mon historique</button><button class="btn alt" data-go="missions">✧ Mes missions</button><button class="btn alt" data-go="friends">♡ Communauté</button></div></div>
  <div class="section-panel"><div class="section-heading"><div><span class="eyebrow">TES OBJECTIFS</span><h2 style="margin-top:4px">Succès de collection</h2></div><span class="section-heading-note">${milestones.filter(a=>a.unlocked).length} / ${milestones.length} débloqués</span></div><div class="achievement-grid">${milestones.map(a=>`<div class="achievement ${a.unlocked?'unlocked':''}"><div class="medal">${a[1]}</div><b>${esc(a[2])}</b><p class="muted">${esc(a[4])}</p><span>${a.unlocked?'Débloqué ✓':'À débloquer'}</span></div>`).join('')}</div></div>
  <div class="section-panel dashboard-missions"><div class="section-heading"><div><span class="eyebrow">À FAIRE AUJOURD’HUI</span><h2 style="margin-top:4px">Missions du moment</h2></div><button class="btn alt" data-go="missions">Toutes les missions →</button></div><div id="dashboard-mission-msg" aria-live="polite"></div>${mr.error?msg('Les missions ne sont pas disponibles pour le moment.'):missionCards||msg('Aucune mission active pour le moment.')}</div>
- <div class="section-panel"><div class="section-heading"><div><span class="eyebrow">TON PORTE-MONNAIE</span><h2 style="margin-top:4px">Derniers mouvements</h2></div><button class="btn alt" data-go="history">Voir l’historique →</button></div>${lr.error?msg('Historique de monnaie indisponible.'):recent.length?recent.map(x=>`<div class="history-row"><time>${x.date?new Date(x.date).toLocaleDateString('fr-FR'):''}</time><span>${esc(x.label)}</span><span class="history-value ${x.value>=0?'positive':'negative'}">${x.value>0?'+':''}${x.value.toLocaleString('fr-FR')} 💰</span></div>`).join(''):'Aucun mouvement enregistré pour le moment.'}</div>`;
+`;
  app.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
  app.querySelectorAll('[data-dashboard-mission]').forEach(b=>b.onclick=async()=>{
   if(busy)return;

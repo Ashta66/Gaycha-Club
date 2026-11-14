@@ -982,6 +982,63 @@ dialog .btn{max-width:100%}
  .mobile-bottom-nav{gap:1px;padding-left:4px;padding-right:4px}
 }
 
+/* ===== LOT 2 — Classeur interactif et finitions par rareté ===== */
+.binder-series{margin:22px 0 30px;perspective:1200px}
+.binder-page{
+ position:relative;overflow:hidden;padding:clamp(16px,2.8vw,28px) clamp(14px,2.5vw,26px) 18px 38px;
+ border:1px solid rgba(228,196,119,.36);border-radius:20px;
+ background:
+  radial-gradient(ellipse at 95% 2%,rgba(185,164,244,.13),transparent 35%),
+  radial-gradient(ellipse at 0% 100%,rgba(241,138,185,.08),transparent 34%),
+  linear-gradient(145deg,#24212b 0%,#17161e 48%,#111117 100%);
+ box-shadow:0 20px 46px rgba(0,0,0,.34),inset 0 1px rgba(255,255,255,.08);
+ animation:binder-page-in .28s ease both;
+}
+.binder-page:before{
+ content:"";position:absolute;left:0;top:0;bottom:0;width:23px;
+ border-right:1px solid rgba(228,196,119,.28);
+ background:
+  radial-gradient(circle at 11px 28px,#09090d 0 5px,#d6b46a 5.5px 6.5px,transparent 7px) 0 0/23px 64px repeat-y,
+  linear-gradient(90deg,#3a3440,#17151d);
+ box-shadow:inset -5px 0 12px rgba(0,0,0,.3);
+}
+.binder-page-head{display:flex;align-items:end;justify-content:space-between;gap:12px;padding-bottom:13px;margin-bottom:16px;border-bottom:1px solid rgba(228,196,119,.22)}
+.binder-kicker{font-size:9px;font-weight:800;letter-spacing:.2em;color:var(--gc-gold)}
+.binder-page-head h3{margin:5px 0 0;font-size:clamp(20px,2.6vw,27px);color:var(--gc-text)}
+.binder-page-meta{display:flex;flex-direction:column;align-items:flex-end;gap:5px;color:var(--gc-muted);font-size:11px;white-space:nowrap}
+.binder-page-meta b{color:var(--gc-gold-light);letter-spacing:.1em}
+.binder-page-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:stretch}
+.binder-page-grid .collection-card-item{min-width:0;padding:7px;background:rgba(7,7,12,.55);border-color:rgba(228,196,119,.18)}
+.binder-page-grid .collection-card-item .btn{font-size:11px;padding:8px 7px}
+.binder-slot{display:grid;place-items:center;min-width:0;aspect-ratio:2/3;border:1px dashed rgba(228,196,119,.2);border-radius:14px;background:linear-gradient(145deg,rgba(255,255,255,.025),rgba(0,0,0,.12));color:rgba(244,240,232,.3);font-size:10px;letter-spacing:.08em;text-align:center}
+.binder-page-foot{display:flex;justify-content:space-between;gap:12px;margin-top:16px;padding-top:10px;border-top:1px solid rgba(255,255,255,.08);color:rgba(170,166,178,.65);font-size:9px;font-weight:800;letter-spacing:.16em}
+.binder-page-controls{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:12px 2px 0;color:var(--gc-muted);font-size:12px}
+.binder-page-controls .btn{min-height:38px;padding:8px 12px}
+.binder-page-controls .btn:disabled{opacity:.32;cursor:not-allowed;transform:none;box-shadow:none}
+@keyframes binder-page-in{from{opacity:.7;transform:rotateY(-1.5deg) translateY(5px)}to{opacity:1;transform:none}}
+.card.r-commun{background:linear-gradient(#0b0b10,#0b0b10) padding-box,linear-gradient(135deg,#e0e2e9,#777f8e,#f8f8ff) border-box!important;box-shadow:0 7px 18px #0006!important}
+.card.r-peu_commun{background:linear-gradient(#0b0b10,#0b0b10) padding-box,linear-gradient(135deg,#c5ffe9,#3eaa87,#8be4c9) border-box!important;box-shadow:0 0 16px rgba(92,220,174,.13),0 9px 22px #0006!important}
+.card.r-rare{background:linear-gradient(#0b0b10,#0b0b10) padding-box,linear-gradient(135deg,#d8e6ff,#5b91e8,#a8c5ff) border-box!important;box-shadow:0 0 18px rgba(110,159,255,.2),0 10px 24px #0007!important}
+.card.r-epique{background:linear-gradient(#0b0b10,#0b0b10) padding-box,linear-gradient(135deg,#ffe0fb,#bd73cf,#8f79ef) border-box!important;box-shadow:0 0 22px rgba(190,115,207,.24),0 10px 26px #0007!important}
+.card.r-legendaire{background:linear-gradient(#0b0b10,#0b0b10) padding-box,linear-gradient(135deg,#fff3be,#c68b35,#fff0a0,#f5d98d) border-box!important;box-shadow:0 0 25px rgba(228,185,84,.3),0 10px 28px #0008!important}
+.card.r-secrete{background:linear-gradient(#08080d,#08080d) padding-box,conic-gradient(from 15deg,#ff4f87,#ff9d45,#ffe16a,#73df9a,#63d8ed,#8b8aff,#e47bea,#ff4f87) border-box!important;box-shadow:0 0 28px rgba(201,167,255,.3),0 0 42px rgba(255,79,135,.12),0 12px 30px #0009!important}
+.card.r-commun .rar{color:#d6dbe5!important}
+.card.r-peu_commun .rar{color:#91e7c8!important}
+.card.r-rare .rar{color:#a9c7ff!important}
+.card.r-epique .rar{color:#e7a7f2!important}
+.card.r-legendaire .rar{color:#ffe6a0!important}
+.card.r-secrete .rar{color:#e4c7ff!important}
+@media(max-width:650px){
+ .binder-page{padding:14px 10px 14px 29px;border-radius:16px}
+ .binder-page:before{width:18px;background-size:18px 64px,18px 100%}
+ .binder-page-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .binder-page-grid .collection-card-item{padding:5px}
+ .binder-page-controls{gap:7px;flex-wrap:wrap}
+ .binder-page-controls .btn{flex:1 1 38%;font-size:11px}
+ .binder-page-controls>span{order:-1;width:100%;text-align:center}
+ .binder-page-foot{font-size:8px;letter-spacing:.1em}
+}
+@media(prefers-reduced-motion:reduce){.binder-page{animation:none}}
 </style></head><body>
 <header><button class="logo logo-home" type="button" data-v="dashboard" data-brand-logo aria-label="Gaycha Club — accueil" title="Retour à l’accueil"><span data-brand-text>GAYCHA<small>CLUB</small></span></button>
 <nav aria-label="Navigation principale"><button class="btn alt" data-v="collection">Collection</button><button class="btn alt" data-v="booster">Boosters</button><button class="btn alt" data-v="notifications">Messages</button><button class="btn alt" data-v="market">Marché</button><button class="btn alt" data-v="friends">Communauté</button><button class="btn alt" data-v="admin" id="nadm" hidden>Administration</button></nav>
@@ -1244,7 +1301,8 @@ const cnt={};data.forEach(d=>cnt[d.card_id]=(cnt[d.card_id]||0)+1);
 const own=cards.filter(c=>cnt[c.id]),duplicates=own.filter(c=>cnt[c.id]>1);
 const completion=cards.length?Math.round(own.length/cards.length*100):0;
 const seriesProgress=[...new Map(cards.map(c=>[c.series_id,c.series?.name||'Série'])).entries()].map(([id,name])=>{const total=cards.filter(c=>c.series_id===id).length,found=cards.filter(c=>c.series_id===id&&cnt[c.id]).length;return{id,name,total,found,pct:total?Math.round(found/total*100):0}}).sort((a,b)=>a.name.localeCompare(b.name,'fr'));
-app.innerHTML=`<section class="collection-hero"><div><span class="eyebrow">ALBUM PERSONNEL</span><h1>Ma collection</h1><p>Chaque carte compte. Suis tes séries, retrouve tes pépites et gère tes doublons.</p><div class="collection-hero-stats"><span><b>${own.length}</b> cartes uniques</span><span><b>${data.length}</b> exemplaires</span><span><b>${duplicates.reduce((n,c)=>n+cnt[c.id]-1,0)}</b> doublons</span></div></div><div class="collection-hero-score"><strong>${completion}%</strong><span>album complété</span><div class="collection-progress-track"><span style="width:${completion}%"></span></div></div></section><section class="collection-progress-panel" aria-labelledby="collection-progress-title"><div class="collection-progress-head"><div><h2 id="collection-progress-title" style="margin:0">Progression de l’album</h2><p class="muted">Complète chaque série, carte après carte.</p></div><div class="collection-progress-total"><strong>${completion}%</strong><span>de l’album</span></div></div><div class="collection-progress-track" role="progressbar" aria-label="Progression totale de la collection" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${completion}"><span style="width:${completion}%"></span></div><div class="collection-series-progress">${seriesProgress.map(x=>`<div class="collection-series-item"><div class="collection-series-heading"><b>${esc(x.name)}</b><span>${x.found}/${x.total}</span></div><div class="collection-progress-track small" role="progressbar" aria-label="Progression ${esc(x.name)}" aria-valuemin="0" aria-valuemax="${x.total}" aria-valuenow="${x.found}"><span style="width:${x.pct}%"></span></div><small>${x.pct}% complété</small></div>`).join('')}</div></section><section class="collection-library-panel"><div class="section-heading"><div><span class="eyebrow">TA BIBLIOTHÈQUE</span><h2 style="margin-top:4px">Toutes mes cartes</h2></div><span class="section-heading-note">Recherche et filtres</span></div><div class="collection-tools"><input id="collection-search" type="search" placeholder="Rechercher une carte…" aria-label="Rechercher une carte"><select id="collection-view" aria-label="Affichage de l’album"><option value="owned">Cartes obtenues</option><option value="all">Album complet</option></select><select id="collection-filter" aria-label="Filtrer la collection"><option value="all">Toutes les cartes</option><option value="duplicates">Avec doublons</option><option value="unique">Un seul exemplaire</option><option value="missing">Cartes à découvrir</option></select><select id="collection-rarity" aria-label="Filtrer par rareté"><option value="all">Toutes les raretés</option><option value="commun">Commun</option><option value="peu_commun">Peu commun</option><option value="rare">Rare</option><option value="epique">Épique</option><option value="legendaire">Légendaire</option><option value="secrete">Secrète</option></select><select id="collection-series" aria-label="Filtrer par série"><option value="all">Toutes les séries</option>${seriesProgress.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('')}</select><select id="collection-sort" aria-label="Trier la collection"><option value="number">Trier : numéro</option><option value="name">Trier : nom</option><option value="rarity">Trier : rareté</option></select><select id="collection-group" aria-label="Organisation de l’album"><option value="series">Album par série</option><option value="all">Vue globale</option></select></div><div class="trade-count" id="collection-count"></div>${own.length?'':msg('Votre album est vide. Ouvrez un booster.')}<div class="collection-card-grid-host" id="collection-grid"></div><div id="cm"></div></section>`;
+app.innerHTML=`<section class="collection-hero"><div><span class="eyebrow">ALBUM PERSONNEL</span><h1>Ma collection</h1><p>Chaque carte compte. Suis tes séries, retrouve tes pépites et gère tes doublons.</p><div class="collection-hero-stats"><span><b>${own.length}</b> cartes uniques</span><span><b>${data.length}</b> exemplaires</span><span><b>${duplicates.reduce((n,c)=>n+cnt[c.id]-1,0)}</b> doublons</span></div></div><div class="collection-hero-score"><strong>${completion}%</strong><span>album complété</span><div class="collection-progress-track"><span style="width:${completion}%"></span></div></div></section><section class="collection-progress-panel" aria-labelledby="collection-progress-title"><div class="collection-progress-head"><div><h2 id="collection-progress-title" style="margin:0">Progression de l’album</h2><p class="muted">Complète chaque série, carte après carte.</p></div><div class="collection-progress-total"><strong>${completion}%</strong><span>de l’album</span></div></div><div class="collection-progress-track" role="progressbar" aria-label="Progression totale de la collection" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${completion}"><span style="width:${completion}%"></span></div><div class="collection-series-progress">${seriesProgress.map(x=>`<div class="collection-series-item"><div class="collection-series-heading"><b>${esc(x.name)}</b><span>${x.found}/${x.total}</span></div><div class="collection-progress-track small" role="progressbar" aria-label="Progression ${esc(x.name)}" aria-valuemin="0" aria-valuemax="${x.total}" aria-valuenow="${x.found}"><span style="width:${x.pct}%"></span></div><small>${x.pct}% complété</small></div>`).join('')}</div></section><section class="collection-library-panel"><div class="section-heading"><div><span class="eyebrow">TA BIBLIOTHÈQUE</span><h2 style="margin-top:4px">Toutes mes cartes</h2></div><span class="section-heading-note">Recherche et filtres</span></div><div class="collection-tools"><input id="collection-search" type="search" placeholder="Rechercher une carte…" aria-label="Rechercher une carte"><select id="collection-view" aria-label="Affichage de l’album"><option value="owned">Cartes obtenues</option><option value="all">Album complet</option></select><select id="collection-filter" aria-label="Filtrer la collection"><option value="all">Toutes les cartes</option><option value="duplicates">Avec doublons</option><option value="unique">Un seul exemplaire</option><option value="missing">Cartes à découvrir</option></select><select id="collection-rarity" aria-label="Filtrer par rareté"><option value="all">Toutes les raretés</option><option value="commun">Commun</option><option value="peu_commun">Peu commun</option><option value="rare">Rare</option><option value="epique">Épique</option><option value="legendaire">Légendaire</option><option value="secrete">Secrète</option></select><select id="collection-series" aria-label="Filtrer par série"><option value="all">Toutes les séries</option>${seriesProgress.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('')}</select><select id="collection-sort" aria-label="Trier la collection"><option value="number">Trier : numéro</option><option value="name">Trier : nom</option><option value="rarity">Trier : rareté</option></select><select id="collection-group" aria-label="Organisation de l’album"><option value="series">Album par série</option><option value="binder">Classeur interactif</option><option value="all">Vue globale</option></select></div><div class="trade-count" id="collection-count"></div>${own.length?'':msg('Votre album est vide. Ouvrez un booster.')}<div class="collection-card-grid-host" id="collection-grid"></div><div id="cm"></div></section>`;
+const binderPages={};
 const drawCollection=()=>{
  const q=$('collection-search').value.trim().toLocaleLowerCase('fr'),f=$('collection-filter').value,view=$('collection-view').value,rarity=$('collection-rarity').value,seriesId=$('collection-series').value,sort=$('collection-sort').value,groupMode=$('collection-group').value;
  const source=view==='all'||f==='missing'?cards:own;
@@ -1255,9 +1313,25 @@ const drawCollection=()=>{
   return(!q||hay.includes(q))&&statusMatch&&(!rarity||rarity==='all'||c.rarity===rarity)&&(!seriesId||seriesId==='all'||c.series_id===seriesId);
  });
  shown.sort((a,b)=>sort==='name'?a.name.localeCompare(b.name,'fr'):sort==='rarity'?Object.keys(RN).indexOf(b.rarity)-Object.keys(RN).indexOf(a.rarity):a.number-b.number);
- $('collection-count').textContent=shown.length+" carte(s) affichée(s)"+(view==='all'||f==='missing'?" · album complet":"");
+ $('collection-count').textContent=shown.length+" carte(s) affichée(s)"+(view==='all'||f==='missing'?" · album complet":groupMode==='binder'?" · classeur":"");
  const renderCard=c=>{const qty=cnt[c.id]||0;const actions=qty?(qty>1?"<button class='btn alt' style='width:100%;margin-top:6px' data-conv='"+c.id+"' data-n='"+(qty-1)+"'>Convertir "+(qty-1)+" doublon(s)</button>":"")+"<button class='btn alt' style='width:100%;margin-top:6px' data-sell='"+c.id+"'>Vendre</button>":"<span class='collection-missing-label'>À découvrir</span>";return "<article class='collection-card-item "+(qty?'':'is-missing')+"'>"+card(c,qty)+actions+"</article>"};
- if(groupMode==='series'){
+ if(groupMode==='binder'){
+  $('collection-grid').classList.add('is-grouped');
+  const pageSize=6;
+  const groups=seriesProgress.map(group=>({key:String(group.id??'other'),name:group.name,items:shown.filter(c=>c.series_id===group.id)})).filter(group=>group.items.length);
+  const ungrouped=shown.filter(c=>!seriesProgress.some(group=>group.id===c.series_id));
+  if(ungrouped.length)groups.push({key:'other',name:'Autres cartes',items:ungrouped});
+  $('collection-grid').innerHTML=groups.map(group=>{
+   const pages=Math.max(1,Math.ceil(group.items.length/pageSize));
+   const page=Math.min(Math.max(0,binderPages[group.key]||0),pages-1);
+   binderPages[group.key]=page;
+   const items=group.items.slice(page*pageSize,(page+1)*pageSize);
+   const slots=Array.from({length:Math.max(0,pageSize-items.length)},()=>'<div class="binder-slot" aria-hidden="true"><span>Emplacement libre</span></div>').join('');
+   return '<section class="binder-series" aria-label="Classeur : '+esc(group.name)+'"><div class="binder-page"><div class="binder-page-head"><div><span class="binder-kicker">CLASSEUR GAYCHA · ARCHIVES DU CLUB</span><h3>'+esc(group.name)+'</h3></div><div class="binder-page-meta"><span>'+group.items.length+' cartes</span><b>PAGE '+(page+1)+' / '+pages+'</b></div></div><div class="binder-page-grid">'+items.map(renderCard).join('')+slots+'</div><div class="binder-page-foot"><span>COLLECTION PRIVÉE</span><span>GAYCHA CLUB · N° '+String(page+1).padStart(2,'0')+'</span></div></div><div class="binder-page-controls"><button type="button" class="btn alt" data-binder-prev="'+esc(group.key)+'" '+(page===0?'disabled':'')+' aria-label="Page précédente de '+esc(group.name)+'">← Précédente</button><span>Page '+(page+1)+' sur '+pages+'</span><button type="button" class="btn alt" data-binder-next="'+esc(group.key)+'" '+(page>=pages-1?'disabled':'')+' aria-label="Page suivante de '+esc(group.name)+'">Suivante →</button></div></section>';
+  }).join('')||'<div class="trade-empty">Aucune carte pour ces critères.</div>';
+  $('collection-grid').querySelectorAll('[data-binder-prev]').forEach(b=>b.onclick=()=>{const key=b.dataset.binderPrev;binderPages[key]=Math.max(0,(binderPages[key]||0)-1);drawCollection()});
+  $('collection-grid').querySelectorAll('[data-binder-next]').forEach(b=>b.onclick=()=>{const key=b.dataset.binderNext;binderPages[key]=(binderPages[key]||0)+1;drawCollection()});
+ }else if(groupMode==='series'){
   $('collection-grid').classList.add('is-grouped');
   const groups=seriesProgress.map(group=>({name:group.name,items:shown.filter(c=>c.series_id===group.id)})).filter(group=>group.items.length);
   const ungrouped=shown.filter(c=>!seriesProgress.some(group=>group.id===c.series_id));

@@ -389,6 +389,14 @@ main{padding-top:clamp(20px,3vw,34px)}
 @media(prefers-reduced-motion:reduce){.achievement,.collection-card-item{transition:none}.achievement:hover,.collection-card-item:hover{transform:none}}
 
 /* ===== Design refinement 3 : progress, admin metrics and catalogue filters ===== */
+.dashboard-xp-level{margin:16px 0;padding:18px 22px;border:1px solid #b99be055;border-radius:18px;background:radial-gradient(ellipse at 8% 0%,#a88bd522,transparent 58%),linear-gradient(120deg,#211d29,#111114)}
+.dashboard-xp-level-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.dashboard-xp-level h2{margin:3px 0;font-size:21px}
+.dashboard-xp-level .xp-level-number{font-size:24px;font-weight:800;color:#d8c0ff;font-variant-numeric:tabular-nums}
+.dashboard-xp-track{height:10px;overflow:hidden;border-radius:999px;background:#ffffff16;margin:13px 0 8px}
+.dashboard-xp-track span{display:block;height:100%;width:var(--progress);border-radius:inherit;background:linear-gradient(90deg,#9c78c9,#e2c27a);transition:width .35s ease}
+.dashboard-xp-meta{display:flex;justify-content:space-between;gap:10px;color:var(--muted,#aaa69e);font-size:12px}
+@media(max-width:560px){.dashboard-xp-level{padding:16px}.dashboard-xp-meta{flex-wrap:wrap}}
 .dashboard-album-progress{padding:18px 22px;border:1px solid #d6b46a44;border-radius:18px;background:linear-gradient(110deg,#d6b46a0d,#ffffff02)}
 .dashboard-progress-value{color:var(--gc-gold-soft);font-size:24px;font-variant-numeric:tabular-nums}
 .dashboard-progress-meta{display:flex;justify-content:space-between;gap:12px;margin-top:9px;color:var(--muted,#aaa69e);font-size:12px}
@@ -1577,13 +1585,18 @@ async function dashboard(){
   ['duplicates_5','🃏','Anti-doublon',dupes>=5,'Cumuler 5 doublons'],
   ['completion','✨','Complétion',cards.length>0&&owned>=cards.length,'Découvrir tout le catalogue']
  ].map(a=>({...a,unlocked:ar.error?a[3]:achievedKeys.has(a[0])}));
+ const xpTotal=Math.max(0,Number(profile?.xp||0));
+ const xpLevel=Math.floor(xpTotal/250)+1;
+ const xpInLevel=xpTotal%250;
+ const xpProgress=Math.round(xpInLevel/250*100);
  app.innerHTML=`<section class="dashboard-welcome"><div class="dashboard-welcome-copy"><span class="eyebrow">TON ESPACE GAYCHA</span><h1>Salut, ${esc(profile?.username||user.user_metadata?.name||'collectionneur·euse')} !</h1><p>Ta collection, tes prochaines découvertes et les objectifs du Club réunis au même endroit.</p><div class="dashboard-welcome-actions"><button class="btn" data-go="booster">✦ Ouvrir un booster</button><button class="btn alt" data-go="collection">Voir ma collection</button></div></div><div class="dashboard-welcome-mark" aria-hidden="true"><span>G</span><small>CLUB</small></div></section>
  <section class="dashboard-free-booster"><div><span class="eyebrow">CADEAU DU CLUB</span><h2>${freeBooster?esc(freeBooster.name):'Ton prochain booster'}</h2><p>${!freeBooster?'Découvre les boosters disponibles dans le Club.':freeRemaining>0?'Prochaine disponibilité dans '+formatCooldown(freeRemaining)+'.':'Ton booster gratuit est prêt à être récupéré.'}</p></div><button class="btn" type="button" data-go="booster">${freeRemaining>0?'Voir le compte à rebours':'Découvrir le booster gratuit'}</button></section>
  <div class="dashboard-grid">
  <div class="dash-tile"><span>Cartes découvertes</span><strong>${owned}</strong><small>sur ${cards.length} cartes au catalogue</small></div>
  <div class="dash-tile"><span>Exemplaires</span><strong>${items.length}</strong><small>${dupes} doublon(s) au total</small></div>
  <div class="dash-tile"><span>Solde</span><strong>${Number(profile?.balance||0).toLocaleString('fr-FR')} 💰</strong><small>Monnaie virtuelle</small></div>
- <div class="dash-tile"><span>Activité récente</span><strong>${month}</strong><small>carte(s) obtenue(s) sur 30 jours</small></div><div class="dash-tile"><span>Boosters en réserve</span><strong>${boosterCount}</strong><small>${boosterCount?'Prêts à être ouverts':'À toi la prochaine découverte'}</small></div></div>
+ <div class="dash-tile"><span>Activité récente</span><strong>${month}</strong><small>carte(s) obtenue(s) sur 30 jours</small></div><div class="dash-tile"><span>Boosters en réserve</span><strong>${boosterCount}</strong><small>${boosterCount?'Prêts à être ouverts':'À toi la prochaine découverte'}</small></div>
+ <section class="dashboard-xp-level" aria-labelledby="dashboard-xp-title"><div class="dashboard-xp-level-head"><div><span class="eyebrow">TON PARCOURS AU CLUB</span><h2 id="dashboard-xp-title">Niveau ${xpLevel}</h2><small class="muted">Chaque palier représente 250 XP. Les niveaux sont un repère de progression, sans modifier les récompenses actuelles.</small></div><strong class="xp-level-number">${xpTotal.toLocaleString('fr-FR')} XP</strong></div><div class="dashboard-xp-track" role="progressbar" aria-label="Progression vers le niveau ${xpLevel+1}" aria-valuemin="0" aria-valuemax="250" aria-valuenow="${xpInLevel}"><span style="--progress:${xpProgress}%"></span></div><div class="dashboard-xp-meta"><span>${xpInLevel} / 250 XP dans ce niveau</span><span>Encore ${250-xpInLevel} XP avant le niveau ${xpLevel+1}</span></div></section>
  <section class="section-panel dashboard-album-progress" aria-labelledby="dashboard-album-title"><div class="section-heading"><div><span class="eyebrow">TA COLLECTION</span><h2 id="dashboard-album-title" style="margin-top:4px">Progression de l’album</h2></div><strong class="dashboard-progress-value">${completion}%</strong></div><div class="collection-progress-track" role="progressbar" aria-label="Progression de la collection" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${completion}"><span style="width:${completion}%"></span></div><div class="dashboard-progress-meta"><span>${owned} cartes découvertes</span><span>${Math.max(0,cards.length-owned)} restantes sur ${cards.length}</span></div></section>
  <section class="section-panel dashboard-discoveries"><div class="section-heading"><div><span class="eyebrow">TES DERNIÈRES CARTES</span><h2 style="margin-top:4px">Découvertes récentes</h2></div><button class="btn alt" data-go="collection">Voir ma collection →</button></div><div class="dashboard-discovery-grid">${recentCards.length?recentCards.map(c=>'<div class="dashboard-discovery-card">'+card(c)+'</div>').join(''):msg('Tes premières découvertes apparaîtront ici.')}</div></section>
  <div class="section-panel dashboard-shortcuts"><div class="section-heading"><div><span class="eyebrow">ACCÈS RAPIDES</span><h2 style="margin-top:4px">Reprendre ma partie</h2></div><span class="section-heading-note">Tout est à portée de main</span></div><div class="tabs"><button class="btn alt" data-go="stats">▤ Mes statistiques</button><button class="btn alt" data-go="history">◷ Mon historique</button><button class="btn alt" data-go="missions">✧ Mes missions</button><button class="btn alt" data-go="friends">♡ Communauté</button></div></div>

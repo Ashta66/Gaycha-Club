@@ -28,7 +28,7 @@ begin
     raise exception 'forbidden' using errcode = '42501';
   end if;
 
-  if p_report is null or p_status not in ('open','reviewed','dismissed') then
+  if p_report is null or p_status is null or p_status not in ('open','reviewed','dismissed') then
     raise exception 'invalid report status' using errcode = '22023';
   end if;
 

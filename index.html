@@ -1134,7 +1134,7 @@ if(user)$('profile-open').onclick=()=>openSettings();setTimeout(refreshNotificat
 async function go(v,fromHistory=false){currentView=v;if(!fromHistory&&location.hash!=='#'+v)history.pushState({view:v},'', '#'+v);try{await refresh();if(!cards.length)await loadCards()}catch(e){handleError(e,'initialisation:'+v,app);return}
 if(v!=='catalog'&&v!=='universe'&&!user){auth();$('am').innerHTML=msg('Connecte-toi pour accéder à cette rubrique.');return}
 if(v==='admin'&&!['admin','moderator','catalog_manager'].includes(profile?.role)){showState(app,'Accès réservé à l’équipe.','Ton compte ne dispose pas des autorisations nécessaires pour administrer le Club.');return}
-try{const view=({catalog,universe,collection,booster,missions,market,leaderboard,playercard:playerCard,trades,messages,notifications,admin,dashboard,stats,history,friends,events})[v];if(!view){showState(app,'Rubrique indisponible.','Cette page n’est pas encore disponible.');return}await view()}catch(error){handleError(error,'vue:'+v,app);return}
+try{const view=({catalog,universe,collection,booster,missions,market,leaderboard,playercard:playerCard,trades,messages,notifications,admin,dashboard,stats,history,friends,events,auth})[v];if(!view){showState(app,'Rubrique indisponible.','Cette page n’est pas encore disponible.');return}await view()}catch(error){handleError(error,'vue:'+v,app);return}
 const sectionMap={
  collection:{title:'Collection',items:[['collection','Ma collection'],['catalog','Catalogue'],['history','Historique'],['stats','Statistiques'],['playercard','Carte joueur']]},
  booster:{title:'Boosters',items:[['booster','Tous les boosters']]},

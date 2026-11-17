@@ -85,3 +85,21 @@ test('image-provider admin RPCs require an existing admin profile', () => {
   assert.match(sql, /image_provider\.store/);
   assert.doesNotMatch(sql, /p_api_key[^;]*log_audit/i);
 });
+
+test('personal data export and deletion request are available in account settings', () => {
+  assert.match(html, /settings-export/);
+  assert.match(html, /gaycha-club-personal-data-v1/);
+  assert.match(html, /settings-delete-confirm/);
+  assert.match(html, /request_account_deletion/);
+  assert.match(html, /sentMessages/);
+  assert.match(html, /user_preferences/);
+});
+
+test('account deletion requests are owner-scoped and do not delete accounts automatically', () => {
+  const sql = fs.readFileSync('supabase/migrations/20261118000400_account_deletion_requests.sql', 'utf8');
+  assert.match(sql, /enable row level security/i);
+  assert.match(sql, /user_id = \(select auth\.uid\(\)\)/);
+  assert.match(sql, /status = 'pending'/);
+  assert.match(sql, /public\.is_staff\(array\['admin'::public\.app_role\]\)/);
+  assert.doesNotMatch(sql, /delete from public\.profiles|delete from auth\.users/i);
+});

@@ -5,7 +5,7 @@ begin
  if auth.uid() is null then raise exception 'Authentification requise.' using errcode='42501'; end if;
  select role::text into v_role from public.profiles where id=auth.uid();
  if v_role is distinct from 'admin' then raise exception 'Accès réservé à l’administration.' using errcode='42501'; end if;
- if p_provider not in ('openai','stability','google','replicate','fal','huggingface','bfl','ideogram','together') then raise exception 'Fournisseur non pris en charge.' using errcode='22023'; end if;
+ if p_provider is null or p_provider not in ('openai','stability','google','replicate','fal','huggingface','bfl','ideogram','together') then raise exception 'Fournisseur non pris en charge.' using errcode='22023'; end if;
  v_name := 'gaycha_image_provider_' || p_provider;
  delete from vault.secrets where name=v_name;
  perform public.log_audit('image_provider.delete',jsonb_build_object('provider',p_provider));

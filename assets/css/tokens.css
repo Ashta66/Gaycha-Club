@@ -1,0 +1,3 @@
+/* Shared design tokens — keep in sync with the inline critical fallback in index.html. */
+:root{color-scheme:dark;--bg:#101010;--ch:#1D1D20;--gold:#D6B46A;--cream:#F4EBDD;--mut:#a9a39a;--rb:linear-gradient(90deg,#FF477E,#FF8A00,#FFDA45,#8CCF35,#00A9A5,#3867FF,#C9A7FF)}
+@media(forced-colors:active){:root{--bg:Canvas;--ch:Canvas;--cream:CanvasText;--gold:LinkText;--mut:GrayText}.card{border-color:CanvasText!important;color:CanvasText}.btn,.btn.alt{forced-color-adjust:auto;border:1px solid ButtonText}.card:focus-visible,button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid Highlight!important;outline-offset:3px}}

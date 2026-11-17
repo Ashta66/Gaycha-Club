@@ -67,3 +67,17 @@ test('mission rewards continue to use existing secure RPCs without schema change
   assert.match(html, /xp_reward/);
   assert.match(html, /mission-progress-copy/);
 });
+
+
+test('dashboard displays the existing XP total as a visual level progression', () => {
+  assert.match(html, /from\\('profiles'\\)\\.select\\('xp'\\)\\.eq\\('id',user\\.id\\)/);
+  assert.match(html, /Niveau \\$\\{level\\}/);
+  assert.match(html, /dashboard-xp-track/);
+  assert.match(html, /Gagner de l’XP/);
+});
+
+test('XP progression is presentation-only and retains existing achievement and mission sources', () => {
+  assert.match(html, /sync_user_achievements/);
+  assert.match(html, /xp_reward/);
+  assert.doesNotMatch(html, /update\\(\\{[^}]*xp:/);
+});

@@ -33,7 +33,8 @@ input,select,textarea{background:#101010;color:var(--cream);border:1px solid #4a
 .err{border-color:#ff5555;color:#ffb4b4}
 .tabs{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.section-shortcuts{display:flex;gap:7px;flex-wrap:wrap;margin:0 0 20px;padding:0 0 14px;border-bottom:1px solid #ffffff18}.section-shortcuts .btn{min-height:36px;padding:7px 12px;font-size:13px;border-radius:999px}
 table{width:100%;border-collapse:collapse}td,th{padding:8px;border-bottom:1px solid #333;text-align:left;font-size:14px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:22px;margin-top:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:22px;margin-top:18px}
+@media(max-width:600px){.grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr))}}
 /* ===== Cartes ===== */
 .card{--s1:#FF477E;--s2:#c4204f;--r:#8a95a3;position:relative;aspect-ratio:5/7;border-radius:14px;background:#0b0b0c;border:3px solid var(--r);padding:6px;display:flex;flex-direction:column;overflow:hidden;color:#fff;width:100%;container-type:inline-size;cursor:pointer;text-align:left;transition:transform .25s,box-shadow .25s}
 .card:hover{transform:translateY(-6px) scale(1.02)}
@@ -65,8 +66,8 @@ table{width:100%;border-collapse:collapse}td,th{padding:8px;border-bottom:1px so
 .venue-art.venue-sauna .venue-glow{background:radial-gradient(ellipse at 50% 45%,#ffca7a99,transparent 58%)}
 .venue-art.venue-sauna .venue-line{background:linear-gradient(90deg,transparent,#f4c78c,transparent);box-shadow:0 0 14px #f4c78c}
  .venue-art .venue-kind{position:absolute;top:3%;right:5%;font-size:clamp(7px,3.2cqw,10px);letter-spacing:.12em;border:1px solid #ffffff55;border-radius:99px;padding:3px 5px;background:#0005}
-.nm{font-family:Anton,sans-serif;font-size:max(11px,9cqw);letter-spacing:.03em}
-.spec{font-size:max(8.5px,5.4cqw);line-height:1.25;color:#d8d2c8}
+.nm{font-family:Anton,sans-serif;font-size:max(11px,9cqw);letter-spacing:.03em;min-height:2.3em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.spec{font-size:max(8.5px,5.4cqw);line-height:1.25;color:#d8d2c8;min-height:2.5em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .meta{display:flex;justify-content:space-between;font-size:max(8.5px,5.2cqw);margin-top:2px}.rar{color:var(--r);font-weight:600}
 .x{position:absolute;top:8.5cqw;right:2cqw;background:var(--gold);color:#101010;border-radius:10px;font:600 max(10px,5cqw) Fraunces;padding:1px 8px;z-index:2}
 .r-peu_commun{--r:#2fa57a;background-image:repeating-linear-gradient(45deg,#ffffff06 0 6px,transparent 6px 12px)}
@@ -983,18 +984,19 @@ dialog .btn{max-width:100%}
 }
 
 .trade-history-tools{margin-top:24px}.trade-history-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.trade-history-heading h2{margin:0}.trade-history-filters{display:grid;grid-template-columns:minmax(180px,2fr) minmax(140px,1fr) minmax(140px,1fr);gap:10px;margin:14px 0}.trade-history-filters label{display:grid;gap:6px;color:var(--mut);font-size:13px}.trade-history-filters input,.trade-history-filters select{margin:0}.trade-offer-card{max-width:none;margin:12px 0;border:1px solid #ffffff20;background:linear-gradient(135deg,#1c1b22,#17151d)}.trade-offer-card .trade-preview{display:flex;gap:8px;flex-wrap:wrap}.trade-offer-card .trade-preview .card{width:105px;margin:0}.trade-offer-card[hidden]{display:none!important}@media(max-width:620px){.trade-history-filters{grid-template-columns:1fr}.trade-offer-card .trade-preview .card{width:88px}}\n.trade-alert-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:12px 0 16px}.trade-alert-filter{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:44px;padding:9px 12px;border:1px solid #ffffff20;border-radius:10px;background:#ffffff06;color:var(--cream);font:600 13px 'DM Sans',sans-serif;text-align:left}.trade-alert-filter strong{display:grid;place-items:center;min-width:26px;height:26px;padding:0 6px;border-radius:99px;background:#ffffff12;color:var(--gold)}.trade-alert-filter.active{border-color:#d6b46a99;background:#d6b46a18;box-shadow:inset 0 0 0 1px #d6b46a22}.trade-status-badge{display:inline-block;margin:4px 0;padding:3px 8px;border-radius:99px;border:1px solid #ffffff28;color:var(--gold);font-size:12px}.trade-status-badge[data-status=accepted]{color:#79d6b0;border-color:#79d6b055}.trade-status-badge[data-status=declined],.trade-status-badge[data-status=expired]{color:#ff9eac;border-color:#ff477e55}@media(max-width:620px){.trade-alert-summary{grid-template-columns:repeat(2,minmax(0,1fr))}.trade-alert-filter{font-size:12px;padding:8px}}</style></head><body>
+<a class="skip-link" href="#main">Aller au contenu principal</a>
 <header><button class="logo logo-home" type="button" data-v="dashboard" data-brand-logo aria-label="Gaycha Club — accueil" title="Retour à l’accueil"><span data-brand-text>GAYCHA<small>CLUB</small></span></button>
 <nav aria-label="Navigation principale"><button class="btn alt" data-v="collection">Collection</button><button class="btn alt" data-v="booster">Boosters</button><button class="btn alt" data-v="notifications">Messages</button><button class="btn alt" data-v="market">Marché</button><button class="btn alt" data-v="friends">Communauté</button><button class="btn alt" data-v="admin" id="nadm" hidden>Administration</button></nav>
 <div class="me" id="me"></div></header>
 <nav class="mobile-bottom-nav" aria-label="Navigation principale mobile"><button class="mobile-nav-item" data-v="collection" aria-label="Collection"><span aria-hidden="true">▦</span><small>Collection</small></button><button class="mobile-nav-item" data-v="booster" aria-label="Boosters"><span aria-hidden="true">✦</span><small>Boosters</small></button><button class="mobile-nav-item" data-v="notifications" aria-label="Messages"><span aria-hidden="true">✉</span><small>Messages</small></button><button class="mobile-nav-item" data-v="market" aria-label="Marché"><span aria-hidden="true">◇</span><small>Marché</small></button><button class="mobile-nav-item" id="mobile-more-toggle" aria-expanded="false" aria-controls="mobile-more-menu" aria-label="Plus de sections"><span aria-hidden="true">☰</span><small>Plus</small></button></nav>
 <div id="mobile-more-menu" class="mobile-more-menu" hidden aria-label="Autres sections"><button data-v="dashboard">⌂ Accueil</button><button data-v="universe">✧ Univers</button><button data-v="stats">▤ Statistiques</button><button data-v="history">◷ Historique</button><button data-v="friends">♡ Amis</button><button data-v="events">✧ Événements</button><button data-v="missions">✓ Missions</button><button data-v="leaderboard">♛ Classement</button><button data-v="playercard">▣ Carte joueur</button><button id="mobile-settings-open">⚙ Paramètres</button><button data-v="admin" id="mobile-admin" hidden>⚒ Admin</button></div>
-<a class="skip-link" href="#app">Aller au contenu</a><main id="app" aria-live="polite" aria-busy="false"></main>
+<main id="main" aria-live="polite" aria-busy="false"></main>
 <script>
 // ===== CONFIG : URL et clé PUBLIQUE uniquement. Jamais la clé service_role. =====
 const SUPABASE_URL='https://tgnembausaanuazoelxw.supabase.co';
 const SUPABASE_KEY='sb_publishable_xPvkIsb6dO0DVHXrf6Gs-g_wGrdewIx';
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-const $=id=>document.getElementById(id),app=$('app');
+const $=id=>document.getElementById(id),app=$('main');
 let siteBranding={};
 function applySiteBranding(data){
  siteBranding=data||{};

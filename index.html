@@ -1131,7 +1131,7 @@ if(user){const {data:privateProfile,error:privateProfileError}=await sb.rpc('get
 $('nadm').hidden=!['admin','moderator','catalog_manager'].includes(profile?.role);
 $('me').innerHTML=user?`${user.user_metadata?.avatar_url?`<img class="profile-avatar" src="${esc(user.user_metadata.avatar_url)}" alt="Photo de profil">`:''}<button class="profile-trigger" id="profile-open" aria-label="Paramètres personnels">🌈 ${esc(profile?.username||user.email)} ▾</button><span>${profile?.balance??0} 💰</span>`:'';
 if(user)$('profile-open').onclick=()=>openSettings();setTimeout(refreshNotificationBadges,0)}
-async function go(v,fromHistory=false){currentView=v;if(!fromHistory&&location.hash!=='#'+v)history.pushState({view:v},'', '#'+v);try{await refresh();if(!cards.length)await loadCards()}catch(e){handleError(e,'initialisation:'+v,app);return}
+async function go(v,fromHistory=false){currentView=v;if(!fromHistory&&location.hash!=='#'+v)window.history.pushState({view:v},'', '#'+v);try{await refresh();if(!cards.length)await loadCards()}catch(e){handleError(e,'initialisation:'+v,app);return}
 if(v!=='catalog'&&v!=='universe'&&!user){auth();$('am').innerHTML=msg('Connecte-toi pour accéder à cette rubrique.');return}
 if(v==='admin'&&!['admin','moderator','catalog_manager'].includes(profile?.role)){showState(app,'Accès réservé à l’équipe.','Ton compte ne dispose pas des autorisations nécessaires pour administrer le Club.');return}
 try{const view=({catalog,universe,collection,booster,missions,market,leaderboard,playercard:playerCard,trades,messages,notifications,admin,dashboard,stats,history,friends,events,auth})[v];if(!view){showState(app,'Rubrique indisponible.','Cette page n’est pas encore disponible.');return}await view()}catch(error){handleError(error,'vue:'+v,app);return}
@@ -1966,6 +1966,6 @@ window.addEventListener('resize',debounce(()=>document.documentElement.style.set
 window.addEventListener('popstate',()=>{const route=location.hash.slice(1);go(gaychaRoutes.has(route)?route:'dashboard',true)});
 let refreshSnapshot=null;try{refreshSnapshot=JSON.parse(sessionStorage.getItem('gaycha-refresh-state-v1')||'null')}catch(_){}
 const hashRoute=location.hash.slice(1),startRoute=gaychaRoutes.has(hashRoute)?hashRoute:(refreshSnapshot?.view&&gaychaRoutes.has(refreshSnapshot.view)?refreshSnapshot.view:'dashboard');
-go(startRoute).then(()=>{if(!refreshSnapshot)return;Object.entries(refreshSnapshot.fields||{}).forEach(([id,value])=>{const el=$(id);if(el){el.value=value;el.dispatchEvent(new Event(el.tagName==='INPUT'?'input':'change',{bubbles:true}))}});window.scrollTo(0,refreshSnapshot.scrollY||0);try{sessionStorage.removeItem('gaycha-refresh-state-v1')}catch(_){}});
+go(startRoute).then(()=>{if(!refreshSnapshot)return;Object.entries(refreshSnapshot.fields||{}).forEach(([id,value])=>{const el=$(id);if(el){el.value=value;el.dispatchEvent(new Event(el.tagName==='INPUT'?'input':'change',{bubbles:true}))}});window.scrollTo(0,refreshSnapshot.scrollY||0);try{sessionStorage.removeItem('gaycha-refresh-state-v1')}catch(_){}}).catch(error=>handleError(error,'demarrage-application',app));
 loadSiteBranding();
 </script></body></html>

@@ -12,6 +12,36 @@ const cors = {
 const reply = (status: number, body: unknown) =>
   new Response(JSON.stringify(body), { status, headers: cors });
 
+
+const IMAGE_PROVIDERS = ["openai","stability","google","replicate","fal","huggingface","bfl","ideogram","together"] as const;
+type ImageProvider = typeof IMAGE_PROVIDERS[number];
+const toBase64 = (bytes: Uint8Array) => { let binary=""; for(let i=0;i<bytes.length;i+=0x8000) binary+=String.fromCharCode(...bytes.subarray(i,i+0x8000)); return btoa(binary); };
+const imageFromUrl = async (url:string) => { const r=await fetch(url); if(!r.ok) throw new Error("Téléchargement du visuel impossible ("+r.status+")."); const mime=r.headers.get("content-type")||"image/png"; if(!mime.startsWith("image/")) throw new Error("Le fournisseur n’a pas renvoyé une image."); return {image:toBase64(new Uint8Array(await r.arrayBuffer())),mimeType:mime.split(";")[0]}; };
+const responseError = async (r:Response,provider:string) => { const raw=(await r.text()).slice(0,500); console.error("Image provider error",provider,r.status,raw.replace(/(Bearer\s+)[^\s"]+/gi,"$1[redacted]")); if(r.status===401||r.status===403)return new Error("Clé API "+provider+" invalide ou sans accès."); if(r.status===402)return new Error("Crédits ou facturation insuffisants chez "+provider+"."); if(r.status===429)return new Error("Limite ou quota atteint chez "+provider+"."); return new Error(provider+" a refusé la génération (HTTP "+r.status+"). Vérifie le modèle, les crédits et les paramètres."); };
+const generateProviderImages = async (provider:ImageProvider,key:string,prompt:string,count:number) => {
+ const p="Portrait vertical 2:3 pour une carte à collectionner Gaycha Club, illustration originale, adulte, LGBTQ+, style éditorial premium et coloré. Aucun texte, aucune signature, aucun logo. "+prompt.slice(0,1450);
+ const images:Array<{image:string,mimeType:string}>=[];
+ if(provider==="openai"){
+  const r=await fetch("https://api.openai.com/v1/images/generations",{method:"POST",headers:{Authorization:"Bearer "+key,"Content-Type":"application/json"},body:JSON.stringify({model:"gpt-image-1",prompt:p,size:"1024x1536",quality:"medium",n:count})}); if(!r.ok)throw await responseError(r,"OpenAI"); const d=await r.json(); for(const x of d.data||[])if(typeof x.b64_json==="string")images.push({image:x.b64_json,mimeType:"image/png"});
+ }else if(provider==="stability"){
+  for(let i=0;i<count;i++){const form=new FormData();form.set("prompt",p);form.set("aspect_ratio","2:3");form.set("output_format","png");const r=await fetch("https://api.stability.ai/v2beta/stable-image/generate/core",{method:"POST",headers:{Authorization:"Bearer "+key,Accept:"application/json"},body:form});if(!r.ok)throw await responseError(r,"Stability AI");const d=await r.json();if(typeof d.image==="string")images.push({image:d.image,mimeType:"image/png"});}
+ }else if(provider==="google"){
+  for(let i=0;i<count;i++){const r=await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key="+encodeURIComponent(key),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({contents:[{parts:[{text:p}]}],generationConfig:{responseModalities:["IMAGE"]}})});if(!r.ok)throw await responseError(r,"Google Gemini");const d=await r.json();const part=d.candidates?.[0]?.content?.parts?.find((x:any)=>x.inlineData?.data);if(part)images.push({image:part.inlineData.data,mimeType:part.inlineData.mimeType||"image/png"});}
+ }else if(provider==="replicate"){
+  for(let i=0;i<count;i++){const r=await fetch("https://api.replicate.com/v1/models/black-forest-labs/flux-schnell/predictions",{method:"POST",headers:{Authorization:"Bearer "+key,"Content-Type":"application/json",Prefer:"wait=60"},body:JSON.stringify({input:{prompt:p,aspect_ratio:"2:3",output_format:"png"}})});if(!r.ok)throw await responseError(r,"Replicate");let d=await r.json();for(let n=0;n<20&&d.status!=="succeeded"&&d.status!=="failed"&&d.urls?.get;n++){await new Promise(resolve=>setTimeout(resolve,1500));const poll=await fetch(d.urls.get,{headers:{Authorization:"Bearer "+key}});if(!poll.ok)throw await responseError(poll,"Replicate");d=await poll.json();}if(d.status!=="succeeded")throw new Error(d.status==="failed"?"Replicate n’a pas pu produire le visuel.":"Replicate met trop de temps à répondre. Réessaie.");const out=Array.isArray(d.output)?d.output:[d.output];for(const url of out.filter((x:any)=>typeof x==="string").slice(0,1))images.push(await imageFromUrl(url));}
+ }else if(provider==="fal"){
+  const r=await fetch("https://fal.run/fal-ai/flux/schnell",{method:"POST",headers:{Authorization:"Key "+key,"Content-Type":"application/json"},body:JSON.stringify({prompt:p,image_size:"portrait_4_3",num_images:count,enable_safety_checker:true})});if(!r.ok)throw await responseError(r,"fal.ai");const d=await r.json();for(const x of (d.images||[]).slice(0,count))if(x.url)images.push(await imageFromUrl(x.url));
+ }else if(provider==="huggingface"){
+  for(let i=0;i<count;i++){const r=await fetch("https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell",{method:"POST",headers:{Authorization:"Bearer "+key,"Content-Type":"application/json",Accept:"image/png"},body:JSON.stringify({inputs:p,parameters:{width:768,height:1152}})});if(!r.ok)throw await responseError(r,"Hugging Face");const mime=r.headers.get("content-type")||"image/png";if(mime.includes("application/json"))throw new Error("Hugging Face n’a pas renvoyé d’image : modèle indisponible ou en chargement.");images.push({image:toBase64(new Uint8Array(await r.arrayBuffer())),mimeType:mime.split(";")[0]});}
+ }else if(provider==="bfl"){
+  for(let i=0;i<count;i++){const r=await fetch("https://api.bfl.ai/v1/flux-2-pro",{method:"POST",headers:{"x-key":key,"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify({prompt:p,width:768,height:1152,output_format:"png"})});if(!r.ok)throw await responseError(r,"Black Forest Labs");const task=await r.json();const pollUrl=task.polling_url||("https://api.bfl.ai/v1/get_result?id="+encodeURIComponent(task.id||""));let result:any=null;for(let n=0;n<25;n++){await new Promise(resolve=>setTimeout(resolve,1500));const poll=await fetch(pollUrl,{headers:{"x-key":key,Accept:"application/json"}});if(!poll.ok)throw await responseError(poll,"Black Forest Labs");result=await poll.json();if(result.status==="Ready"||result.status==="completed"||result.result?.sample)break;if(result.status==="Error"||result.status==="failed")throw new Error("FLUX n’a pas pu produire le visuel.");}const url=result?.result?.sample||result?.result?.url;if(!url)throw new Error("FLUX n’a pas renvoyé de lien d’image exploitable.");images.push(await imageFromUrl(url));}
+ }else if(provider==="ideogram"){
+  const r=await fetch("https://api.ideogram.ai/v2/image/generate/ideogram-4-5",{method:"POST",headers:{"Api-Key":key,"Content-Type":"application/json"},body:JSON.stringify({prompt:p,num_images:count,aspect_ratio:"2:3",rendering_speed:"BALANCED",magic_prompt:"AUTO"})});if(!r.ok)throw await responseError(r,"Ideogram");const d=await r.json();for(const x of (d.data||[]).slice(0,count))if(x.url)images.push(await imageFromUrl(x.url));
+ }else if(provider==="together"){
+  const r=await fetch("https://api.together.xyz/v1/images/generations",{method:"POST",headers:{Authorization:"Bearer "+key,"Content-Type":"application/json"},body:JSON.stringify({model:"black-forest-labs/FLUX.1-schnell",prompt:p,width:768,height:1152,n:count,response_format:"b64_json"})});if(!r.ok)throw await responseError(r,"Together AI");const d=await r.json();for(const x of d.data||[]){if(typeof x.b64_json==="string")images.push({image:x.b64_json,mimeType:"image/png"});else if(typeof x.url==="string")images.push(await imageFromUrl(x.url));}
+ }
+ return images.slice(0,count);
+};
 Deno.serve(async (req: Request) => {
   const origin = req.headers.get("Origin");
   if (origin && origin !== "https://ashta66.github.io") {
@@ -66,23 +96,19 @@ Deno.serve(async (req: Request) => {
   const prompt = String(input.prompt || "").trim();
   if (input.action === "illustration") {
     if(prompt.length<8||prompt.length>1800)return reply(400,{error:"Décrivez l’illustration en 8 à 1800 caractères."});
-    const provider=String(input.provider||"openai");if(!["openai","stability"].includes(provider))return reply(400,{error:"Fournisseur non pris en charge."});
-    const serviceClient=createClient(supabaseUrl,Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")||"",{auth:{persistSession:false,autoRefreshToken:false}});
+    const provider=String(input.provider||"openai") as ImageProvider;
+    if(!IMAGE_PROVIDERS.includes(provider))return reply(400,{error:"Fournisseur non pris en charge."});
+    const serviceKey=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    if(!serviceKey)return reply(503,{error:"Configuration sécurisée des clés indisponible dans Supabase."});
+    const serviceClient=createClient(supabaseUrl,serviceKey,{auth:{persistSession:false,autoRefreshToken:false}});
     const {data:apiKey,error:keyError}=await serviceClient.rpc("get_image_provider_key",{p_provider:provider});
-    if(keyError||!apiKey)return reply(503,{error:"Aucune clé API "+(provider==="openai"?"OpenAI":"Stability AI")+" configurée. Ajoute-la dans Assistant IA > Fournisseurs d’illustrations."});
-    const {error:quotaError}=await supabase.rpc("consume_card_assistant_quota",{p_action:"illustration"});if(quotaError){const limited=/rate limit/i.test(quotaError.message||"");return reply(limited?429:403,{error:limited?"Quota de génération atteint. Réessaie plus tard.":"Accès à la génération refusé."});}
-    const count=Math.max(1,Math.min(4,Math.floor(Number(input.count)||1)));let images:Array<{image:string,mimeType:string}>=[];
-    if(provider==="openai"){
-      const response=await fetch("https://api.openai.com/v1/images/generations",{method:"POST",headers:{"Authorization":"Bearer "+apiKey,"Content-Type":"application/json"},body:JSON.stringify({model:"gpt-image-1",prompt:"Illustration originale pour une carte à collectionner Gaycha Club, public adulte. Visuel portrait stylisé, composition lisible en petit format. Aucun texte, signature ou logo. Concept: "+prompt.slice(0,1500),size:"1024x1536",quality:"medium",n:count})});
-      if(!response.ok){const detail=await response.text();console.error("OpenAI image API error",response.status,detail.slice(0,300));return reply(502,{error:response.status===401?"Clé OpenAI invalide.":response.status===429?"Quota ou limite OpenAI atteint.":"Échec OpenAI ("+response.status+"). Vérifie les accès et la facturation."});}
-      const data=await response.json();images=(data.data||[]).map((x:{b64_json?:string})=>x.b64_json).filter((x:unknown):x is string=>typeof x==="string").map((image:string)=>({image,mimeType:"image/png"}));
-    }else{
-      const form=new FormData();form.set("prompt","Portrait illustration for a premium adult LGBTQ+ collectible card. No text, no logo. "+prompt.slice(0,1400));form.set("aspect_ratio","2:3");form.set("output_format","png");
-      const response=await fetch("https://api.stability.ai/v2beta/stable-image/generate/core",{method:"POST",headers:{"Authorization":"Bearer "+apiKey,"Accept":"application/json"},body:form});
-      if(!response.ok){const detail=await response.text();console.error("Stability image API error",response.status,detail.slice(0,300));return reply(502,{error:response.status===401?"Clé Stability AI invalide.":response.status===402?"Crédits Stability AI insuffisants.":"Échec Stability AI ("+response.status+")."});}
-      const data=await response.json();if(typeof data.image==="string")images=[{image:data.image,mimeType:"image/png"}];
-    }
-    if(!images.length)return reply(502,{error:"Le fournisseur n’a retourné aucun visuel exploitable."});return reply(200,{images,image:images[0].image,mimeType:images[0].mimeType});
+    if(keyError){console.error("Image key lookup failed",provider,keyError.message);return reply(503,{error:"Impossible de lire la clé "+provider+". Vérifie la configuration des fournisseurs dans l’administration."});}
+    if(!apiKey)return reply(503,{error:"Aucune clé API "+provider+" configurée. Ouvre Assistant IA > Fournisseurs d’illustrations, choisis ce service et enregistre sa clé."});
+    const {error:quotaError}=await supabase.rpc("consume_card_assistant_quota",{p_action:"illustration"});
+    if(quotaError){const limited=/rate limit/i.test(quotaError.message||"");return reply(limited?429:403,{error:limited?"Quota de génération atteint. Réessaie plus tard.":"Accès à la génération refusé."});}
+    const count=Math.max(1,Math.min(4,Math.floor(Number(input.count)||1)));
+    try{const images=await generateProviderImages(provider,String(apiKey),prompt,count);if(!images.length)return reply(502,{error:"Le fournisseur n’a retourné aucun visuel exploitable."});return reply(200,{images,image:images[0].image,mimeType:images[0].mimeType,provider});}
+    catch(error){const message=error instanceof Error?error.message:"Erreur inconnue du fournisseur d’images.";console.error("Image generation failed",provider,message);return reply(502,{error:message});}
   }
   if (!["create", "edit"].includes(input.mode || "") || prompt.length < 8 || prompt.length > 1800) {
     return reply(400, { error: "Choisissez création/modification et décrivez la carte (8 à 1800 caractères)." });

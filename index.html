@@ -1914,6 +1914,7 @@ async function events(){
 async function admin(tab,page=1,searchTerm=''){const R=profile?.role;if(!['admin','moderator','catalog_manager'].includes(R))return app.innerHTML=msg('Accès réservé au staff.',1);
 tab=tab||'stats';const T={stats:'Stats',reports:'Signalements',users:'Comptes',cards:'Catalogue',series:'Séries',venues:'Lieux LGBTQ+',assistant:'Assistant IA',boosters:'Boosters',missions:'Missions',branding:'Logos du site',audit:'Audit'};
 const ok={stats:1,reports:R!=='catalog_manager',users:R!=='catalog_manager',cards:R!=='moderator',series:R!=='moderator',venues:R!=='moderator',assistant:R!=='moderator',boosters:R!=='moderator',missions:R==='admin',branding:R==='admin',audit:R==='admin'};
+if(!Object.prototype.hasOwnProperty.call(ok,tab)||!ok[tab])return app.innerHTML=msg('Cette rubrique n’est pas accessible avec ton rôle actuel.',1);
 const bar=`<div class="tabs">${Object.keys(T).filter(k=>ok[k]).map(k=>`<button class="btn${k===tab?'':' alt'}" data-t="${k}">${T[k]}</button>`).join('')}</div><div id="am"></div>`;
 const fail=e=>msg(e.message,1);let body='',missionRows=[];
 if(tab==='stats'){

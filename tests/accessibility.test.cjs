@@ -36,7 +36,10 @@ test('booster cards can be revealed individually with mouse or keyboard', () => 
   assert.match(html, /role='button' tabindex='0' aria-pressed='false'/);
   assert.match(html, /event\.key==='Enter'\|\|event\.key===' '/);
   assert.match(html, /el\.setAttribute\('aria-pressed','true'\)/);
-  assert.match(html, /appuie sur une carte pour accélérer/);
+  assert.match(html, /Clique sur une carte pour la retourner/);
+  assert.match(html, /Tout retourner/);
+  assert.match(html, /Les cartes restent cachées/);
+  assert.doesNotMatch(html, /450\+i\*650/);
 });
 
 test('booster reveal styling reflects the card rarity', () => {

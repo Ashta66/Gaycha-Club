@@ -3,12 +3,12 @@ returns jsonb language plpgsql stable security definer set search_path='' as $$
 declare v_activity jsonb;v_audit jsonb;v_reports integer;v_trades integer;v_suspended integer;
 begin
  if auth.uid() is null or not public.is_staff(array['admin','moderator','catalog_manager']::public.app_role[]) then raise exception 'forbidden' using errcode='42501';end if;
- if p_days not in (7,30,90) then raise exception 'invalid period' using errcode='22023';end if;
+ if p_days is null or p_days not in (7,30,90) then raise exception 'invalid period' using errcode='22023';end if;
  select coalesce(jsonb_agg(jsonb_build_object(
    'day',to_char(d.day,'YYYY-MM-DD'),
-   'new_accounts',(select count(*) from public.profiles p where p.created_at::date=d.day),
-   'cards_acquired',(select count(*) from public.card_instances ci where ci.acquired_at::date=d.day),
-   'boosters_opened',(select count(*) from public.ledger l where l.created_at::date=d.day and (l.reason like 'booster:%' or l.reason like 'booster_gift:%' or l.reason like 'booster_paid:%')),
+   'new_accounts',(select count(*) from public.profiles p where p.created_at::date=d.day::date),
+   'cards_acquired',(select count(*) from public.card_instances ci where ci.acquired_at::date=d.day::date),
+   'boosters_opened',(select count(*) from public.ledger l where l.created_at::date=d.day::date and (l.reason like 'booster:%' or l.reason like 'booster_gift:%' or l.reason like 'booster_paid:%')),
    'credit_delta',(select coalesce(sum(l.delta),0) from public.ledger l where l.created_at::date=d.day)
  ) order by d.day),'[]'::jsonb) into v_activity
  from generate_series(current_date-(p_days-1),current_date,interval '1 day') as d(day);

@@ -99,3 +99,5 @@ test('AI assistant existing-card edit actions are wired to a working selection f
   assert.match(html, /\$\('ai-generate'\)\.onclick/);
   assert.match(html, /\$\('ai-illustrate'\)\.onclick/);
 });
+
+test("collection favorite is a compact overlay and assistant uses visual card tiles",()=>{assert.match(html,/collection-card-visual/);assert.match(html,/width:25px;height:25px/);assert.match(html,/ai-existing-visual/);assert.match(html,/id="ai-provider-save"/)});

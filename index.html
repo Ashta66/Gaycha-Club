@@ -1620,10 +1620,29 @@ async function missions(){
  app.querySelectorAll('[data-mission-filter]').forEach(button=>button.onclick=()=>{filter=button.dataset.missionFilter;render()});
  render();
 }
-async function market(){const {data,error}=await sb.from('market_view').select('*').order('created_at',{ascending:false});
-if(error)return app.innerHTML=msg(error.message,1);
-app.innerHTML=`<h1>Marché</h1><p>Prix en monnaie virtuelle uniquement, non convertible en argent réel. Le vendeur reçoit désormais 100 % du prix affiché, sans commission.</p><div id="mk"></div>${data.length?'':msg('Aucune annonce. Mettez une carte en vente depuis votre collection.')}<div class="grid">${data.map(l=>{const own=l.seller_id===user.id;return `<div>${card({id:l.card_id,name:l.name,rarity:l.rarity,number:l.number,spec:l.spec,series:{name:l.series_name,color_a:l.color_a,color_b:l.color_b}})}<div style="margin:6px 0">${l.price} 💰 · ${esc(l.seller)}</div><button class="btn${own?' alt':''}" style="width:100%" data-l="${l.id}" data-own="${own?1:0}" data-p="${l.price}">${own?'Retirer':'Acheter'}</button></div>`}).join('')}</div>`;
-app.querySelectorAll('[data-l]').forEach(b=>b.onclick=()=>safeClick(async()=>{const own=b.dataset.own==='1';if(!own&&!confirm('Acheter cette carte pour '+b.dataset.p+' 💰 ?'))return;b.disabled=true;try{const {error}=own?await sb.rpc('cancel_listing',{p_listing:b.dataset.l}):await sb.rpc('buy_listing',{p_listing:b.dataset.l,p_key:crypto.randomUUID()});if(error)throw error;await refresh();market()}catch(error){handleError(error,'transaction-marche',$('mk'));if(b.isConnected)b.disabled=false}},'market-listing:'+b.dataset.l))}
+async function market(){
+ const {data,error}=await sb.from('market_view').select('*').order('created_at',{ascending:false});
+ if(error)return app.innerHTML=msg(error.message,1);
+ const listings=data||[];
+ app.innerHTML=`<h1>Marché</h1><p>Prix en monnaie virtuelle uniquement, non convertible en argent réel. Le vendeur reçoit 100 % du prix affiché, sans commission.</p>
+ <section class="section-panel" style="margin:14px 0"><div class="trade-history-heading"><div><h2 style="margin:0">Trouve ta prochaine pépite</h2><p class="muted" style="margin:5px 0 0">Recherche les cartes et compare les offres.</p></div><span class="note" id="market-count"></span></div>
+ <div class="trade-history-filters" style="grid-template-columns:minmax(180px,2fr) repeat(3,minmax(130px,1fr))">
+ <label>Rechercher une carte ou un vendeur<input id="market-search" type="search" placeholder="Nom, série, pseudo…"></label>
+ <label>Rareté<select id="market-rarity"><option value="">Toutes les raretés</option>${Object.keys(RN).map(k=>`<option value="${k}">${esc(RN[k][0])}</option>`).join('')}</select></label>
+ <label>Prix<select id="market-sort"><option value="newest">Plus récentes</option><option value="cheap">Prix croissant</option><option value="expensive">Prix décroissant</option><option value="oldest">Plus anciennes</option></select></label>
+ <label>Vendeur<select id="market-owner"><option value="all">Toutes les annonces</option><option value="others">Autres joueurs</option><option value="mine">Mes annonces</option></select></label></div></section>
+ <div id="mk"></div><div id="market-grid" class="grid"></div>`;
+ const render=()=>{
+ const q=$('market-search').value.trim().toLocaleLowerCase('fr'),rarity=$('market-rarity').value,sort=$('market-sort').value,owner=$('market-owner').value;
+ const rows=listings.filter(l=>{const own=l.seller_id===user.id,text=[l.name,l.seller,l.series_name,l.number].join(' ').toLocaleLowerCase('fr');return(!q||text.includes(q))&&(!rarity||l.rarity===rarity)&&(owner==='all'||(owner==='mine'&&own)||(owner==='others'&&!own))});
+ rows.sort((a,b)=>sort==='cheap'?Number(a.price)-Number(b.price):sort==='expensive'?Number(b.price)-Number(a.price):sort==='oldest'?new Date(a.created_at)-new Date(b.created_at):new Date(b.created_at)-new Date(a.created_at));
+ $('market-count').textContent=rows.length+' annonce'+(rows.length>1?'s':'')+' / '+listings.length;
+ $('market-grid').innerHTML=rows.length?rows.map(l=>{const own=l.seller_id===user.id;return `<article style="min-width:0;padding:10px;border:1px solid #ffffff20;border-radius:14px;background:linear-gradient(145deg,#ffffff08,#ffffff02)">${card({id:l.card_id,name:l.name,rarity:l.rarity,number:l.number,spec:l.spec,series:{name:l.series_name,color_a:l.color_a,color_b:l.color_b}})}<div style="display:flex;justify-content:space-between;gap:8px;align-items:center;margin:9px 0 4px"><strong>${Number(l.price).toLocaleString('fr-FR')} 💰</strong><span class="note">${esc(l.seller)}</span></div><button class="btn${own?' alt':''}" style="width:100%" data-l="${l.id}" data-own="${own?1:0}" data-p="${l.price}">${own?'Retirer mon annonce':'Acheter'}</button></article>`}).join(''):'<div class="trade-empty" style="grid-column:1/-1">Aucune annonce ne correspond à ces filtres.</div>';
+ $('market-grid').querySelectorAll('[data-l]').forEach(b=>b.onclick=()=>safeClick(async()=>{const own=b.dataset.own==='1';if(!own&&!confirm('Acheter cette carte pour '+b.dataset.p+' 💰 ?'))return;b.disabled=true;try{const {error}=own?await sb.rpc('cancel_listing',{p_listing:b.dataset.l}):await sb.rpc('buy_listing',{p_listing:b.dataset.l,p_key:crypto.randomUUID()});if(error)throw error;await refresh();market()}catch(error){handleError(error,'transaction-marche',$('mk'));if(b.isConnected)b.disabled=false}},'market-listing:'+b.dataset.l));
+ };
+ ['market-search','market-rarity','market-sort','market-owner'].forEach(id=>$(id).addEventListener(id==='market-search'?'input':'change',render));
+ render();
+}
 async function leaderboard(){const {data,error}=await sb.from('leaderboard').select('*');
 if(error)return app.innerHTML=msg(error.message,1);
 app.innerHTML=`<h1>Hall of Fame</h1><p>Les légendes du Gaycha Club : gloire, paillettes et cartes rares ✨</p><div class="rainbow-line"></div><div class="leaderboard-list">${data.map((r,i)=>`<div class="leader-row ${i===0?'top-1':i===1?'top-2':i===2?'top-3':''}"><div class="leader-rank">${i===0?'👑':i===1?'🥈':i===2?'🥉':String(i+1).padStart(2,'0')}</div><div><span class="leader-avatar">${esc((r.username||'?').charAt(0).toUpperCase())}</span><b>${esc(r.username)}</b><div class="leader-metrics"><span>🃏 ${r.cards_found} cartes</span><span>✨ ${r.xp} XP</span></div></div><div class="leader-score"><b style="color:#d6b46a">${Number(r.xp||0).toLocaleString('fr-FR')} XP</b></div></div>`).join('')}</div>`}

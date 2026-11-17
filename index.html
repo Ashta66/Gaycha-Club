@@ -1226,14 +1226,21 @@ const SUPABASE_KEY='sb_publishable_xPvkIsb6dO0DVHXrf6Gs-g_wGrdewIx';
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 function avatarStoragePath(value){
  const raw=String(value||'').trim();if(!raw)return '';
- if(/^https?:\\/\\//i.test(raw)){
-  try{const path=new URL(raw).pathname;const match=path.match(/\\/storage\\/v1\\/object\\/(?:public|sign)\\/avatars\\/(.+)$/);return match?decodeURIComponent(match[1]):''}catch{return ''}
+ if(raw.startsWith('https://')||raw.startsWith('http://')){
+  try{
+   const path=new URL(raw).pathname;
+   for(const marker of ['/storage/v1/object/public/avatars/','/storage/v1/object/sign/avatars/']){
+    const at=path.indexOf(marker);if(at>=0)return decodeURIComponent(path.slice(at+marker.length));
+   }
+   return '';
+  }catch{return ''}
  }
- return raw.replace(/^\\/+/, '');
+ let path=raw;while(path.startsWith('/'))path=path.slice(1);return path;
 }
 async function resolveAvatarUrl(value){
  const raw=String(value||'').trim();if(!raw)return '';
- const path=avatarStoragePath(raw);if(!path)return /^https?:\\/\\//i.test(raw)?raw:'';
+ const path=avatarStoragePath(raw);
+ if(!path)return (raw.startsWith('https://')||raw.startsWith('http://'))?raw:'';
  const {data,error}=await sb.storage.from('avatars').createSignedUrl(path,86400);
  if(error){console.warn('Avatar privé indisponible :',error.message);return ''}
  return data?.signedUrl||'';

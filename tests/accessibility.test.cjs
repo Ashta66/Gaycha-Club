@@ -40,7 +40,7 @@ test('booster cards can be revealed individually with mouse or keyboard', () => 
 });
 
 test('booster reveal styling reflects the card rarity', () => {
-  assert.match(html, /rarity-\\"\+esc\(c\?\.rarity\|\|'unknown'\)/);
+  assert.match(html, /rarity-\"\+esc\(c\?\.rarity\|\|'unknown'\)/);
   assert.match(html, /fl\.rarity-legendaire/);
   assert.match(html, /fl\.rarity-secrete/);
 });

@@ -39,7 +39,7 @@ test('trade read-marker migration is reproducible and participant-scoped', () =>
 
 test('image key management binds handlers only after its controls are rendered', () => {
   const render = html.indexOf('app.innerHTML=`<section class="admin-hero"');
-  const handlers = html.indexOf("if(tab==='imagekeys'){\\n const providers=");
+  const handlers = html.indexOf("if(tab==='imagekeys'){", render);
   assert.ok(render >= 0 && handlers > render, 'image key handlers must be registered after admin HTML is inserted');
   assert.match(html, /id="imagekeys-save"/);
   assert.match(html, /id="imagekeys-status"/);

@@ -22,7 +22,7 @@ test('card zoom is a labelled modal dialog with a close control', () => {
 });
 
 test('public catalogue cache is isolated from account and transaction queries', () => {
-  assert.match(html, /staleWhileRevalidate\('public-cards-v1'/);
+  assert.match(html, /staleWhileRevalidate\('public-cards-v2'/);
   assert.match(html, /sb\.from\('cards'\)/);
   assert.doesNotMatch(html, /staleWhileRevalidate\('(profile|balance|inventory|trades|messages)/);
 });

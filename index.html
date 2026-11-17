@@ -1501,7 +1501,7 @@ async function open5(slug,source='paid'){
    return "<div class='fl rarity-"+esc(c?.rarity||'unknown')+" "+(['epique','legendaire','secrete'].includes(c?.rarity)?'hi':'')+"' data-reveal-index='"+i+"' role='button' tabindex='0' aria-pressed='false' aria-label='Révéler la carte "+(i+1)+" sur "+entries.length+(c?" : "+esc(c.name):"")+"' title='Appuie pour révéler cette carte'><div class='fi'><div class='card back fb'><div class='logo'>GAYCHA<small>CLUB</small></div></div><div class='ff'>"+(c?card(c):msg('Carte inconnue'))+"<span class='reveal-tag"+tagClass+"'>"+tag+"</span></div></div></div>";
   }).join('');
   if(!pk?.isConnected)return;
-  pk.innerHTML="<section class='booster-reveal'><div class='booster-reveal-head'><div><span class='eyebrow'>RÉSULTAT DU BOOSTER</span><h2>Voici tes découvertes</h2><p>"+entries.length+" carte"+(entries.length>1?'s':'')+" à ajouter à ton album.</p></div><button class='booster-reveal-close' type='button' id='booster-close-opening' aria-label='Fermer la fenêtre d’ouverture' title='Fermer'>×</button></div><div class='booster-reveal-tools'><span class='booster-reveal-status' id='reveal-status' role='status' aria-live='polite'>Préparation des cartes…</span><button class='btn alt' type='button' id='reveal-all'>Révéler toutes les cartes</button></div><div class='booster-reveal-grid' id='booster-reveal-grid'>"+cardHtml+"</div><section class='booster-summary' id='booster-summary' hidden><h3>Récapitulatif de ton ouverture</h3><div class='booster-summary-stats'><div><strong>"+entries.length+"</strong><span>Cartes révélées</span></div><div><strong>"+(newCount===null?'—':newCount)+"</strong><span>Nouvelles découvertes</span></div><div><strong>"+(duplicateCount===null?'—':duplicateCount)+"</strong><span>Doublons</span></div></div><div class='booster-rarity-list'>"+rarityHtml+"</div><div class='booster-summary-actions'><button class='btn' type='button' id='booster-open-again'>Ouvrir un autre booster</button><button class='btn alt' type='button' id='booster-to-collection'>Voir ma collection</button></div></section></section>";
+  pk.innerHTML="<section class='booster-reveal'><div class='booster-reveal-head'><div><span class='eyebrow'>RÉSULTAT DU BOOSTER</span><h2>Voici tes découvertes</h2><p>"+entries.length+" carte"+(entries.length>1?'s':'')+" à ajouter à ton album.</p></div><button class='booster-reveal-close' type='button' id='booster-close-opening' aria-label='Fermer la fenêtre d’ouverture' title='Fermer'>×</button></div><div class='booster-reveal-tools'><span class='booster-reveal-status' id='reveal-status' role='status' aria-live='polite'>Clique sur une carte pour la retourner.</span><button class='btn alt' type='button' id='reveal-all'>Tout retourner</button></div><div class='booster-reveal-grid' id='booster-reveal-grid'>"+cardHtml+"</div><section class='booster-summary' id='booster-summary' hidden><h3>Récapitulatif de ton ouverture</h3><div class='booster-summary-stats'><div><strong>"+entries.length+"</strong><span>Cartes révélées</span></div><div><strong>"+(newCount===null?'—':newCount)+"</strong><span>Nouvelles découvertes</span></div><div><strong>"+(duplicateCount===null?'—':duplicateCount)+"</strong><span>Doublons</span></div></div><div class='booster-rarity-list'>"+rarityHtml+"</div><div class='booster-summary-actions'><button class='btn' type='button' id='booster-open-again'>Ouvrir un autre booster</button><button class='btn alt' type='button' id='booster-to-collection'>Voir ma collection</button></div></section></section>";
   const grid=$('booster-reveal-grid'),status=$('reveal-status'),summary=$('booster-summary'),revealButton=$('reveal-all');
   pk.dataset.canClose='true';
   $('booster-close-opening')?.addEventListener('click',closeBoosterOpening);
@@ -1511,7 +1511,7 @@ async function open5(slug,source='paid'){
   const revealedCount=()=>grid?.querySelectorAll('.fl.on').length||0;
   const updateProgress=()=>{
    const count=revealedCount();
-   if(status)status.textContent=count+" / "+entries.length+" cartes révélées · appuie sur une carte pour accélérer";
+   if(status)status.textContent=count+" / "+entries.length+" cartes révélées · clique sur chaque carte pour la retourner";
    if(count===entries.length)finish();
   };
   const finish=()=>{
@@ -1543,10 +1543,8 @@ async function open5(slug,source='paid'){
    finish();
   };
   revealButton.onclick=revealAll;
-  if(reducedMotion)revealAll();
-  else entries.forEach((entry,i)=>timers.push(setTimeout(()=>{
-   revealOne(grid?.children[i]);
-  },450+i*650)));
+  // Les cartes restent cachées. Le joueur choisit l'ordre de révélation.
+  // Le bouton « Tout retourner » révèle toutes les cartes restantes.
   pk.scrollIntoView({behavior:reducedMotion?'auto':'smooth',block:'start'});
   await revealPromise;
   await refresh();

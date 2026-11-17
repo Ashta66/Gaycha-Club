@@ -38,3 +38,16 @@ test('booster cards can be revealed individually with mouse or keyboard', () => 
   assert.match(html, /el\.setAttribute\('aria-pressed','true'\)/);
   assert.match(html, /appuie sur une carte pour accélérer/);
 });
+
+test('booster reveal styling reflects the card rarity', () => {
+  assert.match(html, /rarity-\\"\+esc\(c\?\.rarity\|\|'unknown'\)/);
+  assert.match(html, /fl\.rarity-legendaire/);
+  assert.match(html, /fl\.rarity-secrete/);
+});
+
+test('collection binder shows series completion and card ownership in zoom', () => {
+  assert.match(html, /collection-series-completion/);
+  assert.match(html, /collectionCopies=cnt/);
+  assert.match(html, /Dans ta collection/);
+  assert.match(html, /cartes de cette série obtenues/);
+});

@@ -100,7 +100,7 @@ test('AI assistant existing-card edit actions are wired to a working selection f
   assert.match(html, /\$\('ai-illustrate'\)\.onclick/);
 });
 
-test("collection favorite sits outside the card frame and assistant cards cannot overflow",()=>{assert.match(html,/collection-card-item\{position:relative;padding-top:22px/);assert.match(html,/collection-card-visual\{position:static!important/);assert.match(html,/ai-existing-meta>\*\{min-width:0;max-width:100%;overflow-wrap:anywhere/);assert.match(html,/id="ai-provider-save"/)});
+test("collection favorite sits outside the card frame and assistant cards cannot overflow",()=>{assert.match(html,/collection-card-item\{position:relative;padding-top:22px/);assert.match(html,/collection-card-visual\{position:static!important/);assert.match(html,/ai-existing-meta>\*\{min-width:0;max-width:100%;overflow-wrap:anywhere/);assert.match(html,/id="imagekeys-save"/);assert.match(html,/imagekeys:'Clés IA'/)});
 test("image providers are selectable and Edge errors expose the server detail",()=>{for(const provider of ["openai","stability","google","replicate","fal","huggingface","bfl","ideogram","together"])assert.match(html,new RegExp('value="'+provider+'"'));assert.match(html,/context\.clone\(\)\.text\(\)/);});
 
 test("admin booster editor previews presentation and syncs rarity sliders",()=>{assert.match(html,/admin-booster-visual-editor/);assert.match(html,/data-booster-range/);assert.match(html,/admin_set_booster_presentation/);assert.match(html,/boosterPresentationAttrs/)});
@@ -111,3 +111,7 @@ test("admin mission editor has templates and a live reward/progression preview",
 test("events page provides quick templates and a navigable monthly calendar",()=>{assert.match(html,/data-event-template/);assert.match(html,/events-calendar/);assert.match(html,/data-calendar-next/)});
 
 test("admin dashboard has selectable periods, activity charts, alerts and recent audit",()=>{assert.match(html,/data-dashboard-days/);assert.match(html,/admin-dashboard-chart/);assert.match(html,/admin-dashboard-alerts/);assert.match(html,/admin-dashboard-audit/);assert.match(html,/admin_dashboard_detail/)});
+
+test("admin layout uses full page width and centralizes image provider key management",()=>{assert.match(html,/main:has\(\.admin-hero\)\{max-width:none/);assert.match(html,/imagekeys:'Clés IA'/);assert.match(html,/admin_store_image_provider_key/);assert.match(html,/admin_delete_image_provider_key/);assert.doesNotMatch(html,/<section class="ai-provider-panel">/)});
+test("admin audit uses a protected RPC and guarded tab navigation",()=>{assert.match(html,/admin_audit_entries/);assert.match(html,/Ouverture de la rubrique impossible/);assert.match(html,/audit-distribution-results/)});
+test("catalogue image provider options are unique",()=>{const match=html.match(/<select id="cimg-provider">([\s\S]*?)<\/select>/);assert.ok(match);const values=[...match[1].matchAll(/<option value="([^"]+)">/g)].map(x=>x[1]);assert.equal(values.length,new Set(values).size);assert.equal(values.length,9)});

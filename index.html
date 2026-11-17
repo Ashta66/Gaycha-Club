@@ -1211,6 +1211,7 @@ let languageLoadedFor=null;
 let user=null,profile=null,cards=[],busy=false,boosterTypes=[],boosterInventory=[];
 function applyLanguage(root=document.body){if(!root||!currentLanguage)return;document.documentElement.lang=currentLanguage;const map={...(window.GaychaI18n?.dictionaries?.[currentLanguage]||{})};const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),a=[];while(w.nextNode()){const n=w.currentNode;if(n.parentElement&&!n.parentElement.closest('script,style'))a.push(n)}const keys=Object.keys(map).sort((x,y)=>y.length-x.length);for(const n of a){if(n.__gaychaSource===undefined)n.__gaychaSource=n.nodeValue;let v=n.__gaychaSource;for(const k of keys)if(v.includes(k))v=v.split(k).join(map[k]);if(n.nodeValue!==v)n.nodeValue=v}root.querySelectorAll?.('input[placeholder],textarea[placeholder],button[aria-label],input[aria-label],select[aria-label]').forEach(el=>{for(const attr of ['placeholder','aria-label'])if(el.hasAttribute(attr)){const prop='__gaycha_'+attr;if(el[prop]===undefined)el[prop]=el.getAttribute(attr);let v=el[prop];for(const k of keys)if(v.includes(k))v=v.split(k).join(map[k]);el.setAttribute(attr,v)}})}
 window.addEventListener('gaycha:i18n-ready',()=>applyLanguage());
+applyLanguage();
 const languageObserver=new MutationObserver(debounce(()=>applyLanguage(),50));languageObserver.observe(document.body,{subtree:true,childList:true,characterData:true});
 
 

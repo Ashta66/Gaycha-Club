@@ -111,3 +111,7 @@ test("admin mission editor has templates and a live reward/progression preview",
 test("events page provides quick templates and a navigable monthly calendar",()=>{assert.match(html,/data-event-template/);assert.match(html,/events-calendar/);assert.match(html,/data-calendar-next/)});
 
 test("admin dashboard has selectable periods, activity charts, alerts and recent audit",()=>{assert.match(html,/data-dashboard-days/);assert.match(html,/admin-dashboard-chart/);assert.match(html,/admin-dashboard-alerts/);assert.match(html,/admin-dashboard-audit/);assert.match(html,/admin_dashboard_detail/)});
+
+test("admin layout uses full page width and centralizes image provider key management",()=>{assert.match(html,/main:has\(\.admin-hero\)\{max-width:none/);assert.match(html,/imagekeys:'Clés IA'/);assert.match(html,/admin_store_image_provider_key/);assert.match(html,/admin_delete_image_provider_key/);assert.doesNotMatch(html,/<section class="ai-provider-panel">/)});
+test("admin audit uses a protected RPC and guarded tab navigation",()=>{assert.match(html,/admin_audit_entries/);assert.match(html,/Ouverture de la rubrique impossible/);assert.match(html,/audit-distribution-results/)});
+test("catalogue image provider options are unique",()=>{const match=html.match(/<select id="cimg-provider">([\s\S]*?)<\/select>/);assert.ok(match);const values=[...match[1].matchAll(/<option value="([^"]+)">/g)].map(x=>x[1]);assert.equal(values.length,new Set(values).size);assert.equal(values.length,9)});

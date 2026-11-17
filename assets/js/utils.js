@@ -54,6 +54,8 @@
     };
   }
 
+  const rarityRank = rarity => ['commun','peu_commun','rare','epique','legendaire','secrete'].indexOf(rarity);
+
   function paginate(items, page = 1, pageSize = 20) {
     const total = items.length;
     const pages = Math.max(1, Math.ceil(total / pageSize));
@@ -96,5 +98,5 @@
   }
 
   const RN = {commun:['Commun','●'],peu_commun:['Peu commun','⬢'],rare:['Rare','◆'],epique:['Épique','★'],legendaire:['Légendaire','♛'],secrete:['Secrète','◈']};
-  global.GaychaUtils = { esc, $, msg, RN, handleError, safeClick, debounce, paginate, staleWhileRevalidate, showState };
+  global.GaychaUtils = { esc, $, msg, RN, rarityRank, handleError, safeClick, debounce, paginate, staleWhileRevalidate, showState };
 })(window);

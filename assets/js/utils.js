@@ -9,7 +9,15 @@
     '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
   }[char]));
   const $ = id => document.getElementById(id);
-  const msg = (message, isError) => `<div class="note ${isError ? 'err' : ''}" role="${isError ? 'alert' : 'status'}">${esc(message)}</div>`;
+  const msg = (message, isError) => {
+    let display = String(message ?? '');
+    if (isError && /failed to fetch|network|jwt|permission denied|row-level security|not allowed|\b500\b|\b400\b|duplicate key|rpc|supabase|timeout/i.test(display)) {
+      const id = 'GC-' + Math.random().toString(36).slice(2, 8).toUpperCase();
+      global.console?.error?.('[Gaycha Club][unclassified UI error][' + id + ']', display);
+      display = safeErrorMessage(display) + ' Référence : ' + id;
+    }
+    return `<div class="note ${isError ? 'err' : ''}" role="${isError ? 'alert' : 'status'}">${esc(display)}</div>`;
+  };
 
   function safeErrorMessage(error) {
     const raw = String(error?.message || error || '');
@@ -87,5 +95,6 @@
     host.innerHTML = '<section class="empty-state" role="status"><h2>' + esc(title) + '</h2>' + (detail ? '<p>' + esc(detail) + '</p>' : '') + '</section>';
   }
 
-  global.GaychaUtils = { esc, $, msg, handleError, safeClick, debounce, paginate, staleWhileRevalidate, showState };
+  const RN = {commun:['Commun','●'],peu_commun:['Peu commun','⬢'],rare:['Rare','◆'],epique:['Épique','★'],legendaire:['Légendaire','♛'],secrete:['Secrète','◈']};
+  global.GaychaUtils = { esc, $, msg, RN, handleError, safeClick, debounce, paginate, staleWhileRevalidate, showState };
 })(window);

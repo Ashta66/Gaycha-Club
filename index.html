@@ -78,6 +78,43 @@ table{width:100%;border-collapse:collapse}td,th{padding:8px;border-bottom:1px so
 .r-epique{--r:#e03bd0;box-shadow:0 0 20px #e03bd088}
 .r-legendaire{--r:#D6B46A;box-shadow:0 0 24px #D6B46A99,inset 0 0 0 2px #7a5f22}
 .r-secrete{--r:#fff;border-color:transparent;background:linear-gradient(#0b0b0c,#0b0b0c) padding-box,conic-gradient(from var(--a),#ff477e,#ffda45,#8ccf35,#00a9a5,#3867ff,#c9a7ff,#ff477e) border-box;animation:spin 6s linear infinite;box-shadow:0 0 22px #c9a7ff55}
+
+/* Collection premium : identité visuelle distincte pour les six raretés */
+.card{isolation:isolate;transform-style:preserve-3d;will-change:transform}
+.card>.band,.card>.art,.card>.nm,.card>.spec,.card>.meta{position:relative;z-index:2}.card>.x{z-index:6}
+.card-foil{position:absolute;z-index:1;inset:3px;border-radius:10px;pointer-events:none;opacity:0;mix-blend-mode:screen;transition:opacity .35s ease,filter .35s ease}
+.card.r-commun{--r:#a7adb8;border-color:#747b86;background:linear-gradient(145deg,#262a31,#0c0e13 58%,#30343b);box-shadow:inset 0 0 0 1px #ffffff18,0 5px 14px #0008}
+.card.r-commun .band{background:linear-gradient(90deg,#8b929e,#d0d4dc,#737b88);color:#111}
+.card.r-peu_commun{--r:#38c78b;border-color:#26865f;background:linear-gradient(145deg,#123b30,#081b18 62%,#174b39);box-shadow:inset 0 0 0 1px #7af0bd30,0 0 12px #22b87930}
+.card.r-peu_commun .band{background:repeating-linear-gradient(135deg,#167b58 0 8px,#22966b 8px 16px);color:#f2fff8}
+.card.r-rare{--r:#65a6ff;border-color:#3867ff;box-shadow:0 0 18px #3867ff66,inset 0 0 0 1px #b8d0ff}
+.card.r-rare .card-foil{opacity:.22;background:repeating-linear-gradient(125deg,transparent 0 12px,#a8d7ff55 13px 15px,transparent 16px 28px)}
+.card.r-epique{--r:#ff66df;border-color:#e03bd0;box-shadow:0 0 22px #e03bd088,inset 0 0 0 1px #ffc3f5}
+.card.r-epique .card-foil{opacity:.28;background:linear-gradient(115deg,transparent 12%,#ffb7f0aa 28%,#8c6bff66 42%,#54e7ff77 55%,transparent 72%);background-size:220% 100%;animation:gaycha-prism 4s ease-in-out infinite}
+.card.r-legendaire{--r:#f5d27c;border-color:#d6b46a;background:linear-gradient(145deg,#59431b,#15110b 52%,#3d2b0e);box-shadow:0 0 27px #d6b46a99,inset 0 0 0 2px #f9e6a477,inset 0 0 22px #d6b46a25}
+.card.r-legendaire .band{background:linear-gradient(90deg,#8e6824,#f8e2a0,#b58a36);color:#211605}
+.card.r-legendaire .card-foil{opacity:.42;background:linear-gradient(110deg,transparent 15%,#fff5ce 31%,#d6a83c88 44%,#fff8d8 52%,transparent 68%);background-size:230% 100%;animation:gaycha-gold 3.2s ease-in-out infinite}
+.card.r-secrete{--r:#fff;border:3px solid transparent;background:linear-gradient(145deg,#17111f,#08080c 62%,#1c1028) padding-box,conic-gradient(from var(--a),#ff477e,#ffda45,#8ccf35,#00d3c0,#3867ff,#c9a7ff,#ff477e) border-box;animation:spin 7s linear infinite;box-shadow:0 0 30px #c9a7ff88,0 0 55px #ff477e33,inset 0 0 22px #ffffff12}
+.card.r-secrete .band{background:linear-gradient(100deg,#ff477e,#ffda45,#63d89b,#47bfff,#bd8bff,#ff80b8);background-size:250% 100%;color:#160f20;animation:secret-spectrum 5s linear infinite}
+.card.r-secrete .card-foil{opacity:.55;background:repeating-linear-gradient(115deg,transparent 0 9px,#ffffff66 10px 11px,transparent 12px 20px),linear-gradient(115deg,#ff477e66,#ffda4566,#00d3c066,#3867ff66,#c9a7ff66);background-size:100% 100%,240% 100%;animation:gaycha-prism 2.8s ease-in-out infinite}
+@keyframes gaycha-prism{0%,100%{background-position:120% 0,120% 0;filter:hue-rotate(0)}50%{background-position:-20% 0,-20% 0;filter:hue-rotate(35deg)}}
+@keyframes gaycha-gold{0%,100%{background-position:130% 0}50%{background-position:-30% 0}}
+@keyframes secret-spectrum{to{background-position:250% 0}}
+@media(hover:hover) and (pointer:fine){
+ .card:hover{transform:perspective(900px) translateY(-7px) rotateX(3deg) rotateY(-3deg) scale(1.025);box-shadow:0 18px 34px #0009,var(--card-glow,0 0 0 transparent)}
+ .card.r-rare:hover{--card-glow:0 0 24px #3867ff99}
+ .card.r-epique:hover{--card-glow:0 0 30px #e03bd0bb}
+ .card.r-legendaire:hover{--card-glow:0 0 34px #d6b46add}
+ .card.r-secrete:hover{--card-glow:0 0 38px #c9a7ffdd}
+ .card:hover .card-foil{opacity:.72}
+}
+@media(prefers-reduced-motion:reduce){
+ .card,.card-foil,.card.r-secrete,.card.r-secrete .band,.card.r-epique .card-foil,.card.r-legendaire .card-foil{animation:none!important;transition:none!important;will-change:auto}
+ .card:hover{transform:none}
+ .card-foil{opacity:.2!important}
+}
+@media(max-width:600px){.card{transform:none!important}.card-foil{opacity:.16}}
+
 @keyframes spin{to{--a:360deg}}
 .r-epique::after,.r-legendaire::after,.r-secrete::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,#ffffff40 48%,transparent 60%);background-size:250% 100%;background-position:150% 0;animation:sh 3.5s infinite}
 .r-secrete::after{background-image:linear-gradient(115deg,#ff477e44,#ffda4444,#00a9a544,#3867ff44,#c9a7ff44,transparent);animation-direction:alternate;animation-duration:2.5s}

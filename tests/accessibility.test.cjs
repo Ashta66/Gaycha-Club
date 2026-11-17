@@ -76,8 +76,9 @@ test('dashboard displays the existing XP total as a visual level progression', (
   assert.match(html, /Gagner de l’XP/);
 });
 
-test('XP progression is presentation-only and retains existing achievement and mission sources', () => {
-  assert.match(html, /sync_user_achievements/);
+test('XP progression is presentation-only and the dashboard uses progressive badges without the legacy achievement RPC', () => {
+  assert.doesNotMatch(html, /sync_user_achievements/);
+  assert.match(html, /badgeSeries/);
   assert.match(html, /xp_reward/);
   assert.doesNotMatch(html, /update\(\{[^}]*xp:/);
 });

@@ -52,3 +52,23 @@ test('legal information is reachable from the global page footer', () => {
   assert.match(html, /id="legal-dialog"/);
   assert.match(html, /const legalPages=/);
 });
+
+
+test('image assistant exposes a provider selector and guards missing controls', () => {
+  assert.match(html, /id="ai-provider"/);
+  for (const provider of ['openai', 'stability', 'google', 'replicate', 'fal', 'huggingface', 'bfl', 'ideogram', 'together']) {
+    assert.match(html, new RegExp('value="' + provider + '"'));
+  }
+  assert.match(html, /if\(!providerSelect\)\{setStatus\(/);
+  assert.match(html, /provider:providerSelect\.value\|\|'openai'/);
+});
+
+test('image quota reservations can be refunded after provider failures', () => {
+  const quotaSql = fs.readFileSync('supabase/migrations/20261118000200_card_assistant_quota_refunds.sql', 'utf8');
+  const edge = fs.readFileSync('supabase/functions/card-assistant/index.ts', 'utf8');
+  assert.match(quotaSql, /reserve_card_assistant_quota/);
+  assert.match(quotaSql, /release_card_assistant_quota/);
+  assert.match(edge, /reserve_card_assistant_quota/);
+  assert.match(edge, /release_card_assistant_quota/);
+  assert.match(edge, /credit_balance_exhausted/);
+});

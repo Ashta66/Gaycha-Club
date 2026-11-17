@@ -104,3 +104,5 @@ test("collection favorite sits outside the card frame and assistant cards cannot
 test("image providers are selectable and Edge errors expose the server detail",()=>{for(const provider of ["openai","stability","google","replicate","fal","huggingface","bfl","ideogram","together"])assert.match(html,new RegExp('value="'+provider+'"'));assert.match(html,/context\.clone\(\)\.text\(\)/);});
 
 test("admin booster editor previews presentation and syncs rarity sliders",()=>{assert.match(html,/admin-booster-visual-editor/);assert.match(html,/data-booster-range/);assert.match(html,/admin_set_booster_presentation/);assert.match(html,/boosterPresentationAttrs/)});
+
+test("admin player detail panel is visual and exposes inventory and credit history through a secure RPC",()=>{assert.match(html,/data-account-details/);assert.match(html,/admin_get_account_detail/);assert.match(html,/admin-account-owned-grid/);assert.match(html,/admin-account-history/)});

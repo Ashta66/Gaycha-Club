@@ -71,4 +71,5 @@ test('image quota reservations can be refunded after provider failures', () => {
   assert.match(edge, /reserve_card_assistant_quota/);
   assert.match(edge, /release_card_assistant_quota/);
   assert.match(edge, /credit_balance_exhausted/);
+  assert.match(edge, /content_moderation/);
 });

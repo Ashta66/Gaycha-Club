@@ -1524,7 +1524,7 @@ $('zc').onclick=()=>zoom.close()}
 zoom.addEventListener('click',e=>{if(e.target===zoom)zoom.close()});
 let zoomReturnFocus=null;zoom.addEventListener('close',()=>{zoomReturnFocus?.focus?.();zoomReturnFocus=null});
 document.addEventListener('click',e=>{const c=e.target.closest('.card[data-cid]');if(c&&!c.closest('dialog'))openZoom(c.dataset.cid)});
-document.addEventListener('keydown',e=>{if(e.key==='Enter'){const c=document.activeElement;if(c&&c.matches&&c.matches('.card[data-cid]')&&!c.closest('dialog'))openZoom(c.dataset.cid)}});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const c=document.activeElement;if(c&&c.matches&&c.matches('.card[data-cid]')&&!c.closest('dialog')){e.preventDefault();openZoom(c.dataset.cid)}}});
 
 
 /* ===== Tableau de bord personnel ===== */

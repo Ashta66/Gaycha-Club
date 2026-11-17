@@ -15,7 +15,7 @@ create unique index if not exists account_deletion_requests_one_open_per_user
   where status in ('pending','reviewing');
 alter table public.account_deletion_requests enable row level security;
 revoke all on public.account_deletion_requests from anon, public;
-grant select, insert on public.account_deletion_requests to authenticated;
+grant select, insert, update on public.account_deletion_requests to authenticated;
 drop policy if exists account_deletion_requests_read_own on public.account_deletion_requests;
 create policy account_deletion_requests_read_own
   on public.account_deletion_requests for select to authenticated

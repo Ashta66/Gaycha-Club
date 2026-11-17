@@ -1134,7 +1134,7 @@ if(user)$('profile-open').onclick=()=>openSettings();setTimeout(refreshNotificat
 async function go(v,fromHistory=false){currentView=v;if(!fromHistory&&location.hash!=='#'+v)window.history.pushState({view:v},'', '#'+v);try{await refresh()}catch(e){handleError(e,'initialisation-session:'+v,app);return}if(!cards.length){try{await loadCards()}catch(e){console.error('[Gaycha] Catalogue indisponible ; affichage de la rubrique sans données cartes.',e);cards=[]}}
 if(v!=='catalog'&&v!=='universe'&&!user){auth();$('am').innerHTML=msg('Connecte-toi pour accéder à cette rubrique.');return}
 if(v==='admin'&&!['admin','moderator','catalog_manager'].includes(profile?.role)){showState(app,'Accès réservé à l’équipe.','Ton compte ne dispose pas des autorisations nécessaires pour administrer le Club.');return}
-try{const view=({catalog,universe,collection,booster,missions,market,leaderboard,playercard:playerCard,trades,messages,notifications,admin,dashboard,stats,history,friends,events,auth})[v];if(!view){showState(app,'Rubrique indisponible.','Cette page n’est pas encore disponible.');return}await view()}catch(error){handleError(error,'vue:'+v,app);return}
+try{const view=({catalog,universe,collection,booster,missions,market,leaderboard,playercard:playerCard,trades,messages,notifications,admin,dashboard,stats,history:activityHistory,friends,events,auth})[v];if(!view){showState(app,'Rubrique indisponible.','Cette page n’est pas encore disponible.');return}await view()}catch(error){handleError(error,'vue:'+v,app);return}
 const sectionMap={
  collection:{title:'Collection',items:[['collection','Ma collection'],['catalog','Catalogue'],['history','Historique'],['stats','Statistiques'],['playercard','Carte joueur']]},
  booster:{title:'Boosters',items:[['booster','Tous les boosters']]},
@@ -1640,7 +1640,7 @@ async function stats(){
  app.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
 }
 /* ===== Historique complet avec filtres ===== */
-async function history(){
+async function activityHistory(){
  if(!user)return auth();
  app.innerHTML='<h1>Historique</h1><p>Chargement de tes activités…</p>';
  const [led,inst,list,claims]=await Promise.all([

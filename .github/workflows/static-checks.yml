@@ -27,6 +27,13 @@ jobs:
           console.log(`Extracted ${scripts.length} inline script block(s).`);
           NODE
           node --check /tmp/gaycha-inline.js
+      - name: Check shared JavaScript modules
+        run: |
+          node --check assets/js/utils.js
+          node --check assets/js/card-renderer.js
+          node --check assets/js/i18n.js
+      - name: Run unit tests
+        run: node --test tests/*.test.cjs
       - name: Check security migration safeguards
         run: |
           test -f supabase/migrations/20261028_gaycha_audit_hardening.sql

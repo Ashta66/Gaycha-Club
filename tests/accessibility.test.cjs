@@ -31,3 +31,10 @@ test('both card grids paginate to twenty entries', () => {
   assert.match(html, /paginate\(shown,collectionPage,20\)/);
   assert.match(html, /paginate\(shown,catalogPage,20\)/);
 });
+
+test('booster cards can be revealed individually with mouse or keyboard', () => {
+  assert.match(html, /role='button' tabindex='0' aria-pressed='false'/);
+  assert.match(html, /event\.key==='Enter'\|\|event\.key===' '/);
+  assert.match(html, /el\.setAttribute\('aria-pressed','true'\)/);
+  assert.match(html, /appuie sur une carte pour accélérer/);
+});

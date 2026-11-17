@@ -36,3 +36,19 @@ test('trade read-marker migration is reproducible and participant-scoped', () =>
   assert.match(readsSql, /user_id = \(SELECT auth\.uid\(\)\)/);
   assert.match(readsSql, /o\.proposer_id = \(SELECT auth\.uid\(\)\) OR o\.recipient_id = \(SELECT auth\.uid\(\)\)/);
 });
+
+test('image key management binds handlers only after its controls are rendered', () => {
+  const render = html.indexOf('app.innerHTML=`<section class="admin-hero"');
+  const handlers = html.indexOf("if(tab==='imagekeys'){\\n const providers=");
+  assert.ok(render >= 0 && handlers > render, 'image key handlers must be registered after admin HTML is inserted');
+  assert.match(html, /id="imagekeys-save"/);
+  assert.match(html, /id="imagekeys-status"/);
+});
+
+test('legal information is reachable from the global page footer', () => {
+  for (const key of ['mentions', 'privacy', 'terms', 'moderation', 'cookies']) {
+    assert.match(html, new RegExp('data-legal="' + key + '"'));
+  }
+  assert.match(html, /id="legal-dialog"/);
+  assert.match(html, /const legalPages=/);
+});

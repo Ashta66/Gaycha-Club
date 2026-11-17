@@ -109,3 +109,5 @@ test("admin player detail panel is visual and exposes inventory and credit histo
 
 test("admin mission editor has templates and a live reward/progression preview",()=>{assert.match(html,/data-mission-template/);assert.match(html,/mission-preview-steps/);assert.match(html,/mission-preview-rewards/)});
 test("events page provides quick templates and a navigable monthly calendar",()=>{assert.match(html,/data-event-template/);assert.match(html,/events-calendar/);assert.match(html,/data-calendar-next/)});
+
+test("admin dashboard has selectable periods, activity charts, alerts and recent audit",()=>{assert.match(html,/data-dashboard-days/);assert.match(html,/admin-dashboard-chart/);assert.match(html,/admin-dashboard-alerts/);assert.match(html,/admin-dashboard-audit/);assert.match(html,/admin_dashboard_detail/)});

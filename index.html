@@ -1696,14 +1696,18 @@ async function universe(){
 async function dashboard(){
  if(!user)return auth();
  app.innerHTML='<h1>Mon tableau de bord</h1><p>Chargement de ton espace…</p>';
- const [ir,mr,sr,br,fr,cr,xr]=await Promise.all([
+ const [ir,mr,sr,br,fr,cr,xr,bc1,bc2,bc3,mc]=await Promise.all([
   sb.from('card_instances').select('card_id,acquired_at').order('acquired_at',{ascending:false}),
   sb.rpc('my_missions'),
   sb.from('series').select('id,name'),
   sb.from('booster_inventory').select('quantity,paid_quantity').eq('user_id',user.id),
   sb.from('booster_types').select('slug,name,cooldown_hours,price').eq('active',true).eq('price',0).order('name').limit(1),
   sb.from('ledger').select('reason,created_at').eq('user_id',user.id).order('created_at',{ascending:false}).limit(100),
-  sb.from('profiles').select('xp').eq('id',user.id).maybeSingle()
+  sb.from('profiles').select('xp').eq('id',user.id).maybeSingle(),
+  sb.from('ledger').select('reason',{count:'exact',head:true}).eq('user_id',user.id).like('reason','booster:%'),
+  sb.from('ledger').select('reason',{count:'exact',head:true}).eq('user_id',user.id).like('reason','booster_paid:%'),
+  sb.from('ledger').select('reason',{count:'exact',head:true}).eq('user_id',user.id).like('reason','booster_purchase:%'),
+  sb.from('ledger').select('reason',{count:'exact',head:true}).eq('user_id',user.id).like('reason','mission:%')
  ]);
  if(ir.error)return app.innerHTML=msg('Chargement de la collection impossible : '+ir.error.message,1);
  const items=ir.data||[],counts={};items.forEach(x=>counts[x.card_id]=(counts[x.card_id]||0)+1);
@@ -1731,8 +1735,8 @@ async function dashboard(){
   </article>`;
  }).join('');
  const rarityCount=new Set(cards.filter(c=>counts[c.id]).map(c=>c.rarity)).size;
- const openingCount=(cr.data||[]).filter(x=>/^(booster:|booster_paid:|booster_purchase:)/.test(x.reason||'')).length;
- const missionCount=(cr.data||[]).filter(x=>(x.reason||'').startsWith('mission:')).length;
+ const openingCount=Number(bc1.count||0)+Number(bc2.count||0)+Number(bc3.count||0);
+ const missionCount=Number(mc.count||0);
  const badgeSeries=[
   {icon:'💎',name:'Collectionnite aiguë',desc:'Accumuler des cartes, doublons compris',value:items.length,tiers:[50,100,200,300,500],unit:'cartes'},
   {icon:'🧨',name:'Ouvreur de braguette',desc:'Faire sauter les emballages de boosters',value:openingCount,tiers:[10,25,50,100,250],unit:'boosters'},

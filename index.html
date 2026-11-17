@@ -4,6 +4,7 @@
 <meta name="i18n-allowed-languages" content="fr,en,es">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; object-src 'none'; base-uri 'self'; form-action 'self' https://*.supabase.co; upgrade-insecure-requests">
 <title>GAYCHA CLUB — Collection & communauté</title>
+<link rel="icon" href="./favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;600;700;800&family=Fraunces:wght@400;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script src="./assets/js/utils.js"></script><script src="./assets/js/card-renderer.js"></script><script src="./assets/js/i18n.js" defer></script>
@@ -1693,11 +1694,10 @@ async function universe(){
 async function dashboard(){
  if(!user)return auth();
  app.innerHTML='<h1>Mon tableau de bord</h1><p>Chargement de ton espace…</p>';
- const [ir,mr,sr,ar,br,fr,cr]=await Promise.all([
+ const [ir,mr,sr,br,fr,cr,xr]=await Promise.all([
   sb.from('card_instances').select('card_id,acquired_at').order('acquired_at',{ascending:false}),
   sb.rpc('my_missions'),
   sb.from('series').select('id,name'),
-  sb.rpc('sync_user_achievements'),
   sb.from('booster_inventory').select('quantity,paid_quantity').eq('user_id',user.id),
   sb.from('booster_types').select('slug,name,cooldown_hours,price').eq('active',true).eq('price',0).order('name').limit(1),
   sb.from('ledger').select('reason,created_at').eq('user_id',user.id).order('created_at',{ascending:false}).limit(100),
@@ -1713,7 +1713,6 @@ async function dashboard(){
  const month=items.filter(x=>x.acquired_at&&new Date(x.acquired_at)>new Date(Date.now()-30*86400000)).length;
  const xpTotal=Math.max(0,Number(xr.data?.xp??profile?.xp??0)||0);
  const level=Math.floor(xpTotal/500)+1,xpInLevel=xpTotal%500,xpPct=Math.round(xpInLevel/500*100);
- const achievedKeys=new Set((ar.data||[]).map(x=>x.achievement_key));
  const missionCards=(mr.data||[]).slice(0,4).map(m=>{
   const goal=Math.max(1,Number(m.goal||1));
   const progress=Math.max(0,Math.min(goal,Number(m.progress||0)));

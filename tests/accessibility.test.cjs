@@ -106,3 +106,6 @@ test("image providers are selectable and Edge errors expose the server detail",(
 test("admin booster editor previews presentation and syncs rarity sliders",()=>{assert.match(html,/admin-booster-visual-editor/);assert.match(html,/data-booster-range/);assert.match(html,/admin_set_booster_presentation/);assert.match(html,/boosterPresentationAttrs/)});
 
 test("admin player detail panel is visual and exposes inventory and credit history through a secure RPC",()=>{assert.match(html,/data-account-details/);assert.match(html,/admin_get_account_detail/);assert.match(html,/admin-account-owned-grid/);assert.match(html,/admin-account-history/)});
+
+test("admin mission editor has templates and a live reward/progression preview",()=>{assert.match(html,/data-mission-template/);assert.match(html,/mission-preview-steps/);assert.match(html,/mission-preview-rewards/)});
+test("events page provides quick templates and a navigable monthly calendar",()=>{assert.match(html,/data-event-template/);assert.match(html,/events-calendar/);assert.match(html,/data-calendar-next/)});

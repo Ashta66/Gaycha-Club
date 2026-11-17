@@ -5,8 +5,8 @@ const fs = require('node:fs');
 const html = fs.readFileSync('index.html', 'utf8');
 const en = JSON.parse(fs.readFileSync('i18n/en.json', 'utf8'));
 const es = JSON.parse(fs.readFileSync('i18n/es.json', 'utf8'));
-const achievementSql = fs.readFileSync('supabase/migrations/20261117000200_fix_achievement_sync_and_admin_stats.sql', 'utf8');
-const readsSql = fs.readFileSync('supabase/migrations/20261117000100_reconcile_trade_offer_reads.sql', 'utf8');
+const achievementSql = fs.readFileSync('supabase/migrations/20261117213300_fix_achievement_sync_and_admin_stats.sql', 'utf8');
+const readsSql = fs.readFileSync('supabase/migrations/20261117213257_reconcile_trade_offer_reads.sql', 'utf8');
 
 test('translation dictionaries are complete and loaded from JSON', () => {
   assert.ok(Object.keys(en).length >= 240);

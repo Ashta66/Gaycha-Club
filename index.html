@@ -109,9 +109,13 @@ table{width:100%;border-collapse:collapse}td,th{padding:8px;border-bottom:1px so
  .card:hover .card-foil{opacity:.72}
 }
 @media(prefers-reduced-motion:reduce){
+ *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}
  .card,.card-foil,.card.r-secrete,.card.r-secrete .band,.card.r-epique .card-foil,.card.r-legendaire .card-foil{animation:none!important;transition:none!important;will-change:auto}
  .card:hover{transform:none}
  .card-foil{opacity:.2!important}
+}
+@media(max-width:600px){
+ body{background-attachment:scroll}
 }
 @media(max-width:600px){.card{transform:none!important}.card-foil{opacity:.16}}
 

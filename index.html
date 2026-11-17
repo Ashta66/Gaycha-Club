@@ -19,7 +19,7 @@ button{font:inherit;cursor:pointer}:focus-visible{outline:3px solid var(--gold);
 header{position:sticky;top:0;z-index:10;display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:12px 20px 15px;background:#1D1D20ee;backdrop-filter:blur(8px)}
 header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--rb);background-size:200% 100%;animation:flow 8s linear infinite}
 @keyframes flow{to{background-position:200% 0}}
-.logo{font-size:28px;color:var(--gold);line-height:1;text-shadow:0 0 18px #D6B46A44}.logo small{font:600 10px Fraunces;letter-spacing:.5em;display:block;color:var(--cream)}.logo-home{border:0;background:transparent;padding:0;cursor:pointer;text-align:left;flex:0 0 auto}.logo-home:hover{filter:brightness(1.18)}.site-brand-logo{display:block;width:auto;max-width:min(190px,28vw);height:auto;max-height:48px;object-fit:contain}.logo-home:has(.site-brand-logo){display:flex;align-items:center;min-height:44px}
+.logo{font-size:28px;color:var(--gold);line-height:1;text-shadow:0 0 18px #D6B46A44}.logo small{font:600 10px Fraunces;letter-spacing:.5em;display:block;color:var(--cream)}.logo-home{border:0;background:transparent;padding:0;cursor:pointer;text-align:left;flex:0 0 auto}.logo-home:hover{filter:brightness(1.18)}.site-brand-logo{display:block;width:auto;max-width:min(190px,28vw);height:auto;max-height:48px;object-fit:contain;background:#f7f4eb;padding:4px 8px;border-radius:8px;box-shadow:0 2px 12px #0003}.logo-home:has(.site-brand-logo){display:flex;align-items:center;min-height:44px}
 header nav{display:flex;gap:6px;flex-wrap:wrap}header nav .btn{padding:8px 14px;min-height:40px;font-size:14px}
 header .me{margin-left:auto;color:var(--mut);font-size:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
 main{max-width:1100px;margin:0 auto;padding:30px 20px 60px}
@@ -1159,7 +1159,7 @@ dialog .btn{max-width:100%}
 .booster-catalog-tools{display:grid;grid-template-columns:minmax(180px,1.5fr) minmax(180px,1fr) auto;gap:10px;align-items:center;margin:16px 0}.booster-catalog-tools input,.booster-catalog-tools select{margin:0;min-width:0}.booster-catalog-tools .note{white-space:nowrap}@media(max-width:560px){.booster-catalog-tools{grid-template-columns:1fr 1fr}.booster-catalog-tools input{grid-column:1/-1}.booster-catalog-tools .note{grid-column:1/-1}}
 </style><link rel="stylesheet" href="./assets/css/tokens.css"></head><body>
 <a class="skip-link" href="#main">Aller au contenu principal</a>
-<header><button class="logo logo-home" type="button" data-v="dashboard" data-brand-logo aria-label="Gaycha Club — accueil" title="Retour à l’accueil"><span data-brand-text>GAYCHA<small>CLUB</small></span></button>
+<header><button class="logo logo-home" type="button" data-v="dashboard" data-brand-logo aria-label="Gaycha Club — accueil" title="Retour à l’accueil"><img class="site-brand-logo" src="./assets/brand/gaycha-logo.svg" alt="GAYCHA CLUB — Collectionneurs de cartes"></button>
 <nav aria-label="Navigation principale"><button class="btn alt" data-v="collection">Collection</button><button class="btn alt" data-v="booster">Boosters</button><button class="btn alt" data-v="notifications">Messages</button><button class="btn alt" data-v="market">Marché</button><button class="btn alt" data-v="friends">Communauté</button><button class="btn alt" data-v="admin" id="nadm" hidden>Administration</button></nav>
 <div class="me" id="me"></div></header>
 <nav class="mobile-bottom-nav" aria-label="Navigation principale mobile"><button class="mobile-nav-item" data-v="collection" aria-label="Collection"><span aria-hidden="true">▦</span><small>Collection</small></button><button class="mobile-nav-item" data-v="booster" aria-label="Boosters"><span aria-hidden="true">✦</span><small>Boosters</small></button><button class="mobile-nav-item" data-v="notifications" aria-label="Messages"><span aria-hidden="true">✉</span><small>Messages</small></button><button class="mobile-nav-item" data-v="market" aria-label="Marché"><span aria-hidden="true">◇</span><small>Marché</small></button><button class="mobile-nav-item" id="mobile-more-toggle" aria-expanded="false" aria-controls="mobile-more-menu" aria-label="Plus de sections"><span aria-hidden="true">☰</span><small>Plus</small></button></nav>
@@ -1178,7 +1178,7 @@ function applySiteBranding(data){
  siteBranding=data||{};
  const button=document.querySelector('[data-brand-logo]');
  if(button){
-  button.innerHTML=siteBranding.logo_url?'<img class="site-brand-logo" src="'+esc(siteBranding.logo_url)+'" alt="'+esc(siteBranding.logo_alt||'Gaycha Club')+'">':'<span data-brand-text>GAYCHA<small>CLUB</small></span>';
+  button.innerHTML=siteBranding.logo_url?'<img class="site-brand-logo" src="'+esc(siteBranding.logo_url)+'" alt="'+esc(siteBranding.logo_alt||'Gaycha Club')+'">' :'<img class="site-brand-logo" src="./assets/brand/gaycha-logo.svg" alt="'+esc(siteBranding.logo_alt||'GAYCHA CLUB — Collectionneurs de cartes')+'">';
   button.setAttribute('aria-label',siteBranding.logo_alt||'Gaycha Club — accueil');
  }
  let icon=document.querySelector('link[data-brand-favicon]');

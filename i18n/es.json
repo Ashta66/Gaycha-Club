@@ -249,5 +249,7 @@
   "publie": "publicado",
   "archive": "archivado",
   "cartes affichées": "cartas mostradas",
-  "Aucune statistique disponible.": "No hay estadísticas disponibles."
+  "Aucune statistique disponible.": "No hay estadísticas disponibles.",
+  "Enregistrer les modifications": "Guardar los cambios",
+  "Assistant IA non configuré : ajoutez le secret OPENAI_API_KEY dans Supabase Edge Functions.": "Asistente de IA no configurado: añade el secreto OPENAI_API_KEY en las funciones Edge de Supabase."
 }

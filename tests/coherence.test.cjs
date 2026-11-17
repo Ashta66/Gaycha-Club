@@ -77,11 +77,11 @@ test('image quota reservations can be refunded after provider failures', () => {
 
 test('image-provider admin RPCs require an existing admin profile', () => {
   const sql = fs.readFileSync('supabase/migrations/20261118000300_harden_image_provider_admin_guards.sql', 'utf8');
-  assert.equal((sql.match(/if auth\\.uid\\(\\) is null then/g) || []).length, 2);
+  assert.equal((sql.match(/if auth\.uid\(\) is null then/g) || []).length, 2);
   assert.equal((sql.match(/if v_role is distinct from 'admin' then/g) || []).length, 2);
   assert.match(sql, /set search_path to ''/);
-  assert.match(sql, /revoke all on function public\\.admin_store_image_provider_key\\(text,text\\) from public, anon/);
-  assert.match(sql, /grant execute on function public\\.admin_store_image_provider_key\\(text,text\\) to authenticated/);
-  assert.match(sql, /image_provider\\.store/);
+  assert.match(sql, /revoke all on function public\.admin_store_image_provider_key\(text,text\) from public, anon/);
+  assert.match(sql, /grant execute on function public\.admin_store_image_provider_key\(text,text\) to authenticated/);
+  assert.match(sql, /image_provider\.store/);
   assert.doesNotMatch(sql, /p_api_key[^;]*log_audit/i);
 });

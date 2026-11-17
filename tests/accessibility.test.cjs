@@ -51,3 +51,19 @@ test('collection binder shows series completion and card ownership in zoom', () 
   assert.match(html, /Dans ta collection/);
   assert.match(html, /cartes de cette série obtenues/);
 });
+
+test('missions page presents progression summaries and accessible filters', () => {
+  assert.match(html, /Missions & récompenses/);
+  assert.match(html, /mission-summary/);
+  assert.match(html, /data-mission-filter="daily"/);
+  assert.match(html, /data-mission-filter="weekly"/);
+  assert.match(html, /data-mission-filter="ready"/);
+  assert.match(html, /aria-pressed/);
+});
+
+test('mission rewards continue to use existing secure RPCs without schema changes', () => {
+  assert.match(html, /sb\.rpc\('my_missions'\)/);
+  assert.match(html, /sb\.rpc\('claim_mission',\{p_slug:button\.dataset\.m\}\)/);
+  assert.match(html, /xp_reward/);
+  assert.match(html, /mission-progress-copy/);
+});

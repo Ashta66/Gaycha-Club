@@ -27,9 +27,9 @@ test('public catalogue cache is isolated from account and transaction queries', 
   assert.doesNotMatch(html, /staleWhileRevalidate\('(profile|balance|inventory|trades|messages)/);
 });
 
-test('both card grids paginate to twenty entries', () => {
+test('collection and catalogue grids use their intended page sizes', () => {
   assert.match(html, /paginate\(shown,collectionPage,20\)/);
-  assert.match(html, /paginate\(shown,catalogPage,20\)/);
+  assert.match(html, /paginate\(shown,catalogPage,36\)/);
 });
 
 test('booster cards can be revealed individually with mouse or keyboard', () => {

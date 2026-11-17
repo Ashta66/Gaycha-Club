@@ -19,7 +19,7 @@ button{font:inherit;cursor:pointer}:focus-visible{outline:3px solid var(--gold);
 header{position:sticky;top:0;z-index:10;display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:12px 20px 15px;background:#1D1D20ee;backdrop-filter:blur(8px)}
 header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--rb);background-size:200% 100%;animation:flow 8s linear infinite}
 @keyframes flow{to{background-position:200% 0}}
-.logo{font-size:28px;color:var(--gold);line-height:1;text-shadow:0 0 18px #D6B46A44}.logo small{font:600 10px Fraunces;letter-spacing:.5em;display:block;color:var(--cream)}.logo-home{border:0;background:transparent;padding:0;cursor:pointer;text-align:left;flex:0 0 auto}.logo-home:hover{filter:brightness(1.18)}.site-brand-logo{display:block;width:auto;max-width:min(190px,28vw);height:auto;max-height:48px;object-fit:contain;background:#f7f4eb;padding:4px 8px;border-radius:8px;box-shadow:0 2px 12px #0003}.logo-home:has(.site-brand-logo){display:flex;align-items:center;min-height:44px}
+.logo{font-size:28px;color:var(--gold);line-height:1;text-shadow:0 0 18px #D6B46A44}.logo small{font:600 10px Fraunces;letter-spacing:.5em;display:block;color:var(--cream)}.logo-home{border:0;background:transparent;padding:0;cursor:pointer;text-align:left;flex:0 0 auto}.logo-home:hover{filter:brightness(1.18)}.site-brand-logo{display:block;width:auto;max-width:min(190px,28vw);height:auto;max-height:48px;object-fit:contain;background:transparent;padding:0;border-radius:0;box-shadow:none;filter:drop-shadow(0 1px 3px #0005)}.logo-home:has(.site-brand-logo){display:flex;align-items:center;min-height:44px}
 header nav{display:flex;gap:6px;flex-wrap:wrap}header nav .btn{padding:8px 14px;min-height:40px;font-size:14px}
 header .me{margin-left:auto;color:var(--mut);font-size:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
 main{max-width:1100px;margin:0 auto;padding:30px 20px 60px}
@@ -128,16 +128,17 @@ table{width:100%;border-collapse:collapse}td,th{padding:8px;border-bottom:1px so
 .fb,.ff{position:absolute;inset:0;backface-visibility:hidden}.ff{transform:rotateY(180deg)}.ff .card{height:100%}.fl .card:hover{transform:none}
 .fl.hi.on{animation:pop .9s}@keyframes pop{30%{filter:brightness(2) drop-shadow(0 0 26px #FFDA45);transform:scale(1.08)}}
 .back{display:grid;place-items:center;border:3px solid var(--gold);background:radial-gradient(circle at 50% 35%,#ffffff12,transparent 45%),repeating-conic-gradient(#ff477e18 0 15deg,#3867ff18 0 30deg),#0b0b0c;overflow:hidden}
-.card-back-brand{position:relative;z-index:1;display:grid;justify-items:center;gap:8px;width:78%;padding:12px 8px;border:1px solid var(--back-accent,#d6b46a);border-radius:12px;background:linear-gradient(145deg,#ffffff12,#00000044);box-shadow:inset 0 0 18px var(--back-glow,#d6b46a22),0 0 18px var(--back-glow,#d6b46a22)}
-.card-back-brand img{display:block;width:68%;max-width:100px;aspect-ratio:1;object-fit:contain;filter:drop-shadow(0 3px 5px #000b)}
-.card-back-brand span{font:700 clamp(8px,2.7cqw,13px)/1 Arial,sans-serif;letter-spacing:.18em;color:#fff;text-shadow:0 2px 5px #000;text-align:center}
-.fl.rarity-commun .back{--back-accent:#a7adb8;--back-glow:#a7adb833}
-.fl.rarity-peu_commun .back{--back-accent:#38c78b;--back-glow:#38c78b44}
-.fl.rarity-rare .back{--back-accent:#65a6ff;--back-glow:#3867ff66}
-.fl.rarity-epique .back{--back-accent:#ff66df;--back-glow:#e03bd066}
-.fl.rarity-legendaire .back{--back-accent:#f5d27c;--back-glow:#d6b46a88}
-.fl.rarity-secrete .back{--back-accent:#d7b7ff;--back-glow:#c9a7ff99;border-color:transparent;background:linear-gradient(#0b0b0c,#0b0b0c) padding-box,conic-gradient(from var(--a),#ff477e,#ffda45,#8ccf35,#00d3c0,#3867ff,#c9a7ff,#ff477e) border-box}
-@media(prefers-reduced-motion:no-preference){.fl.rarity-secrete .back .card-back-brand{animation:back-secret-glow 3s ease-in-out infinite alternate}@keyframes back-secret-glow{to{box-shadow:inset 0 0 24px #c9a7ff66,0 0 24px #ff477e66}}}
+.card-back-brand{position:relative;z-index:1;display:grid;place-items:center;width:100%;height:100%;background:transparent;border:0;box-shadow:none}
+.card-back-brand img{display:block;width:54%;max-width:86px;aspect-ratio:1;object-fit:contain;opacity:.16;filter:grayscale(1) saturate(0) brightness(1.8);mix-blend-mode:screen}
+.card-back-brand span{position:absolute;bottom:13%;font:700 clamp(7px,2.2cqw,10px)/1 Arial,sans-serif;letter-spacing:.2em;color:#fff;opacity:.13;text-shadow:0 1px 3px #000;text-align:center}
+.card-back-brand::after{content:"";position:absolute;bottom:8%;width:14px;height:2px;border-radius:2px;background:var(--back-accent,#a7adb8);opacity:.38}
+.fl.rarity-commun .back{--back-accent:#a7adb8}
+.fl.rarity-peu_commun .back{--back-accent:#72a88f}
+.fl.rarity-rare .back{--back-accent:#7796bd}
+.fl.rarity-epique .back{--back-accent:#aa83a9}
+.fl.rarity-legendaire .back{--back-accent:#b7a77a}
+.fl.rarity-secrete .back{--back-accent:#a89bbd}
+.booster-pack .booster-brand-mark{background:transparent}
 .sealed{width:200px;aspect-ratio:5/8;margin:20px auto;background:linear-gradient(160deg,#2a2418,#0b0b0c);border:3px solid var(--gold);border-radius:10px;display:grid;place-content:center;text-align:center;animation:shk .5s 2;box-shadow:0 0 30px #D6B46A55}
 @keyframes shk{25%{transform:rotate(-4deg)}75%{transform:rotate(4deg)}}
 /* Vue en grand */
@@ -736,7 +737,7 @@ body{background-image:radial-gradient(ellipse at 12% 0%,#8d5c9b14,transparent 32
 .admin-branding-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:18px 0}
 .admin-branding-item{min-width:0;padding:18px;border:1px solid #d6b46a44;border-radius:12px;background:#ffffff04}
 .admin-branding-item h3{margin:0 0 12px}
-.admin-branding-preview{display:block;max-width:100%;width:auto;height:auto;max-height:150px;object-fit:contain;margin:8px 0 16px;padding:10px;border:1px solid #ffffff22;border-radius:10px;background:#101014}
+.admin-branding-preview{display:block;max-width:100%;width:auto;height:auto;max-height:150px;object-fit:contain;margin:8px 0 16px;padding:10px;border:1px solid var(--line);border-radius:10px;background:transparent}
 .admin-favicon-preview{width:112px;height:112px;object-fit:contain}
 .admin-branding-empty{display:grid;place-items:center;min-height:112px;margin:8px 0 16px;border:1px dashed #ffffff35;border-radius:10px;color:var(--gold);font-family:Anton,sans-serif;font-size:24px;letter-spacing:.08em}
 .admin-branding-item small{display:block;color:var(--mut);font-size:12px;margin-top:8px}

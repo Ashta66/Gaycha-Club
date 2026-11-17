@@ -25,3 +25,9 @@ test('catalogue failure does not block session routing or the home view', () => 
   assert.match(html, /Catalogue indisponible ; affichage de la rubrique sans données cartes/);
   assert.doesNotMatch(html, /try\{await refresh\(\);if\(!cards\.length\)await loadCards\(\)\}catch/);
 });
+
+test('activity history view does not shadow the browser History API', () => {
+  assert.match(html, /async function activityHistory\(\)/);
+  assert.match(html, /history:activityHistory/);
+  assert.doesNotMatch(html, /async function history\(\)/);
+});

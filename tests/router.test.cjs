@@ -13,3 +13,15 @@ test('startup reports rejected initialization instead of leaving a blank page', 
   assert.match(html, /demarrage-application/);
   assert.match(html, /\.catch\(error\s*=>\s*handleError\(error,'demarrage-application',app\)\)/);
 });
+
+test('catalogue metadata failure falls back to core card data', () => {
+  assert.match(html, /public-cards-v2/);
+  assert.match(html, /select\('\*,series\(name,color_a,color_b\)'\)/);
+  assert.match(html, /select\('\*'\)\.order\('number'\)/);
+});
+
+test('catalogue failure does not block session routing or the home view', () => {
+  assert.match(html, /initialisation-session:\+v/);
+  assert.match(html, /Catalogue indisponible ; affichage de la rubrique sans données cartes/);
+  assert.doesNotMatch(html, /try\{await refresh\(\);if\(!cards\.length\)await loadCards\(\)\}catch/);
+});

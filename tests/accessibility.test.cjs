@@ -85,3 +85,17 @@ test('XP progression is presentation-only and the dashboard uses progressive bad
   assert.match(html, /xp_reward/);
   assert.doesNotMatch(html, /update\(\{[^}]*xp:/);
 });
+
+
+test('admin catalogue exposes multi-variant AI artwork generation and selection', () => {
+  assert.match(html, /id="cimg-generate"/);
+  assert.match(html, /id="cimg-gallery"/);
+  assert.match(html, /data-image-choice/);
+  assert.match(html, /functions\.invoke\('card-assistant'/);
+});
+
+test('AI assistant existing-card edit actions are wired to a working selection flow', () => {
+  assert.match(html, /data-ai-edit-card/);
+  assert.match(html, /\$\('ai-generate'\)\.onclick/);
+  assert.match(html, /\$\('ai-illustrate'\)\.onclick/);
+});

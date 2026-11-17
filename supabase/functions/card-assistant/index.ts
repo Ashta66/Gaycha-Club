@@ -30,7 +30,7 @@ Deno.serve(async (req: Request) => {
   const openaiKey = Deno.env.get("OPENAI_API_KEY");
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
   const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
-  if (!openaiKey) return reply(503, { error: "Assistant IA non configuré : ajoutez le secret OPENAI_API_KEY dans Supabase Edge Functions." });
+  
   if (!supabaseUrl || !anonKey) return reply(503, { error: "Configuration Supabase manquante." });
 
   const auth = req.headers.get("Authorization") || "";
@@ -55,7 +55,7 @@ Deno.serve(async (req: Request) => {
     return reply(403, { error: "Accès réservé aux administrateurs et gestionnaires du catalogue actifs." });
   }
 
-  let input: { action?: string; mode?: string; prompt?: string; existing?: Record<string, unknown>; seriesName?: string; style?: string; cardName?: string; count?: number };
+  let input: { action?: string; mode?: string; prompt?: string; existing?: Record<string, unknown>; seriesName?: string; style?: string; cardName?: string; count?: number; provider?: string };
   try {
     const rawBody = await req.text();
     if (new TextEncoder().encode(rawBody).byteLength > 16000) {
@@ -65,21 +65,24 @@ Deno.serve(async (req: Request) => {
   } catch { return reply(400, { error: "Requête JSON invalide." }); }
   const prompt = String(input.prompt || "").trim();
   if (input.action === "illustration") {
-    if (prompt.length < 8 || prompt.length > 1800) return reply(400, { error: "Décrivez l’illustration en 8 à 1800 caractères." });
-    const { error: quotaError } = await supabase.rpc("consume_card_assistant_quota", { p_action: "illustration" });
-    if (quotaError) {
-      const limited = /rate limit/i.test(quotaError.message || "");
-      return reply(limited ? 429 : 403, { error: limited ? "Quota de génération atteint. Réessayez plus tard." : "Accès à la génération refusé." });
+    if(prompt.length<8||prompt.length>1800)return reply(400,{error:"Décrivez l’illustration en 8 à 1800 caractères."});
+    const provider=String(input.provider||"openai");if(!["openai","stability"].includes(provider))return reply(400,{error:"Fournisseur non pris en charge."});
+    const serviceClient=createClient(supabaseUrl,Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")||"",{auth:{persistSession:false,autoRefreshToken:false}});
+    const {data:apiKey,error:keyError}=await serviceClient.rpc("get_image_provider_key",{p_provider:provider});
+    if(keyError||!apiKey)return reply(503,{error:"Aucune clé API "+(provider==="openai"?"OpenAI":"Stability AI")+" configurée. Ajoute-la dans Assistant IA > Fournisseurs d’illustrations."});
+    const {error:quotaError}=await supabase.rpc("consume_card_assistant_quota",{p_action:"illustration"});if(quotaError){const limited=/rate limit/i.test(quotaError.message||"");return reply(limited?429:403,{error:limited?"Quota de génération atteint. Réessaie plus tard.":"Accès à la génération refusé."});}
+    const count=Math.max(1,Math.min(4,Math.floor(Number(input.count)||1)));let images:Array<{image:string,mimeType:string}>=[];
+    if(provider==="openai"){
+      const response=await fetch("https://api.openai.com/v1/images/generations",{method:"POST",headers:{"Authorization":"Bearer "+apiKey,"Content-Type":"application/json"},body:JSON.stringify({model:"gpt-image-1",prompt:"Illustration originale pour une carte à collectionner Gaycha Club, public adulte. Visuel portrait stylisé, composition lisible en petit format. Aucun texte, signature ou logo. Concept: "+prompt.slice(0,1500),size:"1024x1536",quality:"medium",n:count})});
+      if(!response.ok){const detail=await response.text();console.error("OpenAI image API error",response.status,detail.slice(0,300));return reply(502,{error:response.status===401?"Clé OpenAI invalide.":response.status===429?"Quota ou limite OpenAI atteint.":"Échec OpenAI ("+response.status+"). Vérifie les accès et la facturation."});}
+      const data=await response.json();images=(data.data||[]).map((x:{b64_json?:string})=>x.b64_json).filter((x:unknown):x is string=>typeof x==="string").map((image:string)=>({image,mimeType:"image/png"}));
+    }else{
+      const form=new FormData();form.set("prompt","Portrait illustration for a premium adult LGBTQ+ collectible card. No text, no logo. "+prompt.slice(0,1400));form.set("aspect_ratio","2:3");form.set("output_format","png");
+      const response=await fetch("https://api.stability.ai/v2beta/stable-image/generate/core",{method:"POST",headers:{"Authorization":"Bearer "+apiKey,"Accept":"application/json"},body:form});
+      if(!response.ok){const detail=await response.text();console.error("Stability image API error",response.status,detail.slice(0,300));return reply(502,{error:response.status===401?"Clé Stability AI invalide.":response.status===402?"Crédits Stability AI insuffisants.":"Échec Stability AI ("+response.status+")."});}
+      const data=await response.json();if(typeof data.image==="string")images=[{image:data.image,mimeType:"image/png"}];
     }
-    const imageResponse = await fetch("https://api.openai.com/v1/images/generations", {
-      method: "POST",
-      headers: { "Authorization": "Bearer " + openaiKey, "Content-Type": "application/json" },
-      body: JSON.stringify({ model: "gpt-image-1", prompt: "Illustration originale pour une carte à collectionner Gaycha Club, public adulte. Visuel portrait stylisé, composition lisible en petit format. Aucun texte, signature ou logo. Concept: " + prompt.slice(0, 1500), size: "1024x1536", quality: "medium", n: Math.max(1, Math.min(4, Math.floor(Number(input.count) || 1))) }),
-    });
-    if (!imageResponse.ok) { const detail = await imageResponse.text(); console.error("OpenAI image API error", imageResponse.status, detail.slice(0, 300)); return reply(502, { error: imageResponse.status === 401 ? "La clé OpenAI est invalide." : "La génération d’illustration a échoué. Vérifiez que votre compte API a accès à gpt-image-1." }); }
-    const imageData = await imageResponse.json(); const images = (imageData.data || []).map((item: { b64_json?: string }) => item.b64_json).filter((value: unknown): value is string => typeof value === "string" && value.length > 0).map((image: string) => ({ image, mimeType: "image/png" }));
-    if (!images.length) return reply(502, { error: "L’API n’a pas retourné de fichier image exploitable." });
-    return reply(200, { images, image: images[0].image, mimeType: images[0].mimeType });
+    if(!images.length)return reply(502,{error:"Le fournisseur n’a retourné aucun visuel exploitable."});return reply(200,{images,image:images[0].image,mimeType:images[0].mimeType});
   }
   if (!["create", "edit"].includes(input.mode || "") || prompt.length < 8 || prompt.length > 1800) {
     return reply(400, { error: "Choisissez création/modification et décrivez la carte (8 à 1800 caractères)." });

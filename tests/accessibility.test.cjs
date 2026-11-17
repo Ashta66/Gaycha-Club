@@ -102,3 +102,5 @@ test('AI assistant existing-card edit actions are wired to a working selection f
 
 test("collection favorite sits outside the card frame and assistant cards cannot overflow",()=>{assert.match(html,/collection-card-item\{position:relative;padding-top:22px/);assert.match(html,/collection-card-visual\{position:static!important/);assert.match(html,/ai-existing-meta>\*\{min-width:0;max-width:100%;overflow-wrap:anywhere/);assert.match(html,/id="ai-provider-save"/)});
 test("image providers are selectable and Edge errors expose the server detail",()=>{for(const provider of ["openai","stability","google","replicate","fal","huggingface","bfl","ideogram","together"])assert.match(html,new RegExp('value="'+provider+'"'));assert.match(html,/context\.clone\(\)\.text\(\)/);});
+
+test("admin booster editor previews presentation and syncs rarity sliders",()=>{assert.match(html,/admin-booster-visual-editor/);assert.match(html,/data-booster-range/);assert.match(html,/admin_set_booster_presentation/);assert.match(html,/boosterPresentationAttrs/)});

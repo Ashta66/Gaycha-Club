@@ -19,7 +19,7 @@ button{font:inherit;cursor:pointer}:focus-visible{outline:3px solid var(--gold);
 header{position:sticky;top:0;z-index:10;display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:12px 20px 15px;background:#1D1D20ee;backdrop-filter:blur(8px)}
 header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--rb);background-size:200% 100%;animation:flow 8s linear infinite}
 @keyframes flow{to{background-position:200% 0}}
-.logo{font-size:28px;color:var(--gold);line-height:1;text-shadow:0 0 18px #D6B46A44}.logo small{font:600 10px Fraunces;letter-spacing:.5em;display:block;color:var(--cream)}.logo-home{border:0;background:transparent;padding:0;cursor:pointer;text-align:left;flex:0 0 auto}.logo-home:hover{filter:brightness(1.18)}.site-brand-logo{display:block;width:auto;max-width:min(190px,28vw);height:auto;max-height:48px;object-fit:contain;background:transparent;padding:0;border-radius:0;box-shadow:none;filter:drop-shadow(0 1px 3px #0005)}.logo-home:has(.site-brand-logo){display:flex;align-items:center;min-height:44px}
+.logo{font-size:28px;color:var(--gold);line-height:1;text-shadow:0 0 18px #D6B46A44}.logo small{font:600 10px Fraunces;letter-spacing:.5em;display:block;color:var(--cream)}.logo-home{border:0;background:transparent;padding:0;cursor:pointer;text-align:left;flex:0 0 auto}.logo-home:hover{filter:brightness(1.18)}.site-brand-logo{display:block;width:48px;height:48px;flex:0 0 48px;object-fit:contain;background:transparent;padding:0;border-radius:0;box-shadow:none;filter:drop-shadow(0 1px 3px #0005)}.site-brand-copy{display:grid;gap:3px;text-align:left;line-height:1.05}.site-brand-copy strong{font:800 clamp(16px,2vw,23px)/1 Arial,sans-serif;letter-spacing:.055em;color:#fff8ed;text-shadow:0 1px 5px #000b}.site-brand-copy small{font:600 9px/1.2 Arial,sans-serif;letter-spacing:.12em;color:#d6cfc4}.logo-home:has(.site-brand-logo){display:flex;align-items:center;gap:10px;min-height:48px}
 header nav{display:flex;gap:6px;flex-wrap:wrap}header nav .btn{padding:8px 14px;min-height:40px;font-size:14px}
 header .me{margin-left:auto;color:var(--mut);font-size:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
 main{max-width:1100px;margin:0 auto;padding:30px 20px 60px}
@@ -128,16 +128,17 @@ table{width:100%;border-collapse:collapse}td,th{padding:8px;border-bottom:1px so
 .fb,.ff{position:absolute;inset:0;backface-visibility:hidden}.ff{transform:rotateY(180deg)}.ff .card{height:100%}.fl .card:hover{transform:none}
 .fl.hi.on{animation:pop .9s}@keyframes pop{30%{filter:brightness(2) drop-shadow(0 0 26px #FFDA45);transform:scale(1.08)}}
 .back{display:grid;place-items:center;border:3px solid var(--gold);background:radial-gradient(circle at 50% 35%,#ffffff12,transparent 45%),repeating-conic-gradient(#ff477e18 0 15deg,#3867ff18 0 30deg),#0b0b0c;overflow:hidden}
-.card-back-brand{position:relative;z-index:1;display:grid;place-items:center;width:100%;height:100%;background:transparent;border:0;box-shadow:none}
-.card-back-brand img{display:block;width:54%;max-width:86px;aspect-ratio:1;object-fit:contain;opacity:.16;filter:grayscale(1) saturate(0) brightness(1.8);mix-blend-mode:screen}
+.card-back-brand{position:relative;z-index:1;display:grid;place-items:center;width:100%;height:100%;background:transparent;border:0;box-shadow:none;overflow:hidden}
+.card-back-brand img{display:block;width:58%;max-width:92px;aspect-ratio:1;object-fit:contain;opacity:.32;filter:drop-shadow(0 1px 2px #0008)}
 .card-back-brand span{position:absolute;bottom:13%;font:700 clamp(7px,2.2cqw,10px)/1 Arial,sans-serif;letter-spacing:.2em;color:#fff;opacity:.13;text-shadow:0 1px 3px #000;text-align:center}
-.card-back-brand::after{content:"";position:absolute;bottom:8%;width:14px;height:2px;border-radius:2px;background:var(--back-accent,#a7adb8);opacity:.38}
-.fl.rarity-commun .back{--back-accent:#a7adb8}
-.fl.rarity-peu_commun .back{--back-accent:#72a88f}
-.fl.rarity-rare .back{--back-accent:#7796bd}
-.fl.rarity-epique .back{--back-accent:#aa83a9}
-.fl.rarity-legendaire .back{--back-accent:#b7a77a}
-.fl.rarity-secrete .back{--back-accent:#a89bbd}
+.card-back-brand::before{content:"";position:absolute;inset:8%;pointer-events:none;opacity:0;background:radial-gradient(ellipse at 28% 24%,var(--back-sparkle,#ffffff) 0 1px,transparent 2px),radial-gradient(ellipse at 73% 34%,var(--back-sparkle,#ffffff) 0 1px,transparent 2px),radial-gradient(ellipse at 61% 76%,var(--back-sparkle,#ffffff) 0 1px,transparent 2px),radial-gradient(ellipse at 36% 67%,var(--back-sparkle,#ffffff) 0 1px,transparent 2px);filter:drop-shadow(0 0 2px var(--back-accent,#fff));}
+.fl.rarity-commun .back{--back-accent:#c5c9d0;--back-sparkle:#d7dce5}
+.fl.rarity-peu_commun .back{--back-accent:#83c9a5;--back-sparkle:#a6e5c2}
+.fl.rarity-rare .back{--back-accent:#82aee8;--back-sparkle:#a9c9f5}
+.fl.rarity-epique .back{--back-accent:#c38fcb;--back-sparkle:#e1b4e6}
+.fl.rarity-legendaire .back{--back-accent:#d5bd7c;--back-sparkle:#f0dba2}
+.fl.rarity-secrete .back{--back-accent:#c6a6dc;--back-sparkle:#e8c7ff}
+@media(prefers-reduced-motion:no-preference){.fl .card-back-brand::before{animation:rarity-back-glint 4.8s ease-in-out infinite}@keyframes rarity-back-glint{0%,72%,100%{opacity:0;transform:translateY(0)}82%{opacity:.22;transform:translateY(-1px)}90%{opacity:.07;transform:translateY(1px)}}}
 .booster-pack .booster-brand-mark{background:transparent}
 .sealed{width:200px;aspect-ratio:5/8;margin:20px auto;background:linear-gradient(160deg,#2a2418,#0b0b0c);border:3px solid var(--gold);border-radius:10px;display:grid;place-content:center;text-align:center;animation:shk .5s 2;box-shadow:0 0 30px #D6B46A55}
 @keyframes shk{25%{transform:rotate(-4deg)}75%{transform:rotate(4deg)}}
@@ -1171,7 +1172,7 @@ dialog .btn{max-width:100%}
 .booster-catalog-tools{display:grid;grid-template-columns:minmax(180px,1.5fr) minmax(180px,1fr) auto;gap:10px;align-items:center;margin:16px 0}.booster-catalog-tools input,.booster-catalog-tools select{margin:0;min-width:0}.booster-catalog-tools .note{white-space:nowrap}@media(max-width:560px){.booster-catalog-tools{grid-template-columns:1fr 1fr}.booster-catalog-tools input{grid-column:1/-1}.booster-catalog-tools .note{grid-column:1/-1}}
 </style><link rel="stylesheet" href="./assets/css/tokens.css"></head><body>
 <a class="skip-link" href="#main">Aller au contenu principal</a>
-<header><button class="logo logo-home" type="button" data-v="dashboard" data-brand-logo aria-label="Gaycha Club — accueil" title="Retour à l’accueil"><img class="site-brand-logo" src="./assets/brand/gaycha-logo.svg" alt="GAYCHA CLUB — Collectionneurs de cartes"></button>
+<header><button class="logo logo-home" type="button" data-v="dashboard" data-brand-logo aria-label="Gaycha Club — accueil" title="Retour à l’accueil"><img class="site-brand-logo" src="./assets/brand/gaycha-mark.svg" alt=""><span class="site-brand-copy"><strong>GAYCHA CLUB</strong><small>COLLECTIONNEURS DE CARTES</small></span></button>
 <nav aria-label="Navigation principale"><button class="btn alt" data-v="collection">Collection</button><button class="btn alt" data-v="booster">Boosters</button><button class="btn alt" data-v="notifications">Messages</button><button class="btn alt" data-v="market">Marché</button><button class="btn alt" data-v="friends">Communauté</button><button class="btn alt" data-v="admin" id="nadm" hidden>Administration</button></nav>
 <div class="me" id="me"></div></header>
 <nav class="mobile-bottom-nav" aria-label="Navigation principale mobile"><button class="mobile-nav-item" data-v="collection" aria-label="Collection"><span aria-hidden="true">▦</span><small>Collection</small></button><button class="mobile-nav-item" data-v="booster" aria-label="Boosters"><span aria-hidden="true">✦</span><small>Boosters</small></button><button class="mobile-nav-item" data-v="notifications" aria-label="Messages"><span aria-hidden="true">✉</span><small>Messages</small></button><button class="mobile-nav-item" data-v="market" aria-label="Marché"><span aria-hidden="true">◇</span><small>Marché</small></button><button class="mobile-nav-item" id="mobile-more-toggle" aria-expanded="false" aria-controls="mobile-more-menu" aria-label="Plus de sections"><span aria-hidden="true">☰</span><small>Plus</small></button></nav>
@@ -1190,7 +1191,7 @@ function applySiteBranding(data){
  siteBranding=data||{};
  const button=document.querySelector('[data-brand-logo]');
  if(button){
-  button.innerHTML=siteBranding.logo_url?'<img class="site-brand-logo" src="'+esc(siteBranding.logo_url)+'" alt="'+esc(siteBranding.logo_alt||'Gaycha Club')+'">' :'<img class="site-brand-logo" src="./assets/brand/gaycha-logo.svg" alt="'+esc(siteBranding.logo_alt||'GAYCHA CLUB — Collectionneurs de cartes')+'">';
+  button.innerHTML='<img class="site-brand-logo" src="'+(siteBranding.logo_url?esc(siteBranding.logo_url):'./assets/brand/gaycha-mark.svg')+'" alt=""><span class="site-brand-copy"><strong>GAYCHA CLUB</strong><small>COLLECTIONNEURS DE CARTES</small></span>';
   button.setAttribute('aria-label',siteBranding.logo_alt||'Gaycha Club — accueil');
  }
  let icon=document.querySelector('link[data-brand-favicon]');

@@ -97,7 +97,7 @@ test('personal data export and deletion request are available in account setting
 
 test('account deletion requests are owner-scoped and do not delete accounts automatically', () => {
   const sql = fs.readFileSync('supabase/migrations/20261118000400_account_deletion_requests.sql', 'utf8');
-  assert.match(sql, /ENABLE ROW LEVEL SECURITY/);
+  assert.match(sql, /enable row level security/i);
   assert.match(sql, /user_id = \(select auth\.uid\(\)\)/);
   assert.match(sql, /status = 'pending'/);
   assert.match(sql, /public\.is_staff\(array\['admin'::public\.app_role\]\)/);

@@ -232,6 +232,16 @@ main{min-height:65vh}
 .stat-track{height:10px;background:#ffffff12;border-radius:99px;overflow:hidden}.stat-fill{height:100%;border-radius:99px;background:var(--rb)}
 .history-row{display:grid;grid-template-columns:130px minmax(0,1fr) auto;gap:12px;align-items:center;padding:12px 4px;border-bottom:1px solid #ffffff14}
 .history-row:last-child{border-bottom:0}.history-value{font-weight:700;text-align:right}.positive{color:#65e6ad}.negative{color:#ff8da9}
+.dashboard-xp-panel{position:relative;overflow:hidden;border-color:#d6b46a66;background:radial-gradient(ellipse at 90% 0%,#d6b46a20,transparent 48%),linear-gradient(135deg,#211d27,#141318)}
+.dashboard-xp-heading{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.dashboard-xp-heading h2{margin:5px 0}.dashboard-xp-heading p{margin:0;color:var(--mut);font-size:13px}
+.dashboard-level-medal{display:grid;place-items:center;flex:0 0 66px;width:66px;height:66px;border:1px solid #f0d58f;border-radius:50%;background:linear-gradient(145deg,#d6b46a30,#b5a4ff14);box-shadow:0 0 24px #d6b46a22;color:#f4d98e;font:24px Anton,sans-serif}
+.dashboard-xp-track{height:12px;margin:20px 0 8px;overflow:hidden;border-radius:99px;background:#ffffff14}
+.dashboard-xp-track span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#a56be0,#ff80b8,#f0d58e);box-shadow:0 0 16px #d6b46a55;transition:width .35s}
+.dashboard-xp-meta,.dashboard-xp-footer{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.dashboard-xp-meta{color:var(--mut);font-size:12px}.dashboard-xp-meta strong{color:var(--cream)}
+.dashboard-xp-footer{margin-top:16px;padding-top:13px;border-top:1px solid #ffffff16;font-size:13px}
+@media(max-width:520px){.dashboard-xp-heading{align-items:flex-start}.dashboard-level-medal{flex-basis:54px;width:54px;height:54px;font-size:20px}.dashboard-xp-meta{align-items:flex-start;flex-direction:column}}
 .achievement-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px}
 .achievement{border:1px solid #ffffff20;border-radius:12px;padding:14px;background:#ffffff05}.achievement.unlocked{border-color:#d6b46a88;background:linear-gradient(135deg,#d6b46a15,#ffffff04)}.achievement .medal{font-size:28px}
 @media(max-width:560px){.history-row{grid-template-columns:1fr auto;gap:4px}.history-row time{grid-column:1/-1}.stat-row{grid-template-columns:95px 1fr 32px}}
@@ -1646,7 +1656,8 @@ async function dashboard(){
   sb.rpc('sync_user_achievements'),
   sb.from('booster_inventory').select('quantity,paid_quantity').eq('user_id',user.id),
   sb.from('booster_types').select('slug,name,cooldown_hours,price').eq('active',true).eq('price',0).order('name').limit(1),
-  sb.from('ledger').select('reason,created_at').eq('user_id',user.id).order('created_at',{ascending:false}).limit(100)
+  sb.from('ledger').select('reason,created_at').eq('user_id',user.id).order('created_at',{ascending:false}).limit(100),
+  sb.from('profiles').select('xp').eq('id',user.id).maybeSingle()
  ]);
  if(ir.error)return app.innerHTML=msg('Chargement de la collection impossible : '+ir.error.message,1);
  const items=ir.data||[],counts={};items.forEach(x=>counts[x.card_id]=(counts[x.card_id]||0)+1);
@@ -1656,6 +1667,8 @@ async function dashboard(){
  const freeRemaining=freeBooster&&freeLast?Math.max(0,new Date(freeLast.created_at).getTime()+Number(freeBooster.cooldown_hours||0)*3600000-Date.now()):0;
  const recentCards=[...new Set(items.map(x=>x.card_id))].slice(0,3).map(id=>cards.find(c=>c.id===id)).filter(Boolean);
  const month=items.filter(x=>x.acquired_at&&new Date(x.acquired_at)>new Date(Date.now()-30*86400000)).length;
+ const xpTotal=Math.max(0,Number(xr.data?.xp??profile?.xp??0)||0);
+ const level=Math.floor(xpTotal/500)+1,xpInLevel=xpTotal%500,xpPct=Math.round(xpInLevel/500*100);
  const achievedKeys=new Set((ar.data||[]).map(x=>x.achievement_key));
  const missionCards=(mr.data||[]).slice(0,4).map(m=>{
   const goal=Math.max(1,Number(m.goal||1));
@@ -1681,6 +1694,7 @@ async function dashboard(){
  ].map(a=>({...a,unlocked:ar.error?a[3]:achievedKeys.has(a[0])}));
  app.innerHTML=`<section class="dashboard-welcome"><div class="dashboard-welcome-copy"><span class="eyebrow">TON ESPACE GAYCHA</span><h1>Salut, ${esc(profile?.username||user.user_metadata?.name||'collectionneur·euse')} !</h1><p>Ta collection, tes prochaines découvertes et les objectifs du Club réunis au même endroit.</p><div class="dashboard-welcome-actions"><button class="btn" data-go="booster">✦ Ouvrir un booster</button><button class="btn alt" data-go="collection">Voir ma collection</button></div></div><div class="dashboard-welcome-mark" aria-hidden="true"><span>G</span><small>CLUB</small></div></section>
  <section class="dashboard-free-booster"><div><span class="eyebrow">CADEAU DU CLUB</span><h2>${freeBooster?esc(freeBooster.name):'Ton prochain booster'}</h2><p>${!freeBooster?'Découvre les boosters disponibles dans le Club.':freeRemaining>0?'Prochaine disponibilité dans '+formatCooldown(freeRemaining)+'.':'Ton booster gratuit est prêt à être récupéré.'}</p></div><button class="btn" type="button" data-go="booster">${freeRemaining>0?'Voir le compte à rebours':'Découvrir le booster gratuit'}</button></section>
+ <section class="section-panel dashboard-xp-panel" aria-labelledby="dashboard-xp-title"><div class="dashboard-xp-heading"><div><span class="eyebrow">TA PROGRESSION</span><h2 id="dashboard-xp-title">Niveau ${level} · ${xpTotal.toLocaleString('fr-FR')} XP</h2><p>Chaque mission accomplie te rapproche du prochain palier.</p></div><div class="dashboard-level-medal" aria-label="Niveau ${level}">N${level}</div></div><div class="dashboard-xp-track" role="progressbar" aria-label="Progression vers le niveau ${level+1}" aria-valuemin="0" aria-valuemax="500" aria-valuenow="${xpInLevel}"><span style="width:${xpPct}%"></span></div><div class="dashboard-xp-meta"><strong>${xpInLevel.toLocaleString('fr-FR')} / 500 XP</strong><span>Encore ${(500-xpInLevel).toLocaleString('fr-FR')} XP avant le niveau ${level+1}</span></div><div class="dashboard-xp-footer"><span>🏅 ${milestones.filter(a=>a.unlocked).length} succès débloqués sur ${milestones.length}</span><button class="btn alt" type="button" data-go="missions">Gagner de l’XP</button></div></section>
  <div class="dashboard-grid">
  <div class="dash-tile"><span>Cartes découvertes</span><strong>${owned}</strong><small>sur ${cards.length} cartes au catalogue</small></div>
  <div class="dash-tile"><span>Exemplaires</span><strong>${items.length}</strong><small>${dupes} doublon(s) au total</small></div>

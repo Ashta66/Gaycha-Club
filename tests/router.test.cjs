@@ -31,3 +31,12 @@ test('activity history view does not shadow the browser History API', () => {
   assert.match(html, /history:activityHistory/);
   assert.doesNotMatch(html, /async function history\(\)/);
 });
+
+test('shared design tokens include mobile grid and consistent keyboard focus', () => {
+  const tokens = fs.readFileSync('assets/css/tokens.css', 'utf8');
+  assert.match(tokens, /--gc-card-radius:/);
+  assert.match(tokens, /--gc-focus-ring:/);
+  assert.match(tokens, /button:focus-visible/);
+  assert.match(tokens, /min\(120px,100%\)/);
+  assert.match(tokens, /prefers-reduced-motion:reduce/);
+});

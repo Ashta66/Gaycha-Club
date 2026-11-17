@@ -21,7 +21,7 @@ test('catalogue metadata failure falls back to core card data', () => {
 });
 
 test('catalogue failure does not block session routing or the home view', () => {
-  assert.match(html, /initialisation-session:\+v/);
+  assert.match(html, /handleError\(e,'initialisation-session:'\+v,app\)/);
   assert.match(html, /Catalogue indisponible ; affichage de la rubrique sans données cartes/);
   assert.doesNotMatch(html, /try\{await refresh\(\);if\(!cards\.length\)await loadCards\(\)\}catch/);
 });

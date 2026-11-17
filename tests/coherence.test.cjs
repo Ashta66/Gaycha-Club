@@ -103,3 +103,18 @@ test('account deletion requests are owner-scoped and do not delete accounts auto
   assert.match(sql, /public\.is_staff\(array\['admin'::public\.app_role\]\)/);
   assert.doesNotMatch(sql, /delete from public\.profiles|delete from auth\.users/i);
 });
+
+test('admin privacy requests are restricted to admins and can be tracked', () => {
+  assert.match(html, /privacy:'Demandes RGPD'/);
+  assert.match(html, /privacy:R==='admin'/);
+  assert.match(html, /data-deletion-save/);
+  assert.match(html, /account_deletion_requests/);
+});
+
+test('cookie notice documents actual browser storage and third-party services', () => {
+  assert.match(html, /Supabase Auth conserve la session/);
+  assert.match(html, /jsDelivr/);
+  assert.match(html, /Google Fonts/);
+  assert.match(html, /eu-west-3/);
+  assert.match(html, /Aucun script publicitaire/);
+});
